@@ -1,10 +1,10 @@
 {
   "name": "Miru",
   "version": "3.8.3",
-  "author": "ThaUnknown_ <ThaUnknown@users.noreply.github.com>",
+  "author": "VanshDeshwal_ <VanshDeshwal@users.noreply.github.com>",
   "description": "Stream anime torrents, real-time with no waiting for downloads.",
   "main": "src/index.js",
-  "homepage": "https://github.com/ThaUnknown/miru#readme",
+  "homepage": "https://github.com/VanshDeshwal/miru#readme",
   "scripts": {
     "start": "SET NODE_ENV=development & concurrently --kill-others \"pnpm run web:watch\" \"pnpm run electron:start\"",
     "web:watch": "vite",
@@ -48,12 +48,12 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "ThaUnknown",
+        "owner": "VanshDeshwal",
         "repo": "miru"
       }
     ],
     "afterSign": "./build/notarize.js",
-    "appId": "com.github.thaunknown.miru",
+    "appId": "com.github.vanshdeshwal.miru",
     "productName": "Miru",
     "files": [
       "src/*",

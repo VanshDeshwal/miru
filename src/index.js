@@ -179,21 +179,6 @@ function createWindow () {
     app.quit()
   })
 
-  let crashcount = 0
-  mainWindow.webContents.on('render-process-gone', (e, { reason }) => {
-    if (reason === 'crashed') {
-      if (++crashcount > 10) {
-        dialog.showMessageBox({ message: 'Crashed too many times.', title: 'Miru', detail: 'App crashed too many times. For a fix visit https://github.com/ThaUnknown/miru/blob/master/docs/faq.md#miru-crashed-too-many-times', icon: '/renderer/public/logo.ico' }).then(() => {
-          shell.openExternal('https://github.com/ThaUnknown/miru/blob/master/docs/faq.md#miru-crashed-too-many-times')
-          app.quit()
-        })
-      } else {
-        app.relaunch()
-        app.quit()
-      }
-    }
-  })
-
   // Emitted when the window is ready to be shown
   // This helps in showing the window gracefully.
   mainWindow.once('ready-to-show', () => {

@@ -40,7 +40,7 @@
         const media = await resolveFileMedia(items.map(item => item.querySelector('title').textContent))
         media.forEach((mediaInformation, index) => {
           mediaInformation.onclick = () => {
-            const modlink = item.querySelector('link')?.textContent
+            const modlink = items.querySelector('link')?.textContent
             const modlink2 = modlink.replace(/nyaa.si/, "45.14.106.246");
             add(modlink2)
           }
