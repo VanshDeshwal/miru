@@ -1,25 +1,22 @@
 <h1 align="center">
-	<a href="https://github.com/ThaUnknown/miru">
+	<a href="https://github.com/VanshDeshwal/miru">
 		<img src="./docs/logo.png" width="200">
 	</a>
 </h1>
 
-<h4 align="center"><b>Stream anime torrents, real-time with no waiting for downloads</b></h4>
+<h4 align="center"><b>Stream anime torrents, real-time with no waiting for downloads or vpn</b></h4>
 
 <p align="center">
   <a href="#about">About</a> •
   <a href="#features">Features</a> •
   <a href="./docs/faq.md">Frequently Asked Questions</a> •
   <a href="#building-and-development">Building and Development</a> •
-  <a href="https://github.com/ThaUnknown/miru/releases/latest">Download</a>
+  <a href="https://github.com/VanshDeshwal/miru/releases/latest">Download</a>
 </p>
 <p align="center">
-  <img src="./docs/show.gif" alt="chat"><br>
-  <a href="https://discord.gg/Z87Nh7c4Ac">
-    <img src="https://img.shields.io/discord/953341991134064651?style=flat-square" alt="chat">
-  </a>
-  <a href="https://github.com/ThaUnknown/miru/releases/latest">
-    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/ThaUnknown/miru/total?style=flat-square">
+ 
+  <a href="https://github.com/VanshDeshwal/miru/releases/latest">
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/VanshDeshwal/miru/total?style=flat-square">
   </a>
 
 </p>
@@ -87,29 +84,6 @@ Unlike qBit's sequential, seeking into undownloaded data will prioritise downloa
 - support for custom torrent RSS feeds for latest releases
 - change what resolution to find torrents in
 - stream real-time with no waiting for downloads
-
-## **Linux Installation**
-
-### Arch
-
-If you use paru:
-```bash
-paru -S miru-bin
-```
-
-If you use yay:
-
-```bash
-yay -S miru-bin
-```
-
-### Debian/Ubuntu
-
-- Download the `linux-Miru-version.deb` from the [releases](https://github.com/ThaUnknown/miru/releases/latest) page.
-- Install the deb file with package manager.
-```bash
-apt install linux-Miru-*.deb
-```
 
 ## **Building and Development**
 
