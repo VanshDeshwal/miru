@@ -360,19 +360,3 @@
   }
 </script>
 
-<div class='d-flex h-full flex-column overflow-y-scroll root' on:scroll={infiniteScroll} bind:this={container}>
-  <div class='h-full py-10'>
-    <Search bind:media bind:search={$search} bind:current {loadCurrent} />
-    {#if media.length}
-      <Gallery {media} />
-    {:else}
-      <div>
-        {#each Object.entries(sections) as [key, opts] (key)}
-          {#if !opts.hide}
-            <Section opts={{ ...opts, onclick: () => (current = key) }} />
-          {/if}
-        {/each}
-      </div>
-    {/if}
-  </div>
-</div>

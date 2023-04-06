@@ -48,10 +48,6 @@
         <div class='row h-full'>
           <div class='col-4'>
             <img loading='lazy' src={card.media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full h-full' />
-            <div class="badge text-dark mr-5 font-weight-bold s-HqY-olil0_bj" style="position: absolute;top: 0px;left: 0px;background-color: rgba(0,0,0,.7);border-top-width: 0px;border-left-width: 0px;border-radius: 0 0 4px 0px;margin-right: 0px;">
-              <span class="material-icons font-size-16" style="color:yellow;size=5px;">star</span>
-              <span style="color: white;">{card.media.averageScore}</span>
-            </div>
           </div>
           <div class='col-8 h-full card-grid'>
             <div class='px-15 py-10 bg-very-dark'>

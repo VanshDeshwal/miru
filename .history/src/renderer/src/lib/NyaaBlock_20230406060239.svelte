@@ -5,7 +5,7 @@
     try {
       for (let i = 0; i < 2; ++i) {
         // fetch nyaa twice, sometimes it will go tru once if ISP is shitty
-        await fetch('https://45.14.106.246/')
+        await fetch('https://nyaa.si')
       }
       block = false
     } catch (e) {

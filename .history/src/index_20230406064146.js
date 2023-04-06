@@ -8,7 +8,7 @@ const flags = [
   ['enable-gpu-rasterization'],
   ['enable-zero-copy'],
   ['ignore-gpu-blocklist'],
-  ['ignore-certificate-errors'],
+  ['ignore-certificate-errors']
   ['enable-hardware-overlays', 'single-fullscreen,single-on-top,underlay'],
   ['enable-features', 'EnableDrDc,CanvasOopRasterization,BackForwardCache:TimeToLiveInBackForwardCacheInSeconds/300/should_ignore_blocklists/true/enable_same_site/true,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes,UseSkiaRenderer,WebAssemblyLazyCompilationEnableDrDc,CanvasOopRasterization,BackForwardCache:TimeToLiveInBackForwardCacheInSeconds/300/should_ignore_blocklists/true/enable_same_site/true,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes,UseSkiaRenderer,WebAssemblyLazyCompilation'],
   ['force_high_performance_gpu'],

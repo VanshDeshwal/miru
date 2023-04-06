@@ -149,10 +149,18 @@
           </div>
         </TabLabel>
       {/each}
-
+      <button
+        on:click={() => window.IPC.emit('open', 'https://github.com/sponsors/ThaUnknown/')}
+        class='btn btn-primary mx-20 mt-auto'
+        type='button'
+        data-toggle='tooltip'
+        data-placement='top'
+        data-title='Opens The Donate Site'>
+        Donate
+      </button>
       <button
         on:click={checkUpdate}
-        class='btn btn-primary mx-20 mt-auto'
+        class='btn btn-primary mx-20 mt-10'
         type='button'
         data-toggle='tooltip'
         data-placement='top'
@@ -242,9 +250,9 @@
               <input type='text' class='form-control form-control-lg w-150 flex-reset' placeholder='New Releases' autocomplete='off' bind:value={settings.rssFeeds[i][0]} />
               <input id='rss-feed-{i}' type='text' list='rss-feed-list-{i}' class='w-400 form-control form-control-lg' placeholder='https://nyaa.si/?page=rss&c=0_0&f=0&q=' autocomplete='off' bind:value={settings.rssFeeds[i][1]} />
               <datalist id='rss-feed-list-{i}'>
-                <option value='SubsPlease'>https://45.14.106.246/?page=rss&c=0_0&f=0&u=subsplease&q=</option>
-                <option value='NC-Raws'>https://45.14.106.246/?page=rss&c=0_0&f=0&u=BraveSail&q=</option>
-                <option value='Erai-raws [Multi-Sub]'>https://45.14.106.246/?page=rss&c=0_0&f=0&u=Erai-raws&q=</option>
+                <option value='SubsPlease'>https://nyaa.si/?page=rss&c=0_0&f=0&u=subsplease&q=</option>
+                <option value='NC-Raws'>https://nyaa.si/?page=rss&c=0_0&f=0&u=BraveSail&q=</option>
+                <option value='Erai-raws [Multi-Sub]'>https://nyaa.si/?page=rss&c=0_0&f=0&u=Erai-raws&q=</option>
               </datalist>
               <div class='input-group-append'>
                 <button type='button' on:click={() => { settings.rssFeeds.splice(i, 1); settings.rssFeeds = settings.rssFeeds }} class='btn btn-danger btn-lg input-group-append'>Remove</button>

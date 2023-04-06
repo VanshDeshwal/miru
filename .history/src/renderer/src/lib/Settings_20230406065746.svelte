@@ -149,10 +149,18 @@
           </div>
         </TabLabel>
       {/each}
-
+      <button
+        on:click={() => window.IPC.emit('open', 'https://github.com/sponsors/ThaUnknown/')}
+        class='btn btn-primary mx-20 mt-auto'
+        type='button'
+        data-toggle='tooltip'
+        data-placement='top'
+        data-title='Opens The Donate Site'>
+        Donate
+      </button>
       <button
         on:click={checkUpdate}
-        class='btn btn-primary mx-20 mt-auto'
+        class='btn btn-primary mx-20 mt-10'
         type='button'
         data-toggle='tooltip'
         data-placement='top'

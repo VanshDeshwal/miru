@@ -366,7 +366,6 @@
     {#if media.length}
       <Gallery {media} />
     {:else}
-      <div>
         {#each Object.entries(sections) as [key, opts] (key)}
           {#if !opts.hide}
             <Section opts={{ ...opts, onclick: () => (current = key) }} />

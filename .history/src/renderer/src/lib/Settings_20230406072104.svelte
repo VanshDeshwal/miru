@@ -150,18 +150,10 @@
         </TabLabel>
       {/each}
 
-      <button
-        on:click={checkUpdate}
-        class='btn btn-primary mx-20 mt-auto'
-        type='button'
-        data-toggle='tooltip'
-        data-placement='top'
-        data-title='Checks For Available Updates And Notifies The User'>
-        Check For Updates
-      </button>
+
       <button
         on:click={restoreSettings}
-        class='btn btn-danger mx-20 mt-10'
+        class='btn btn-danger mx-20 mt-auto'
         type='button'
         data-toggle='tooltip'
         data-placement='top'
