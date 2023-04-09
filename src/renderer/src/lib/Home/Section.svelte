@@ -12,11 +12,14 @@
   <div class='pl-10 font-size-24 font-weight-semi-bold'>{opts.title}</div>
   <div class='pr-10 ml-auto font-size-12'>View More</div>
 </span>
-<div class='gallery pt-10 pb-20 w-full overflow-x-hidden position-relative'>
+<div class='gallery pt-10 pb-20 w-full overflow-y-hidden position-relative'>
   <Cards {cards} />
 </div>
 
 <style>
+  div::-webkit-scrollbar{
+    display: none;
+  }
   .text-muted:hover {
     color: var(--dm-link-text-color-hover) !important;
   }
@@ -40,7 +43,6 @@
     right: 0;
     height: 100%;
     width: 8rem;
-    background: linear-gradient(270deg, rgba(37, 40, 44, 1) 0%, rgba(37, 40, 44, 0) 100%);
     /*this gradient looks like ass, need to find smth better*/
     pointer-events: none;
   }
