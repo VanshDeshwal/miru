@@ -229,10 +229,10 @@
         if (!self.previewData) {
           await sleep(i * 3000) // stagger lists by 3 seconds
           setInterval(async () => {
-            const newData = await self.load(1, 12, false, false)
+            const newData = await self.load(1, 10, false, false)
             if (newData) self.previewData = newData
           }, 15000)
-          self.previewData = await self.load(1, 12, false, false)
+          self.previewData = await self.load(1, 10, false, false)
         }
         return self.previewData
       }

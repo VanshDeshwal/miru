@@ -6,7 +6,7 @@
   function viewMedia (media) {
     $view = media
   }
-  export let length = 5
+  export let length = 8
   export let tabable = false
 </script>
 
