@@ -8,6 +8,15 @@
   }
   export let length = 8
   export let tabable = false
+
+  const statusColorMap = {
+    CURRENT: 'rgb(61,180,242)',
+    PLANNING: 'rgb(247,154,99)',
+    COMPLETED: 'rgb(123,213,85)',
+    PAUSED: 'rgb(250,122,122)',
+    REPEAT: '#3baeea',
+    DROPPED: 'rgb(232,93,117)'
+  }
 </script>
 
 {#await cards}
@@ -39,50 +48,53 @@
           <div class='col-12'>
             <img loading='lazy' src={card.media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full' />
           </div>
-          
-
-
+          <div class='col-8 h-full card-grid'>
+            <div class='px-15 py-10 bg-very-dark'>
+              <h5 class='m-0 text-capitalize font-weight-bold'>
+                {#if card.media.mediaListEntry?.status}
+                  <div style:--statusColor={statusColorMap[card.media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={card.media.mediaListEntry.status} />
+                {/if}
+                {#if card.failed}
+                  <span class='badge badge-secondary'>Uncertain</span>
+                {/if}
+                {[card.media.title.userPreferred, card.episode].filter(s => s).join(' - ')}
+              </h5>
+              {#if card.schedule && card.media.nextAiringEpisode}
+                <span class='text-muted font-weight-bold'>
+                  {'EP ' + card.media.nextAiringEpisode.episode + ' in ' + countdown(card.media.nextAiringEpisode.timeUntilAiring)}
+                </span>
+              {/if}
+              <p class='text-muted m-0 text-capitalize details'>
+                {#if card.media.format === 'TV'}
+                  <span>TV Show</span>
+                {:else if card.media.format}
+                  <span>{card.media.format?.toLowerCase().replace(/_/g, ' ')}</span>
+                {/if}
+                {#if card.media.episodes}
+                  <span>{card.media.episodes + ' Episodes'}</span>
+                {:else if card.media.duration}
+                  <span>{card.media.duration + ' Minutes'}</span>
+                {/if}
+                {#if card.media.status}
+                  <span>{card.media.status?.toLowerCase().replace(/_/g, ' ')}</span>
+                {/if}
+                {#if card.media.season || card.media.seasonYear}
+                  <span>
+                    {[card.media.season?.toLowerCase(), card.media.seasonYear].filter(s => s).join(' ')}
+                  </span>
+                {/if}
+              </p>
+            </div>
+            <div class='overflow-y-auto px-15 pb-5 bg-very-dark card-desc pre-wrap'>
+              {card.media.description?.replace(/<[^>]*>/g, '') || ''}
+            </div>
+            <div class='px-15 pb-10 pt-5 genres'>
+              {#each card.media.genres as genre}
+                <span class='badge badge-pill badge-color text-dark mt-5 mr-5 font-weight-bold'>{genre}</span>
+              {/each}
+            </div>
+          </div>
         </div>
-        <div class="badge text-dark mr-5 font-weight-bold s-HqY-olil0_bj" style="position:absolute;top: 0px;left: 0px;background-color: rgba(0,0,0,.7);border-top-width: 0px;border-left-width: 0px;border-radius: 0.6rem 0 4px 0px;margin-right: 0px;">
-          <span class="material-icons font-size-16" style="color:yellow;size=5px;">star</span>
-          <span style="color: white;">{card.media.averageScore}</span>
-          
-        </div>
-        <div style="position: absolute;top: 210px;bottom:17px;left: 0px; right:0px;background-color: rgb(25,28,32);margin-right: 0px">             
-          <h5 class='text-capitalize font-weight-bold' style="position: absolute; top:0px; bottom:1px; margin-left:10px; margin-bottom:0px; margin-right:10px">
-          {#if card.failed}
-            <span class='badge badge-secondary'>Uncertain</span>
-          {/if}
-          {[card.media.title.userPreferred, card.episode].filter(s => s).join(' - ')}
-          </h5>
-        </div>
-
-        <div style="position: absolute;bottom: 0px;left: 0px; right:0px;background-color: rgb(25,28,32);margin-right: 0px;">          
-
-        <p class='text-muted m-0 text-capitalize details'>
-          {#if card.schedule && card.media.nextAiringEpisode}
-          <span style="margin-left:10px;"class='text-muted font-weight-bold'>
-            {'EP ' + card.media.nextAiringEpisode.episode + ' in ' + countdown(card.media.nextAiringEpisode.timeUntilAiring)}
-          </span>
-        {/if}
-          {#if (card.media.format === 'TV') && !(card.schedule && card.media.nextAiringEpisode)}
-            <span class='m-10'>TV</span>
-          {:else if (card.media.format) && !(card.schedule && card.media.nextAiringEpisode)}
-            <span class='m-10'>{card.media.format?.toLowerCase().replace(/_/g, ' ')}</span>
-          {/if}
-          {#if (card.media.episodes) && !(card.schedule && card.media.nextAiringEpisode)}
-            <span>{card.media.episodes + ' Episodes'}</span>
-          {:else if (card.media.duration) && !(card.schedule && card.media.nextAiringEpisode)}
-            <span>{card.media.duration + ' Minutes'}</span>
-          {/if}
-          {#if (card.media.season || card.media.seasonYear) && !(card.schedule && card.media.nextAiringEpisode)}
-          <span>
-            {[card.media.season?.toLowerCase(), card.media.seasonYear].filter(s => s).join(' ')}
-          </span>
-        {/if}
-        </p>
-        </div>
-
       </div>
     {/if}
   {:else}
@@ -177,5 +189,10 @@
   .day-row {
     grid-column: 1 / -1;
   }
-
+  .list-status-circle {
+    background: var(--statusColor);
+    height: 1.1rem;
+    width: 1.1rem;
+    border-radius: 50%;
+  }
 </style>
