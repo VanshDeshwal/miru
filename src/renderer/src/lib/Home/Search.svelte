@@ -48,11 +48,7 @@
 </script>
 
 <div class='container-fluid row p-20' on:input={input}>
-  <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
-    <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-      <div class='material-icons mr-10 font-size-30'>title</div>
-      Title
-    </div>
+  <div class='col-4 p-10 d-flex flex-column justify-content-end'>
     <div class='input-group shadow-lg'>
       <div class='input-group-prepend'>
         <span class='input-group-text d-flex material-icons bg-dark pr-0 font-size-18'>search</span>
@@ -72,17 +68,13 @@
         autocomplete='off'
         bind:value={search.search}
         data-option='search'
-        placeholder='Any' />
+        placeholder='Title' />
     </div>
   </div>
   <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
-    <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-      <div class='material-icons mr-10 font-size-30'>theater_comedy</div>
-      Genre
-    </div>
     <div class='shadow-lg'>
       <select class='form-control bg-dark' required bind:value={search.genre}>
-        <option value selected disabled hidden>Any</option>
+        <option value selected disabled hidden>Genre</option>
         <option value='Action'>Action</option>
         <option value='Adventure'>Adventure</option>
         <option value='Comedy'>Comedy</option>
@@ -105,19 +97,15 @@
     </div>
   </div>
   <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
-    <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-      <div class='material-icons mr-10 font-size-30'>spa</div>
-      Season
-    </div>
     <div class='input-group shadow-lg'>
       <select class='form-control bg-dark border-right-dark' required bind:value={search.season}>
-        <option value selected disabled hidden>Any</option>
+        <option value selected disabled hidden>Season</option>
         <option value='WINTER'>Winter</option>
         <option value='SPRING'>Spring</option>
         <option value='SUMMER'>Summer</option>
         <option value='FALL'>Fall</option>
       </select>
-      <input type='number' placeholder='Any' min='1940' max='2100' list='search-year' class='form-control bg-dark' bind:value={search.year} />
+      <input type='number' placeholder='Year' min='1940' max='2100' list='search-year' class='form-control bg-dark' bind:value={search.year} />
       <datalist id='search-year'>
         {#each Array(new Date().getFullYear() - 1940 + 2) as _, i}
           {@const year = new Date().getFullYear() + 2 - i}
@@ -127,13 +115,9 @@
     </div>
   </div>
   <div class='col p-10 d-flex flex-column justify-content-end'>
-    <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-      <div class='material-icons mr-10 font-size-30'>monitor</div>
-      Format
-    </div>
     <div class='shadow-lg'>
       <select class='form-control bg-dark' required bind:value={search.format}>
-        <option value selected disabled hidden>Any</option>
+        <option value selected disabled hidden>Format</option>
         <option value='TV'>TV Show</option>
         <option value='MOVIE'>Movie</option>
         <option value='TV_SHORT'>TV Short</option>
@@ -143,13 +127,9 @@
     </div>
   </div>
   <div class='col p-10 d-flex flex-column justify-content-end'>
-    <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-      <div class='material-icons mr-10 font-size-30'>live_tv</div>
-      Status
-    </div>
     <div class='shadow-lg'>
       <select class='form-control bg-dark' required bind:value={search.status}>
-        <option value selected disabled hidden>Any</option>
+        <option value selected disabled hidden>Status</option>
         <option value='RELEASING'>Airing</option>
         <option value='FINISHED'>Finished</option>
         <option value='NOT_YET_RELEASED'>Not Yet Aired</option>
@@ -158,10 +138,6 @@
     </div>
   </div>
   <div class='col p-10 d-flex flex-column justify-content-end'>
-    <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-      <div class='material-icons mr-10 font-size-30'>sort</div>
-      Sort
-    </div>
     <div class='shadow-lg'>
       <select class='form-control bg-dark' required bind:value={search.sort}>
         <option value selected disabled hidden>Name</option>

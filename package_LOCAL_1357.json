@@ -1,0 +1,128 @@
+{
+  "name": "Miru",
+  "version": "3.8.3",
+  "author": "VanshDeshwal_ <VanshDeshwal@users.noreply.github.com>",
+  "description": "Stream anime torrents, real-time with no waiting for downloads.",
+  "main": "src/index.js",
+  "homepage": "https://github.com/VanshDeshwal/miru#readme",
+  "scripts": {
+    "start": "SET NODE_ENV=development & concurrently --kill-others \"pnpm run web:watch\" \"pnpm run electron:start\"",
+    "web:watch": "vite",
+    "electron:start": "electron src",
+    "build": "vite build && electron-builder",
+    "publish": "vite build && electron-builder -p always"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.4.0",
+    "concurrently": "^7.6.0",
+    "electron": "23.1.0",
+    "electron-builder": "^23.6.0",
+    "electron-notarize": "^1.2.2",
+    "svelte": "^3.55.0",
+    "vite": "4.2.1",
+    "vite-plugin-commonjs": "^0.5.3"
+  },
+  "standard": {
+    "ignore": [
+      "bundle.js",
+      "bundle.map.js"
+    ],
+    "env": [
+      "browser",
+      "node"
+    ]
+  },
+  "build": {
+    "asarUnpack": "**/*.node",
+    "electronDownload": {
+      "mirror": "https://github.com/aa910d571134/feb7c2e1a10f/releases/download/",
+      "version": "23.1.0",
+      "customDir": "2ffc48f0b43f"
+    },
+    "protocols": {
+      "name": "miru",
+      "schemes": [
+        "miru"
+      ]
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "VanshDeshwal",
+        "repo": "miru"
+      }
+    ],
+    "afterSign": "./build/notarize.js",
+    "appId": "com.github.vanshdeshwal.miru",
+    "productName": "Miru",
+    "files": [
+      "src/*",
+      "src/main/*",
+      "src/renderer/dist/**/*",
+      "!node_modules/**/*.{mk,a,o,h}"
+    ],
+    "mac": {
+      "artifactName": "${os}-${name}-${version}.${ext}",
+      "singleArchFiles": "node_modules/+(register-scheme|utp-native)/**",
+      "category": "public.app-category.video",
+      "icon": "build/icon.icns",
+      "target": [
+        {
+          "arch": "universal",
+          "target": "dmg"
+        }
+      ]
+    },
+    "win": {
+      "artifactName": "${os}-${name}-${version}.${ext}",
+      "target": "nsis"
+    },
+    "linux": {
+      "artifactName": "${os}-${name}-${version}.${ext}",
+      "category": "AudioVideo;Video",
+      "description": "Bittorrent streaming software for cats",
+      "desktop": {
+        "Name": "Miru",
+        "Comment": "Bittorrent streaming software for cats",
+        "Keywords": "miru;anime",
+        "Type": "Application",
+        "MimeType": "x-scheme-handler/miru;"
+      },
+      "target": [
+        {
+          "arch": "x64",
+          "target": "AppImage"
+        },
+        {
+          "arch": "x64",
+          "target": "deb"
+        }
+      ]
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
+  },
+  "dependencies": {
+    "anitomyscript": "github:ThaUnknown/anitomyscript",
+    "bottleneck": "^2.19.5",
+    "browser-event-target-emitter": "^1.0.0",
+    "discord-rpc": "4.0.1",
+    "electron-log": "^4.4.8",
+    "electron-updater": "^4.6.5",
+    "jassub": "1.2.1",
+    "js-levenshtein": "^1.1.6",
+    "matroska-subtitles": "github:ThaUnknown/matroska-subtitles#redist",
+    "mime": "^3.0.0",
+    "p2pcf": "github:ThaUnknown/p2pcf#no-remove",
+    "perfect-seekbar": "^1.1.0",
+    "pump": "^3.0.0",
+    "quartermoon": "^1.2.3",
+    "range-parser": "^1.2.1",
+    "simple-store-svelte": "^1.0.0",
+    "svelte-keybinds": "1.0.5",
+    "svelte-miniplayer": "1.0.3",
+    "webtorrent": "^1.9.6"
+  }
+}

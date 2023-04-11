@@ -83,7 +83,7 @@
   let sections = {
     continue: {
       title: 'Continue Watching',
-      preview: () => sections.continue.load(1, 6),
+      preview: () => sections.continue.load(1, 10),
       load: (page = 1, perPage = 50, initial = false) => {
         if (initial) search.value = { ...search.value, sort: 'UPDATED_TIME_DESC' }
         return alRequest({ method: 'UserLists', status_in: ['CURRENT', 'REPEATING'], page }).then(res => {
@@ -111,7 +111,7 @@
           })
         }).map(({ node }) => node.id)
       })(),
-      preview: () => sections.newSeasons.load(1, 6),
+      preview: () => sections.newSeasons.load(1, 10),
       load: async (page = 1, perPage = 50, initial = false) => {
         if (initial) search.value = { ...search.value, status: 'FINISHED' }
         const id = await sections.newSeasons.data
@@ -122,7 +122,7 @@
     },
     planning: {
       title: 'Your List',
-      preview: () => sections.planning.load(1, 6),
+      preview: () => sections.planning.load(1, 10),
       load: (page = 1, perPage = 50, initial = false) => {
         if (initial) search.value = { ...search.value, sort: 'UPDATED_TIME_DESC' }
         return alRequest({ method: 'UserLists', page, perPage, status_in: 'PLANNING' }).then(res => {
@@ -136,7 +136,7 @@
       title: 'Popular This Season',
       preview: () => {
         const self = sections.seasonal
-        if (!self.previewData) self.previewData = self.load(1, 6)
+        if (!self.previewData) self.previewData = self.load(1, 10)
         return self.previewData
       },
       load: async (page = 1, perPage = 50, initial = false) => {
@@ -158,7 +158,7 @@
       title: 'Trending Now',
       preview: () => {
         const self = sections.trending
-        if (!self.previewData) self.previewData = self.load(1, 6)
+        if (!self.previewData) self.previewData = self.load(1, 10)
         return self.previewData
       },
       load: (page = 1, perPage = 50, initial = false) => {
@@ -170,72 +170,12 @@
       title: 'All Time Popular',
       preview: () => {
         const self = sections.popular
-        if (!self.previewData) self.previewData = self.load(1, 6)
+        if (!self.previewData) self.previewData = self.load(1, 10)
         return self.previewData
       },
       load: (page = 1, perPage = 50, initial = false) => {
         if (initial) search.value = { ...search.value, sort: 'POPULARITY_DESC' }
         return alRequest({ method: 'Search', page, perPage, sort: 'POPULARITY_DESC', ...sanitiseObject(search.value) }).then(res => processMedia(res))
-      }
-    },
-    romance: {
-      title: 'Romance',
-      preview: () => {
-        const self = sections.romance
-        if (!self.previewData) self.previewData = self.load(1, 6)
-        return self.previewData
-      },
-      load: (page = 1, perPage = 50, initial = false) => {
-        if (initial) search.value = { ...search.value, sort: 'TRENDING_DESC', genre: 'Romance' }
-        return alRequest({ method: 'Search', page, perPage, sort: 'TRENDING_DESC', genre: 'Romance', ...sanitiseObject(search.value) }).then(res => processMedia(res))
-      }
-    },
-    action: {
-      title: 'Action',
-      preview: () => {
-        const self = sections.action
-        if (!self.previewData) self.previewData = self.load(1, 6)
-        return self.previewData
-      },
-      load: (page = 1, perPage = 50, initial = false) => {
-        if (initial) search.value = { ...search.value, sort: 'TRENDING_DESC', genre: 'Action' }
-        return alRequest({ method: 'Search', page, perPage, sort: 'TRENDING_DESC', genre: 'Action', ...sanitiseObject(search.value) }).then(res => processMedia(res))
-      }
-    },
-    adventure: {
-      title: 'Adventure',
-      preview: () => {
-        const self = sections.adventure
-        if (!self.previewData) self.previewData = self.load(1, 6)
-        return self.previewData
-      },
-      load: (page = 1, perPage = 50, initial = false) => {
-        if (initial) search.value = { ...search.value, sort: 'TRENDING_DESC', genre: 'Adventure' }
-        return alRequest({ method: 'Search', page, perPage, sort: 'TRENDING_DESC', genre: 'Adventure', ...sanitiseObject(search.value) }).then(res => processMedia(res))
-      }
-    },
-    fantasy: {
-      title: 'Fantasy',
-      preview: () => {
-        const self = sections.fantasy
-        if (!self.previewData) self.previewData = self.load(1, 6)
-        return self.previewData
-      },
-      load: (page = 1, perPage = 50, initial = false) => {
-        if (initial) search.value = { ...search.value, sort: 'TRENDING_DESC', genre: 'Fantasy' }
-        return alRequest({ method: 'Search', page, perPage, sort: 'TRENDING_DESC', genre: 'Fantasy', ...sanitiseObject(search.value) }).then(res => processMedia(res))
-      }
-    },
-    comedy: {
-      title: 'Comedy',
-      preview: () => {
-        const self = sections.comedy
-        if (!self.previewData) self.previewData = self.load(1, 6)
-        return self.previewData
-      },
-      load: (page = 1, perPage = 50, initial = false) => {
-        if (initial) search.value = { ...search.value, sort: 'TRENDING_DESC', genre: 'Comedy' }
-        return alRequest({ method: 'Search', page, perPage, sort: 'TRENDING_DESC', genre: 'Comedy', ...sanitiseObject(search.value) }).then(res => processMedia(res))
       }
     },
     schedule: {
@@ -289,10 +229,10 @@
         if (!self.previewData) {
           await sleep(i * 3000) // stagger lists by 3 seconds
           setInterval(async () => {
-            const newData = await self.load(1, 6, false, false)
+            const newData = await self.load(1, 12, false, false)
             if (newData) self.previewData = newData
           }, 15000)
-          self.previewData = await self.load(1, 6, false, false)
+          self.previewData = await self.load(1, 12, false, false)
         }
         return self.previewData
       }
