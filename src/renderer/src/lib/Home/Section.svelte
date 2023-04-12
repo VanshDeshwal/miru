@@ -30,7 +30,7 @@
     padding: 2rem 4rem;
     position: relative;
     padding: 0.7rem 4rem;
-    grid-template-columns: repeat(10, 12.5vw);
+    grid-template-columns: repeat(10, 24rem);
   }
 
   .gallery :global(.empty) {
@@ -46,4 +46,5 @@
     /*this gradient looks like ass, need to find smth better*/
     pointer-events: none;
   }
+
 </style>
