@@ -44,13 +44,17 @@
         tabindex={tabable ? 0 : null} role='button'
         style:--color={card.media.coverImage.color || '#1890ff'}
         title={card.parseObject?.file_name}>
-        <div class='row h-full'>
+        <div class='row h-full  bg-very-dark'>
           <div class='col-12'>
             <img loading='lazy' src={card.media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full' />
           </div>
-          <div class='col-8 h-full card-grid'>
-            <div class='px-15 py-10 bg-very-dark'>
-              <h5 class='m-0 text-capitalize font-weight-bold'>
+          <div class="badge text-dark font-weight-bold rating">
+            <span class="material-icons font-size-16" style="color:yellow;size=5px;">star</span>
+            <span style="color: white;">{card.media.averageScore}</span>
+          </div>
+          <div class='col-12 mid-card text-overflow-hidden'>
+            <div class='px-10'>
+              <h5 class='m-0 text-capitalize font-weight-bold' >
                 {#if card.media.mediaListEntry?.status}
                   <div style:--statusColor={statusColorMap[card.media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={card.media.mediaListEntry.status} />
                 {/if}
@@ -59,39 +63,33 @@
                 {/if}
                 {[card.media.title.userPreferred, card.episode].filter(s => s).join(' - ')}
               </h5>
-              {#if card.schedule && card.media.nextAiringEpisode}
+            </div>
+          </div>
+          <div class="col-12 end-card">
+            <div class='px-10'>
+
+              <p class='text-muted m-0 text-capitalize details'>
+                {#if card.schedule && card.media.nextAiringEpisode}
                 <span class='text-muted font-weight-bold'>
                   {'EP ' + card.media.nextAiringEpisode.episode + ' in ' + countdown(card.media.nextAiringEpisode.timeUntilAiring)}
                 </span>
-              {/if}
-              <p class='text-muted m-0 text-capitalize details'>
+                {/if}
                 {#if card.media.format === 'TV'}
-                  <span>TV Show</span>
+                  <span>TV</span>
                 {:else if card.media.format}
                   <span>{card.media.format?.toLowerCase().replace(/_/g, ' ')}</span>
                 {/if}
-                {#if card.media.episodes}
+                {#if (card.media.episodes) && !(card.schedule && card.media.nextAiringEpisode)}
                   <span>{card.media.episodes + ' Episodes'}</span>
-                {:else if card.media.duration}
+                {:else if (card.media.duration) && !(card.schedule && card.media.nextAiringEpisode)}
                   <span>{card.media.duration + ' Minutes'}</span>
                 {/if}
-                {#if card.media.status}
-                  <span>{card.media.status?.toLowerCase().replace(/_/g, ' ')}</span>
-                {/if}
-                {#if card.media.season || card.media.seasonYear}
+                {#if (card.media.season || card.media.seasonYear) && !(card.schedule && card.media.nextAiringEpisode)}
                   <span>
                     {[card.media.season?.toLowerCase(), card.media.seasonYear].filter(s => s).join(' ')}
                   </span>
                 {/if}
               </p>
-            </div>
-            <div class='overflow-y-auto px-15 pb-5 bg-very-dark card-desc pre-wrap'>
-              {card.media.description?.replace(/<[^>]*>/g, '') || ''}
-            </div>
-            <div class='px-15 pb-10 pt-5 genres'>
-              {#each card.media.genres as genre}
-                <span class='badge badge-pill badge-color text-dark mt-5 mr-5 font-weight-bold'>{genre}</span>
-              {/each}
             </div>
           </div>
         </div>
@@ -194,5 +192,28 @@
     height: 1.1rem;
     width: 1.1rem;
     border-radius: 50%;
+  }
+  .text-overflow-hidden{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .rating{
+    position:absolute;
+    background-color: rgba(0,0,0,.7);
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-radius: 0.6rem 0 4px 0px;
+  }
+  .mid-card{
+    position:absolute;
+    top:220px;
+    height:45px;
+  }
+  .end-card{
+    position:absolute; 
+    bottom:0px;
   }
 </style>

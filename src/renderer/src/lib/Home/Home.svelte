@@ -99,6 +99,18 @@
       },
       hide: !alToken
     },
+    planning: {
+      title: 'Your List',
+      preview: () => sections.planning.load(1, 10),
+      load: (page = 1, perPage = 50, initial = false) => {
+        if (initial) search.value = { ...search.value, sort: 'UPDATED_TIME_DESC' }
+        return alRequest({ method: 'UserLists', page, perPage, status_in: 'PLANNING' }).then(res => {
+          hasNext = res?.data?.Page.pageInfo.hasNextPage
+          return customFilter(res?.data?.Page.mediaList)
+        })
+      },
+      hide: !alToken
+    },
     newSeasons: {
       title: 'Sequels You Missed',
       data: (async () => {
@@ -120,18 +132,7 @@
       },
       hide: !alToken
     },
-    planning: {
-      title: 'Your List',
-      preview: () => sections.planning.load(1, 10),
-      load: (page = 1, perPage = 50, initial = false) => {
-        if (initial) search.value = { ...search.value, sort: 'UPDATED_TIME_DESC' }
-        return alRequest({ method: 'UserLists', page, perPage, status_in: 'PLANNING' }).then(res => {
-          hasNext = res?.data?.Page.pageInfo.hasNextPage
-          return customFilter(res?.data?.Page.mediaList)
-        })
-      },
-      hide: !alToken
-    },
+
     seasonal: {
       title: 'Popular This Season',
       preview: () => {

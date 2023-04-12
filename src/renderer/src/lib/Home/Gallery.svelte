@@ -21,7 +21,7 @@
 <style>
   .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 12.5vw);
+    grid-template-columns: repeat(auto-fill, 24rem);
     grid-auto-rows: auto;
     justify-content: center;
     grid-gap: 1rem;
