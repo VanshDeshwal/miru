@@ -1,5 +1,5 @@
 <script>
-  import { countdown, wrapEnter } from '@/modules/util.js'
+  import { countdown,release_time, wrapEnter} from '@/modules/util.js'
   import { getContext } from 'svelte'
   export let cards = new Promise(() => {})
   const view = getContext('view')
@@ -66,17 +66,16 @@
             </div>
           </div>
           <div class="col-12 end-card">
-            <div class='px-10'>
-
-              <p class='text-muted m-0 text-capitalize details'>
+            <div class='px-10' >
+              <p class=' m-0 text-capitalize details'>
                 {#if card.schedule && card.media.nextAiringEpisode}
-                <span class='text-muted font-weight-bold'>
-                  {'EP ' + card.media.nextAiringEpisode.episode + ' in ' + countdown(card.media.nextAiringEpisode.timeUntilAiring)}
+                <span class=' font-weight-bold badge-color'>
+                  {'EP ' + card.media.nextAiringEpisode.episode + ' releasing at ' + release_time(card.media.nextAiringEpisode.timeUntilAiring)}
                 </span>
                 {/if}
-                {#if card.media.format === 'TV'}
+                {#if (card.media.format === 'TV') && !(card.schedule && card.media.nextAiringEpisode)}
                   <span>TV</span>
-                {:else if card.media.format}
+                {:else if (card.media.format) && !(card.schedule && card.media.nextAiringEpisode)}
                   <span>{card.media.format?.toLowerCase().replace(/_/g, ' ')}</span>
                 {/if}
                 {#if (card.media.episodes) && !(card.schedule && card.media.nextAiringEpisode)}
@@ -136,8 +135,7 @@
     grid-template-rows: auto 1fr auto;
   }
   .badge-color {
-    background-color: var(--color) !important;
-    border-color: var(--color) !important;
+    color: var(--color) !important;
   }
 
   .card:hover {

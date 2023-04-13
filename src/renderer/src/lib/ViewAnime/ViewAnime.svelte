@@ -100,7 +100,7 @@
               </div>
             </ToggleList>
             {#if maxPlayEp}
-              <h1 class='title font-weight-bold text-white pt-20'>Episodes</h1>
+              <h1 class='title font-weight-bold text-white pt-20'></h1>
               <div class='card m-0 d-inline-block'>
                 <table class='table table-hover w-500 table-auto '>
                   <tbody>

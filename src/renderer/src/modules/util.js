@@ -1,4 +1,5 @@
 export function countdown (s) {
+  s = s + 3600
   const d = Math.floor(s / (3600 * 24))
   s -= d * 3600 * 24
   const h = Math.floor(s / 3600)
@@ -11,7 +12,10 @@ export function countdown (s) {
   if (d || h || m) tmp.push(m + 'm')
   return tmp.join(' ')
 }
-
+export function release_time (s) {
+  var t= new Date(new Date().getTime() + s*1000 + 3600000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  return t
+}
 const units = [' B', ' kB', ' MB', ' GB', ' TB']
 export function fastPrettyBytes (num) {
   if (isNaN(num)) return '0 B'
