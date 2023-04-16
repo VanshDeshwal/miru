@@ -120,6 +120,7 @@
 
   .details span + span::before {
     content: ' • ';
+    white-space: normal;
   }
   .card {
     animation: 0.3s ease 0s 1 load-in;
