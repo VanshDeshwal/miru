@@ -1,6 +1,6 @@
 {
   "name": "Miru",
-  "version": "4.9.7",
+  "version": "4.9.8",
   "author": "VanshDeshwal_ <VanshDeshwal@users.noreply.github.com>",
   "description": "Stream anime torrents, real-time with no waiting for downloads.",
   "main": "src/index.js",
@@ -54,7 +54,7 @@
     ],
     "afterSign": "./build/notarize.js",
     "appId": "com.github.vanshdeshwal.miru",
-    "productName": "Miru-Beta",
+    "productName": "Miru",
     "files": [
       "src/*",
       "src/main/*",
