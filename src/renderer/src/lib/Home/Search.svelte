@@ -8,6 +8,10 @@
   let searchTimeout = null
   let searchTextInput
 
+  function toggleBlackMode() {
+  document.body.classList.toggle('black-mode');
+  }
+
   function searchClear () {
     search = {
       format: '',
@@ -166,6 +170,13 @@
       </button>
     </div>
   </div>
+  <div class='col-auto p-10 d-flex'>
+    <div class='shadow-lg align-self-end'>
+      <button id="black-mode-toggle" class='btn bg-dark material-icons font-size-18 px-5 align-self-end border-0' type='button' on:click={toggleBlackMode} class:text-primary={!!current}>
+        contrast
+      </button>
+    </div>
+  </div>
 </div>
 
 <style>
@@ -192,8 +203,5 @@
   }
   .font-size-30 {
     font-size: 3rem !important;
-  }
-  .search-container {
-    background: var(--dm-base-body-bg-color);;
   }
 </style>

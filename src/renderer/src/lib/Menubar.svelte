@@ -3,9 +3,9 @@
   export const title = writable('Miru')
 </script>
 
-<div class='w-full navbar border-0 bg-dark position-relative p-0'>
+<div class='w-full navbar border-0  position-relative p-0'>
   <div class='menu-shadow shadow-lg position-absolute w-full h-full z-0' />
-  <div class='w-full h-full bg-dark z-10 d-flex'>
+  <div class='w-full h-full z-10 d-flex'>
     <div class='d-flex w-full draggable h-full align-items-center'>
       <img src='./logo.ico' alt='ico' />
       {$title}

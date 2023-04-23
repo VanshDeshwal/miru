@@ -50,6 +50,13 @@
     },
     {
       click: () => {
+        location.reload();
+      },
+      icon: 'cached',
+      text: 'Reload'
+    },
+    {
+      click: () => {
         page = 'settings'
       },
       icon: 'tune',
@@ -192,7 +199,7 @@
   }
 
   .brand {
-    height: 8rem;
+    height: 11rem;
   }
 
   .sidebar {

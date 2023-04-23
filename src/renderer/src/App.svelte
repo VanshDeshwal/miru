@@ -64,6 +64,7 @@
     --sidebar-border-width: 0;
     --input-border-width: 0;
   }
+
   :global(.pointer) {
     cursor: pointer;
   }
@@ -132,3 +133,4 @@
     opacity: 0;
   }
 </style>
+

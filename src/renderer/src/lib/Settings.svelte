@@ -2,6 +2,7 @@
   import { addToast } from './Toasts.svelte'
   export let alToken = localStorage.getItem('ALtoken') || null
   const defaults = {
+    isdarkModeEnabled: false,
     playerAutoplay: true,
     playerPause: true,
     playerAutocomplete: true,
@@ -17,6 +18,12 @@
     subtitleLanguage: 'eng',
     audioLanguage: 'jpn'
   }
+
+  function toggleBlackMode() {
+  document.body.classList.toggle('black-mode');
+  localStorage.setItem("isdarkModeEnabled", isdarkModeEnabled);
+  }
+
   localStorage.removeItem('relations') // TODO: remove
   export const set = { ...defaults, ...(JSON.parse(localStorage.getItem('settings')) || {}) }
   if (!set.rssFeeds) { // TODO: remove ;-;
