@@ -49,7 +49,7 @@
             <img loading='lazy' src={card.media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full' />
           </div>
           <div class="badge text-dark font-weight-bold rating">
-            <span class="material-icons font-size-16" style="color:yellow;size=5px;">star</span>
+            <span class="material-icons font-size-16" style="color:yellow">star</span>
             <span style="color: white;">{card.media.averageScore}</span>
           </div>
           {#if card.date}
