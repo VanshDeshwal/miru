@@ -137,12 +137,12 @@
       chapters = []
       currentSkippable = null
       completed = false
+      if (subs) subs.destroy()
       current = file
       emit('current', current)
-      if (subs) subs.destroy()
-      subs = new Subtitles(video, files, current, handleHeaders)
       src = file.url
       client.send('current', file)
+      subs = new Subtitles(video, files, current, handleHeaders)
       await tick()
       video?.play()
     }
@@ -677,6 +677,31 @@
       if (time < (chapter.end / 1000) && time >= (chapter.start / 1000)) return chapter
     }
   }
+
+  // remaps chapters to what perfect-seekbar uses and adds potentially missing chapters
+  function sanitiseChapters (chapters, safeduration) {
+    if (!chapters?.length) return []
+    const sanitised = []
+    let sum = 0
+    for (const { start, end, text } of chapters) {
+      if (!sanitised.length && start !== 0) {
+        const size = start / 10 / safeduration
+        sum += size
+        sanitised.push({ size })
+      }
+      const size = (end / 10 / safeduration) - (start / 10 / safeduration)
+      sum += size
+      sanitised.push({
+        size,
+        text
+      })
+    }
+    if (sum !== 100) {
+      sanitised.push({ size: 100 - sum })
+    }
+    return sanitised
+  }
+
   const thumbCanvas = document.createElement('canvas')
   thumbCanvas.width = 200
   const thumbnailData = {
@@ -892,7 +917,6 @@
     on:loadedmetadata={findChapters}
     on:loadedmetadata={autoPlay}
     on:loadedmetadata={checkAudio}
-    on:loadedmetadata={() => subs?.initSubtitleRenderer()}
     on:leavepictureinpicture={() => (pip = false)} />
   {#if stats}
     <div class='position-absolute top-0 bg-tp p-10 m-15 text-monospace rounded z-50'>
@@ -944,10 +968,7 @@
         bind:progress={progress}
         on:seeking={handleMouseDown}
         on:seeked={handleMouseUp}
-        chapters={chapters.map(({ start, end, text }) => ({
-          size: (end / 10 / safeduration) - (start / 10 / safeduration),
-          text
-        }))}
+        chapters={sanitiseChapters(chapters, safeduration)}
         {getThumbnail}
       />
     </div>

@@ -1,5 +1,5 @@
 <script>
-  import { countdown,release_time, wrapEnter} from '@/modules/util.js'
+  import { since, release_time, wrapEnter } from '@/modules/util.js'
   import { getContext } from 'svelte'
   export let cards = new Promise(() => {})
   const view = getContext('view')
@@ -52,6 +52,11 @@
             <span class="material-icons font-size-16" style="color:yellow;size=5px;">star</span>
             <span style="color: white;">{card.media.averageScore}</span>
           </div>
+          {#if card.date}
+          <div class="bg-very-dark since">
+            <span class="text-muted font-weight-bold">{since(card.date)}</span>
+          </div>
+          {/if}
           <div class='col-12 mid-card text-overflow-hidden'>
             <div class='px-10'>
               <h5 class='m-0 text-capitalize font-weight-bold' >
@@ -65,7 +70,7 @@
               </h5>
             </div>
           </div>
-          <div class="col-12 end-card">
+          <div class="col-12 end-card text-overflow-hidden-oneline">
             <div class='px-10' >
               <p class=' m-0 text-capitalize details'>
                 {#if card.schedule && card.media.nextAiringEpisode}
@@ -73,6 +78,8 @@
                   {'EP ' + card.media.nextAiringEpisode.episode + ' releasing at ' + release_time(card.media.nextAiringEpisode.timeUntilAiring)}
                 </span>
                 {/if}
+
+
                 {#if (card.media.format === 'TV') && !(card.schedule && card.media.nextAiringEpisode)}
                   <span>TV</span>
                 {:else if (card.media.format) && !(card.schedule && card.media.nextAiringEpisode)}
@@ -215,4 +222,23 @@
     position:absolute; 
     bottom:0px;
   }
+
+  .text-overflow-hidden-oneline{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .since{
+    position:absolute; 
+    top:200px;
+    right:0px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-radius: 0.5rem 0px 0px 0px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
 </style>

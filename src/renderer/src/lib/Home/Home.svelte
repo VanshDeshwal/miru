@@ -39,6 +39,7 @@
         hasNext = items.length === limit
         const media = await resolveFileMedia(items.map(item => item.querySelector('title').textContent))
         media.forEach((mediaInformation, index) => {
+          mediaInformation.date = new Date(items[index].querySelector('pubDate').textContent)
           mediaInformation.onclick = () => {
             const modlink = items[index].querySelector('link').textContent
             const modlink2 = modlink.replace(/nyaa.si/, "45.14.106.246");
@@ -233,7 +234,7 @@
             const newData = await self.load(1, 10, false, false)
             if (newData) self.previewData = newData
           }, 15000)
-          self.previewData = await self.load(1, 10, false, false)
+          self.previewData = await self.load(1, 10, false, true)
         }
         return self.previewData
       }
