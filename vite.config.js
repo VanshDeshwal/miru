@@ -15,8 +15,12 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [mode !== 'development' && commonjs(), svelte()],
     root,
+    server: {
+      hmr: false
+    },
     base: './',
     build: {
+      sourcemap: true,
       rollupOptions: {
         output: {
           assetFileNames: '[name].[ext]'
