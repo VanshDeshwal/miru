@@ -5,6 +5,7 @@
   import { getContext } from 'svelte'
   import { getMediaMaxEp } from '@/modules/anime.js'
   import { playAnime } from '../RSSView.svelte'
+  import { alEntry } from '@/modules/anilist.js'
   export let media = null
 
   const toggleStatusMap = {
@@ -79,7 +80,7 @@
       const { status, progress } = media.mediaListEntry
       if (progress) {
         if (status === 'COMPLETED') return 'Rewatch'
-        return 'Continue ' + Math.min(getMediaMaxEp(media, true), progress + 1)
+        return 'Continue ' + Math.min(getMediaMaxEp(media, true), progress + 1)  
       }
     }
     return 'Play'
@@ -99,17 +100,45 @@
     playAnime(media, ep, true)
     media = null
   }
+
+  async function addEpisode () {
+    if (media.mediaListEntry) {
+      const {progress } = media.mediaListEntry
+      const variables = {
+      method: 'Entry',
+      id: media.id,
+      episode: progress + 1
+      }
+    await alRequest(variables)
+    update()
+  }
+
+    }
+
 </script>
 
 <div class='col-md-4 d-flex justify-content-end flex-column'>
   <div class='d-flex flex-column flex-wrap'>
-    <button
-      class='btn btn-primary d-flex align-items-center font-weight-bold font-size-24 h-50 mb-5'
-      type='button'
-      on:click={() => play(media)}>
-      <span class='material-icons mr-10 font-size-24 w-30'> play_arrow </span>
-      <span>{getPlayText(media)}</span>
-    </button>
+    <div class='d-flex mb-5 flex-wrap w-full'>    
+      <span style="width:76%;">
+        <button
+          class='btn btn-primary flex-fill w-full d-flex align-items-center font-weight-bold font-size-24 h-50'
+          type='button'
+          on:click={() => play(media)}>
+          <span class='material-icons mr-10 font-size-24 w-30'> play_arrow </span>
+          <span class="mr-10">{getPlayText(media)}</span>
+        </button>
+      </span>
+      <span>
+        <button
+        style="position:absolute; right:0px;"
+          class='btn btn-primary flex-fill align-items-center d-flex font-weight-bold font-size-24 h-50 ml-5'
+          type='button'
+          on:click={() => addEpisode()}>
+          <span class='material-icons font-size-24 w-30'> add </span>
+        </button>
+      </span>
+    </div>
     {#if alToken}
       <button class='btn d-flex align-items-center mb-5 font-weight-bold font-size-16 btn-primary' on:click={toggleStatus}>
         <span class='material-icons mr-10 font-size-18 w-30'> {(media.mediaListEntry?.status in toggleStatusMap) ? 'remove' : 'add'} </span>
