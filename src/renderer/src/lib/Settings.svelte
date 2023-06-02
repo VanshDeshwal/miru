@@ -2,7 +2,6 @@
   import { addToast } from './Toasts.svelte'
   export let alToken = localStorage.getItem('ALtoken') || null
   const defaults = {
-    isdarkModeEnabled: false,
     playerAutoplay: true,
     playerPause: true,
     playerAutocomplete: true,
@@ -20,7 +19,9 @@
     enableDoH: false,
     doHURL: 'https://cloudflare-dns.com/dns-query',
     disableSubtitleBlur: false,
-    catURL: decodeURIComponent(atob('aHR0cHMlM0ElMkYlMkZueWFhLnNp'))
+    catURL: decodeURIComponent(atob('aHR0cHMlM0ElMkYlMkZueWFhLnNp')),
+    theme: 'Default',
+    compactCards: false
   }
 
 
@@ -34,6 +35,8 @@
       set.rssFeeds = [['New Releases', 'SubsPlease']]
     }
   }
+
+
   window.addEventListener('paste', ({ clipboardData }) => {
     if (clipboardData.items?.[0]) {
       if (clipboardData.items[0].type === 'text/plain' && clipboardData.items[0].kind === 'string') {
@@ -115,6 +118,11 @@
       icon: 'rss_feed',
       desc: 'RSS configuration, URLs, quality, and options.'
     },
+    ui: {
+      name: 'UI',
+      icon: 'settings',
+      desc: 'Tweak User Interface'
+    },
     torrent: {
       name: 'Torrent',
       icon: 'hub',
@@ -164,7 +172,7 @@
 
 <Tabs>
   <div class='d-flex w-full h-full'>
-    <div class='d-flex flex-column h-full w-300 bg-dark'>
+    <div class='d-flex flex-column h-full w-300 settings-color'>
       <div class='px-20 py-15 font-size-20 font-weight-semi-bold border-bottom root'>Settings</div>
       {#each Object.values(groups) as group}
         <TabLabel>
@@ -325,6 +333,8 @@
           </div>
         </div>
       </Tab>
+      
+
       <Tab>
         <div class='root p-20 m-20'>
           {#each settings.rssFeeds as _, i}
@@ -398,9 +408,37 @@
               <span class='input-group-text w-150 justify-content-center'>Cat URL</span>
             </div>
             <input type='text' class='form-control' bind:value={settings.catURL} placeholder={defaults.catURL} />
+          </div>    
+
+          
+        </div>
+      </Tab>
+      <Tab>
+        <div class='root p-20 m-20'>
+          <div class='input-group mb-10 w-300 form-control-lg' data-toggle='tooltip' data-placement='top' data-title='Chose theme'>
+            <div class='input-group-prepend'>
+              <span class='input-group-text w-100 justify-content-center'>Theme</span>
+            </div>
+            <select class='form-control form-control-lg' bind:value={settings.theme} placeholder={defaults.theme} onchange="location.reload()">
+              <option value='Default' selected>Default</option>
+              <option value='Black'>Black</option>
+              <option value='Marin-Blue'>Marin-Blue</option>
+              <option value='Anilist-Blue'>Anilist-Blue</option>
+              <option value='Spot-Green'>Spot-Green</option>
+            </select>
+          </div>
+          <div
+            class='custom-switch mb-10 pl-10 font-size-16 w-300'
+            data-toggle='tooltip'
+            data-placement='bottom'
+            data-title="Short cards are used">
+            <input type='checkbox' id='compact-cards' bind:checked={settings.compactCards} />
+            <label for='compact-cards'>Compact Cards</label>
           </div>
         </div>
       </Tab>
+
+
       <Tab>
         <div class='root p-20 m-20'>
           <div
@@ -460,6 +498,20 @@
             <input type='checkbox' id='torrent-pex' bind:checked={settings.torrentPeX} />
             <label for='torrent-pex'>Disable PeX</label>
           </div>
+          <div
+          class='input-group w-300 form-control-lg mb-10'
+          data-toggle='tooltip'
+          data-placement='bottom'
+          data-title='Download/Upload Speed Limit For Torrents, Higher Values Increase CPU Usage'>
+          <div class='input-group-prepend'>
+            <span class='input-group-text w-150 justify-content-center'>Max Speed</span>
+          </div>
+          <span class='form-control text-right form-control-lg'>{settings.totalDownloadedData}</span>
+          <div class='input-group-append'>
+            <span class='input-group-text'>MB/s</span>
+          </div>
+        </div>
+
         </div>
       </Tab>
       <Tab>
@@ -473,6 +525,7 @@
           {/await}
         </div>
       </Tab>
+
     </div>
   </div>
 </Tabs>

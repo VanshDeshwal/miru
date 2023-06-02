@@ -5,10 +5,19 @@
   import { platformMap } from './Settings.svelte'
   import { addToast } from './Toasts.svelte'
   import { wrapEnter } from '@/modules/util.js'
+  import { client } from '@/modules/torrent.js'
+  import { fastPrettyBytes } from '@/modules/util.js'
   const sidebar = getContext('sidebar')
   const view = getContext('view')
   const gallery = getContext('gallery')
   export let page
+  const torrent = {}
+  client.on('stats', updateStats)
+  function updateStats ({ detail }) {
+    torrent.peers = detail.numPeers || 0
+    torrent.up = detail.uploadSpeed || 0
+    torrent.down = detail.downloadSpeed || 0
+  }
   const links = [
     {
       click: () => {
@@ -47,6 +56,13 @@
       },
       icon: 'groups',
       text: 'Watch Together'
+    },
+    {
+      click: () => {
+        page = 'downloads'
+      },
+      icon: 'download',
+      text: 'Downloads'
     },
     {
       click: () => {
@@ -96,6 +112,24 @@
 
 <div class='sidebar shadow-lg'>
   <div class='sidebar-menu h-full d-flex flex-column m-0 pb-5'>
+
+    <div
+    class='sidebar-link sidebar-link-with-icon pointer'
+    
+    data-toggle='tooltip'
+    data-placement='right'
+    data-title='Download Speed'
+    tabindex='0'
+    role='button'
+    >
+    <span class='text-nowrap d-flex align-items-center'>
+      <span class='stats'>{fastPrettyBytes(torrent.down)}/s</span>
+    </span>
+  </div>
+
+
+
+
     {#each links as { click, icon, text, image }, i (i)}
       <div
         class='sidebar-link sidebar-link-with-icon pointer'
@@ -125,6 +159,8 @@
         </span>
       </div>
     {/each}
+
+         
   </div>
 </div>
 

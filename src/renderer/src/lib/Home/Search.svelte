@@ -1,16 +1,12 @@
 <script>
   import { traceAnime } from '@/modules/anime.js'
-
+ 
   export let search
   export let current
   export let media = null
   export let loadCurrent
   let searchTimeout = null
   let searchTextInput
-
-  function toggleBlackMode() {
-  document.body.classList.toggle('black-mode');
-  }
 
   function searchClear () {
     search = {
@@ -55,7 +51,7 @@
   <div class='col-4 p-10 d-flex flex-column justify-content-end'>
     <div class='input-group shadow-lg'>
       <div class='input-group-prepend'>
-        <span class='input-group-text d-flex material-icons bg-dark pr-0 font-size-18'>search</span>
+        <span class='input-group-text d-flex material-icons search-color pr-0 font-size-18'>search</span>
       </div>
       <!-- svelte-ignore a11y-autofocus -->
       <input
@@ -68,7 +64,7 @@
         bind:this={searchTextInput}
         autofocus
         type='search'
-        class='form-control bg-dark border-left-0 text-capitalize'
+        class='form-control search-color border-left-0 text-capitalize'
         autocomplete='off'
         bind:value={search.search}
         data-option='search'
@@ -77,7 +73,7 @@
   </div>
   <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
     <div class='shadow-lg'>
-      <select class='form-control bg-dark' required bind:value={search.genre}>
+      <select class='form-control search-color' required bind:value={search.genre}>
         <option value selected disabled hidden>Genre</option>
         <option value='Action'>Action</option>
         <option value='Adventure'>Adventure</option>
@@ -102,14 +98,14 @@
   </div>
   <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
     <div class='input-group shadow-lg'>
-      <select class='form-control bg-dark border-right-dark' required bind:value={search.season}>
+      <select class='form-control search-color border-right-dark' required bind:value={search.season}>
         <option value selected disabled hidden>Season</option>
         <option value='WINTER'>Winter</option>
         <option value='SPRING'>Spring</option>
         <option value='SUMMER'>Summer</option>
         <option value='FALL'>Fall</option>
       </select>
-      <input type='number' placeholder='Year' min='1940' max='2100' list='search-year' class='form-control bg-dark' bind:value={search.year} />
+      <input type='number' placeholder='Year' min='1940' max='2100' list='search-year' class='form-control search-color' bind:value={search.year} />
       <datalist id='search-year'>
         {#each Array(new Date().getFullYear() - 1940 + 2) as _, i}
           {@const year = new Date().getFullYear() + 2 - i}
@@ -120,7 +116,7 @@
   </div>
   <div class='col p-10 d-flex flex-column justify-content-end'>
     <div class='shadow-lg'>
-      <select class='form-control bg-dark' required bind:value={search.format}>
+      <select class='form-control search-color' required bind:value={search.format}>
         <option value selected disabled hidden>Format</option>
         <option value='TV'>TV Show</option>
         <option value='MOVIE'>Movie</option>
@@ -132,7 +128,7 @@
   </div>
   <div class='col p-10 d-flex flex-column justify-content-end'>
     <div class='shadow-lg'>
-      <select class='form-control bg-dark' required bind:value={search.status}>
+      <select class='form-control search-color' required bind:value={search.status}>
         <option value selected disabled hidden>Status</option>
         <option value='RELEASING'>Airing</option>
         <option value='FINISHED'>Finished</option>
@@ -143,7 +139,7 @@
   </div>
   <div class='col p-10 d-flex flex-column justify-content-end'>
     <div class='shadow-lg'>
-      <select class='form-control bg-dark' required bind:value={search.sort}>
+      <select class='form-control search-color' required bind:value={search.sort}>
         <option value selected disabled hidden>Name</option>
         <option value='START_DATE_DESC'>Release Date</option>
         <option value='SCORE_DESC'>Score</option>
@@ -156,8 +152,8 @@
   <input type='file' class='d-none' id='search-image' accept='image/*' on:input={handleFile} />
   <div class='col-auto p-10 d-flex'>
     <div class='shadow-lg align-self-end'>
-      <button class='btn bg-dark material-icons font-size-18 px-5 align-self-end border-0' type='button'>
-        <label for='search-image' class='pointer'>
+      <button class='btn search-color material-icons font-size-18 px-5 align-self-end border-0' type='button'>
+        <label for='search-image' style="color:grey;" class='pointer'>
           image
         </label>
       </button>
@@ -165,18 +161,12 @@
   </div>
   <div class='col-auto p-10 d-flex'>
     <div class='shadow-lg align-self-end'>
-      <button class='btn bg-dark material-icons font-size-18 px-5 align-self-end border-0' type='button' on:click={searchClear} class:text-primary={!!current}>
+      <button class='btn search-color material-icons font-size-18 px-5 align-self-end border-0' style="color:grey;" type='button' on:click={searchClear} class:text-primary={!!current}>
         delete
       </button>
     </div>
   </div>
-  <div class='col-auto p-10 d-flex'>
-    <div class='shadow-lg align-self-end'>
-      <button id="black-mode-toggle" class='btn bg-dark material-icons font-size-18 px-5 align-self-end border-0' type='button' on:click={toggleBlackMode} class:text-primary={!!current}>
-        contrast
-      </button>
-    </div>
-  </div>
+
 </div>
 
 <style>

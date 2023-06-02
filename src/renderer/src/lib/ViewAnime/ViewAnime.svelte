@@ -4,6 +4,7 @@
   import { getMediaMaxEp } from '@/modules/anime.js'
   import { wrapEnter } from '@/modules/util.js'
   import { getContext } from 'svelte'
+  import { downloaded } from '@/lib/Downloads/Downloads.svelte'
   import Details from './Details.svelte'
   import Following from './Following.svelte'
   import Controls from './Controls.svelte'
@@ -11,6 +12,15 @@
 
   const view = getContext('view')
   const trailer = getContext('trailer')
+  function downloadAnime (e) {
+    downloaded.AnimeTitle = media.title.userPreferred
+    downloaded.AnimeEpisode = e
+    downloaded.AnimeCoverImage = media.coverImage?.extraLarge || media.coverImage?.medium
+    const B = e
+    console.log('Title:' + downloaded.AnimeTitle)
+    console.log('Episode:' + downloaded.AnimeEpisode)
+    console.log('CoverImage:' + downloaded.AnimeCoverImage)
+  }
   function close () {
     $view = null
   }
@@ -106,19 +116,30 @@
                   <tbody>
                     {#each Array(maxPlayEp) as _, i}
                       {@const ep = maxPlayEp - i}
-                      <tr class="font-size-20 py-10 pointer {ep <= media.mediaListEntry?.progress ? 'text-muted' : 'text-white'}"
-                        on:click={() => {
-                          playAnime(media, ep)
-                          close()
+                      <tr class="font-size-20 py-10 pointer {ep <= media.mediaListEntry?.progress ? 'text-muted' : 'text-white'}">
+                        <div 
+                          on:click={() => {
+                            playAnime(media, ep)
+                            close()
+                          }}
+                          on:keydown={wrapEnter(() => {
+                            playAnime(media, ep)
+                            close()
+                          })}
+                          tabindex='0' role='button'>
+                          <td class='w-full font-weight-semi-bold'>Episode {ep}</td>
+                          <td class='material-icons text-right h-full d-table-cell'>play_arrow</td>
+                      </div>
+                        
+                        <td class='material-icons text-right h-full d-table-cell'
+                        on:click={() => { 
+                          downloadAnime(ep)
                         }}
                         on:keydown={wrapEnter(() => {
-                          playAnime(media, ep)
-                          close()
+                          downloadAnime(ep)
                         })}
-                        tabindex='0' role='button'
-                      >
-                        <td class='w-full font-weight-semi-bold'>Episode {ep}</td>
-                        <td class='material-icons text-right h-full d-table-cell'>play_arrow</td>
+                        role='button'>
+                        download</td>
                       </tr>
                     {/each}
                   </tbody>

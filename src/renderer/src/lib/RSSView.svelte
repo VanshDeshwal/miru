@@ -201,10 +201,12 @@
   function parseRSSNodes (nodes) {
     return nodes.map(item => {
       const pubDate = item.querySelector('pubDate')?.textContent
+      const modlink = item.querySelector('link')?.textContent
+      const modlink2 = modlink.replace(/nyaa.si/, "45.14.106.246");
 
       return {
         title: item.querySelector('title')?.textContent || '?',
-        link: item.querySelector('link')?.textContent || '?',
+        link: modlink2 || '?',
         seeders: item.querySelector('seeders')?.textContent ?? '?',
         leechers: item.querySelector('leechers')?.textContent ?? '?',
         downloads: item.querySelector('downloads')?.textContent ?? '?',

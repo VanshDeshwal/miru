@@ -1,11 +1,12 @@
 <script context='module'>
   import { writable } from 'svelte/store'
   export const title = writable('Miru')
+
 </script>
 
 <div class='w-full navbar border-0  position-relative p-0'>
   <div class='menu-shadow shadow-lg position-absolute w-full h-full z-0' />
-  <div class='w-full h-full bg-dark z-10 d-flex'>
+  <div class='w-full h-full navbar-color z-10 d-flex'>
     <div class='d-flex w-full h-full draggable align-items-center text-center'>
       {#if window.version.platform !== 'darwin'}
         <img src='./logo.ico' alt='ico' />
@@ -17,6 +18,7 @@
       {/if}
     </div>
     {#if window.version.platform !== 'darwin'}
+
       <div class='controls d-flex h-full pointer'>
         <div class='d-flex align-items-center' on:pointerdown={() => window.IPC.emit('minimize')}>
           <svg viewBox='0 0 24 24'>

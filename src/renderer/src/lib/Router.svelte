@@ -4,6 +4,7 @@
   import MediaHandler from './Player/MediaHandler.svelte'
   import Settings from './Settings.svelte'
   import WatchTogether from './WatchTogether/WatchTogether.svelte'
+  import Downloads from './Downloads/Downloads.svelte'
   import Miniplayer from 'svelte-miniplayer'
   export let page = 'home'
   const current = getContext('gallery')
@@ -19,6 +20,8 @@
     <Home bind:current={$current} />
   {:else if page === 'watchtogether'}
     <WatchTogether />
+  {:else if page === 'downloads'}
+    <Downloads />
   {/if}
 </div>
 

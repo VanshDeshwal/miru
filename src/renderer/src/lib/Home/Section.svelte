@@ -30,11 +30,11 @@
     padding: 2rem 4rem;
     position: relative;
     padding: 0.7rem 4rem;
-    grid-template-columns: repeat(10, 24rem);
+    grid-template-columns: repeat(10, 50rem);    /*6,50rem original, 10,24rem mine*/
   }
 
   .gallery :global(.empty) {
-    grid-column: 1/4 !important;
+    grid-column: 1/3 !important;      /*1/3 original, 1/4 mine*/
   }
 
   .gallery:after {
@@ -42,7 +42,7 @@
     position: absolute;
     right: 0;
     height: 100%;
-    width: 2rem;
+    width: 8rem;                   /*8rem original, 2rem mine*/
     /*this gradient looks like ass, need to find smth better*/
     pointer-events: none;
   }

@@ -21,10 +21,10 @@
 <style>
   .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 24rem);
+    grid-template-columns: repeat(auto-fill, 50rem);    /* 24rem for small, 50 rem for large*/
     grid-auto-rows: auto;
     justify-content: center;
-    grid-gap: 1rem;
+    grid-gap: 2rem;                /* 2 rem original, 1rem mine*/
     padding: 2rem 4rem;
     position: relative;
   }
