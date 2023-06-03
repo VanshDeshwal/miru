@@ -59,7 +59,7 @@
               <img loading='lazy' src={card.media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full h-full' />
             </div>
             <div class='col-8 h-full card-grid'>
-              <div class='px-15 py-10 search-color bg-very-dark'>
+              <div class='px-15 py-10 bg-very-dark'>
                 <h5 class='m-0 text-capitalize font-weight-bold'>
                   {#if card.media.mediaListEntry?.status}
                     <div style:--statusColor={statusColorMap[card.media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={card.media.mediaListEntry.status} />
@@ -108,7 +108,7 @@
                   {/if}
                 </p>
               </div>
-              <div class='overflow-y-auto px-15 pb-5 search-color bg-very-dark card-desc pre-wrap'>
+              <div class='overflow-y-auto px-15 pb-5 bg-very-dark card-desc pre-wrap'>
                 {card.media.description?.replace(/<[^>]*>/g, '') || ''}
               </div>
               {#if card.media.genres.length}

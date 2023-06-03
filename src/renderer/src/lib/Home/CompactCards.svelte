@@ -14,7 +14,7 @@
   {#each Array(length) as _}
     <div class='card m-0 p-0'>
       <div class='row h-full '>
-        <div class='col-12 small-skeloader title px-15 py-10'>
+        <div class='col-12 small-skeloader card-title px-15 py-10'>
           <p class='skeloader w-210 h-25 rounded ' />
           <p class='skeloader w-210 h-10 rounded ' />
         </div>

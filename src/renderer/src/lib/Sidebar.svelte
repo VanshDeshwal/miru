@@ -113,7 +113,7 @@
 <div class='sidebar shadow-lg'>
   <div class='sidebar-menu h-full d-flex flex-column m-0 pb-5'>
 
-    <div
+    <!-- <div
     class='sidebar-link sidebar-link-with-icon pointer'
     
     data-toggle='tooltip'
@@ -122,10 +122,10 @@
     tabindex='0'
     role='button'
     >
-    <span class='text-nowrap d-flex align-items-center'>
-      <span class='stats'>{fastPrettyBytes(torrent.down)}/s</span>
-    </span>
-  </div>
+      <span class='text-nowrap d-flex align-items-center'>
+        <span class='stats'>{fastPrettyBytes(torrent.down)}/s</span>
+      </span>
+    </div> -->
 
 
 
