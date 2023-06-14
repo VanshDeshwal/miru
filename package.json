@@ -105,12 +105,17 @@
     }
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-brands-svg-icons": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "anitomyscript": "github:ThaUnknown/anitomyscript",
     "bottleneck": "^2.19.5",
     "browser-event-target-emitter": "^1.0.0",
     "discord-rpc": "4.0.1",
     "electron-log": "^4.4.8",
     "electron-updater": "^4.6.5",
+    "epubjs": "^0.3.88",
     "jassub": "1.7.1",
     "js-levenshtein": "^1.1.6",
     "matroska-subtitles": "github:ThaUnknown/matroska-subtitles#redist",

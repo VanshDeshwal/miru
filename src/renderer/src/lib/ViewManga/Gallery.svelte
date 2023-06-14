@@ -1,8 +1,8 @@
 <script>
   import Cards from './Cards.svelte'
-  import CompactCards from './CompactCards.svelte'
   import { set } from '../Settings.svelte'
   let gallery
+  const cards = opts.preview()
   if (set.compactCards)
     gallery = 'gallery-compact'
   else
@@ -21,13 +21,7 @@
 
 <div class='{gallery} browse' class:loading>
   {#each media as cards, i (i)}
-
-    {#if set.compactCards == true}
-      <CompactCards {cards} length={4} tabable={true} />
-    {:else if set.compactCards == false}
-      <Cards {cards} length={4} tabable={true} />
-    {/if}
-    
+    <Cards {cards} length={4} tabable={true} />
   {/each}
 </div>
 

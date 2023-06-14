@@ -506,7 +506,7 @@
           <div class='input-group-prepend'>
             <span class='input-group-text w-150 justify-content-center'>Max Speed</span>
           </div>
-          <span class='form-control text-right form-control-lg'>{settings.totalDownloadedData}</span>
+          <span class='form-control text-right form-control-lg'>{settings.torrentPath}</span>
           <div class='input-group-append'>
             <span class='input-group-text'>MB/s</span>
           </div>

@@ -2,7 +2,7 @@
   import { readable, writable } from 'simple-store-svelte'
   import { add } from '@/modules/torrent.js'
   import { alToken, set } from '../Settings.svelte'
-  import { alRequest } from '@/modules/anilist.js'
+  import { alRequest } from '@/modules/anilist2.js'
   import { sleep } from '@/modules/util.js'
   import { resolveFileMedia } from '@/modules/anime.js'
   import { getRSSContent, getReleasesRSSurl } from '@/lib/RSSView.svelte'
@@ -111,50 +111,6 @@
         })
       },
       hide: !alToken
-    },
-    newSeasons: {
-      title: 'Sequels You Missed',
-      data: (async () => {
-        if (!alToken) return
-        const { data } = await alRequest({ method: 'NewSeasons' })
-        const res = data.MediaListCollection.lists[0]
-        return res?.entries?.flatMap(({ media }) => {
-          return media.relations.edges.filter(edge => {
-            return edge.relationType === 'SEQUEL' && !edge.node.mediaListEntry
-          })
-        }).map(({ node }) => node.id)
-      })(),
-      preview: () => sections.newSeasons.load(1, 10),
-      load: async (page = 1, perPage = 50, initial = false) => {
-        if (initial) search.value = { ...search.value, status: 'FINISHED' }
-        const id = await sections.newSeasons.data
-        const res = await alRequest({ method: 'SearchIDS', page, perPage, id, ...sanitiseObject(search.value), status: ['FINISHED', 'RELEASING'], onList: false })
-        return processMedia(res)
-      },
-      hide: !alToken
-    },
-
-    seasonal: {
-      title: 'Popular This Season',
-      preview: () => {
-        const self = sections.seasonal
-        if (!self.previewData) self.previewData = self.load(1, 10)
-        return self.previewData
-      },
-      load: async (page = 1, perPage = 50, initial = false) => {
-        const date = new Date()
-        if (initial) {
-          search.value = {
-            ...search.value,
-            season: getSeason(date),
-            year: date.getFullYear(),
-            sort: 'POPULARITY_DESC'
-          }
-        }
-        return alRequest({ method: 'Search', page, perPage, year: date.getFullYear(), season: getSeason(date), sort: 'POPULARITY_DESC', ...sanitiseObject(search.value) }).then(res =>
-          processMedia(res)
-        )
-      }
     },
     trending: {
       title: 'Trending Now',
@@ -304,48 +260,6 @@
 
 <div class='d-flex h-full flex-column overflow-y-scroll root' on:scroll={infiniteScroll} bind:this={container}>
   <div class='h-full py-10'>
-    <div style="background: url('https://s4.anilist.co/file/anilistcdn/media/anime/banner/142770-YgESt2HJXlNg.jpg') no-repeat center fixed;     
-    background-size: cover; height:300px;">
-
-    <div style="width:30%;
-    margin-left:20px;">
-              <div class="title font-weight-bold pb-sm-15 text-white select-all s-8bT6F8xE7Idk">
-                Suzume No Tojimari
-              </div>
-              <div class="font-size-16 select-all m-0 s-8bT6F8xE7Idk">
-                2023.Movie.2h 10m.Spring2023
-
-                 The story follows Suzume, a 17-year-old girl from a quiet Kyushu town who meets a young man looking for a door. They find a door within ruins in the mountain, and Suzume opens it. Soon, more doors begin to open around Japan, bringing disasters from the other side. The film depicts Suzume's liberation and growth, as she closes the doors that are causing disaster.
-
-                 Action Adventure Fantasy
-              </div>
-              <div style="
-              margin-top:20px;
-              ">
-                <span>
-          <button
-          style="
-          background-color: #2c2f37;
-          width: auto;"
-          class='btn btn-primary flex-fill d-flex align-items-center font-weight-bold font-size-24 h-50'
-          type='button'
-          >
-          <span class='material-icons mr-10 font-size-24 w-30'> play_arrow </span>
-          <span class="mr-10">Watch Now</span>
-          </button></span>
-        <!-- <span>
-          <button
-          class='btn btn-primary flex-fill align-items-center d-flex font-weight-bold font-size-24 h-50 ml-5'
-          type='button'>
-          <span class='material-icons font-size-24 w-30'> add </span>
-          </button>
-        </span> -->
-
-
-      </div>
-
-      </div>
-    </div>
     <Search bind:media bind:search={$search} bind:current {loadCurrent} />
     {#if media.length}
       <Gallery {media} />

@@ -4,8 +4,8 @@
 
 </script>
 
-<div class='w-full navbar border-0  position-relative p-0'>
-  <div class='menu-shadow shadow-lg position-absolute w-full h-full z-0' />
+<div  style="background-color:#17191d;" class='w-full navbar border-0  position-relative p-0'>
+  <div  class='menu-shadow position-absolute w-full h-full z-0' />
   <div class='w-full h-full navbar-color z-10 d-flex'>
     <div class='d-flex w-full h-full draggable align-items-center text-center'>
       {#if window.version.platform !== 'darwin'}

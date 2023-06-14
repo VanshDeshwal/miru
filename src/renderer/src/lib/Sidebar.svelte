@@ -59,6 +59,13 @@
     },
     {
       click: () => {
+        page = 'reader'
+      },
+      icon: 'auto_stories',
+      text: 'Manga'
+    },
+    {
+      click: () => {
         page = 'downloads'
       },
       icon: 'download',
@@ -110,7 +117,7 @@
   }
 </script>
 
-<div class='sidebar shadow-lg'>
+<div style="background-color:#17191d;"class='sidebar'>
   <div class='sidebar-menu h-full d-flex flex-column m-0 pb-5'>
 
     <!-- <div

@@ -156,7 +156,7 @@
       overflow: hidden;
       transition: transform 0.2s ease;
       height: 27rem !important;
-
+      box-shadow: rgba(0, 4, 12, 0.3) 0px 7px 15px, rgba(0, 4, 12, 0.05) 0px 4px 4px;
     }
     .card-grid {
       display: grid;

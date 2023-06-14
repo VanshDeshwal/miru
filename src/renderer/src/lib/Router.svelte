@@ -4,6 +4,8 @@
   import MediaHandler from './Player/MediaHandler.svelte'
   import Settings from './Settings.svelte'
   import WatchTogether from './WatchTogether/WatchTogether.svelte'
+  import Reader from './Reader/Reader.svelte'
+  import Home2 from './ViewManga/Home2.svelte'
   import Downloads from './Downloads/Downloads.svelte'
   import Miniplayer from 'svelte-miniplayer'
   export let page = 'home'
@@ -20,6 +22,10 @@
     <Home bind:current={$current} />
   {:else if page === 'watchtogether'}
     <WatchTogether />
+  {:else if page === 'reader'}
+    <Reader />
+  {:else if page === 'home2'}
+    <Home2 />
   {:else if page === 'downloads'}
     <Downloads />
   {/if}

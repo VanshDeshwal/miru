@@ -1,4 +1,4 @@
-<!-- <script>
+<script>
   import { traceAnime } from '@/modules/anime.js'
  
   export let search
@@ -45,14 +45,15 @@
       target.value = null
     }
   }
-</script> -->
+</script>
 
-<!-- <div class='container-fluid row p-20 position-sticky top-0 search-container z-40' on:input={input}>
+<div class='container-fluid row p-20 position-sticky top-0 search-container z-40' on:input={input}>
   <div class='col-4 p-10 d-flex flex-column justify-content-end'>
     <div class='input-group shadow-lg'>
       <div class='input-group-prepend'>
         <span class='input-group-text d-flex material-icons search-color pr-0 font-size-18'>search</span>
       </div>
+      <!-- svelte-ignore a11y-autofocus -->
       <input
         on:input={({ target }) => {
           queueMicrotask(() => {
@@ -168,7 +169,7 @@
 
 </div>
 
-/
+<style>
   .container-fluid > div > :nth-child(2),
   .container-fluid button {
     transition: transform 0.2s ease;
@@ -194,4 +195,3 @@
     font-size: 3rem !important;
   }
 </style>
--->
