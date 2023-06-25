@@ -67,14 +67,14 @@
     {/each}
   </div>
   <div class='d-flex flex-row pb-20'>
-    <button class='btn bg-dark-light px-20 shadow-none border-0'
+    <button class='btn bg-dark-light h-50 w-200 font-size-20 px-20 shadow-none font-weight-bold border-0'
       on:pointerdown|stopPropagation={() => playMedia(media)}>
       Watch Now
     </button>
-    <button class='btn bg-dark-light btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={media.isFavourite} on:pointerdown|stopPropagation={() => toggleFavourite(media)}>
+    <button class='btn bg-dark-light h-50 w-50 font-size-20 btn-square ml-10 material-symbols-outlined shadow-none border-0' class:filled={media.isFavourite} on:pointerdown|stopPropagation={() => toggleFavourite(media)}>
       favorite
     </button>
-    <button class='btn bg-dark-light btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={media.mediaListEntry} on:pointerdown|stopPropagation={() => toggleStatus(media)}>
+    <button class='btn bg-dark-light h-50 w-50 font-size-20 btn-square ml-10 material-symbols-outlined shadow-none border-0' class:filled={media.mediaListEntry} on:pointerdown|stopPropagation={() => toggleStatus(media)}>
       bookmark
     </button>
   </div>

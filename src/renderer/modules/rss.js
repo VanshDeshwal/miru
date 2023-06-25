@@ -1,4 +1,4 @@
-import { DOMPARSER } from '@/modules/util.js'
+import { DOMPARSER, since } from '@/modules/util.js'
 import { set } from '@/views/Settings.svelte'
 import { addToast } from '@/components/Toasts.svelte'
 import { add } from '@/modules/torrent.js'
@@ -81,7 +81,7 @@ class RSSMediaManager {
     const index = (page - 1) * perPage
     const targetPage = [...content.querySelectorAll('item')].slice(index, index + perPage)
     const items = parseRSSNodes(targetPage)
-    const result = items.map(item => this.resolveAnimeFromRSSItem(item))
+    const result = items.map(item => this.resolveAnimeFromRSSItem(item))  
     this.resultMap[url] = {
       date: pubDate,
       result
@@ -89,15 +89,16 @@ class RSSMediaManager {
     return result
   }
 
-  resolveAnimeFromRSSItem ({ title, link }) {
-    const result = this.queueResolve(title, link)
+  resolveAnimeFromRSSItem ({ title, link, date }) {
+    const result = this.queueResolve(title, link, date)
     this.lastResult = result
     return result
   }
 
-  async queueResolve (title, link) {
+  async queueResolve (title, link, date) {
     await this.lastResult
-    const res = (await resolveFileMedia(title))[0]
+    date = since(date)
+    const res = (await resolveFileMedia(title, date))[0]
     if (res.media?.id) {
       res.episodeData = (await getEpisodeMetadataForMedia(res.media))?.find(({ number }) => number === res.episode)
     }

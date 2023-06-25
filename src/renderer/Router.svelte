@@ -10,7 +10,7 @@
   const current = getContext('gallery')
 </script>
 
-<Miniplayer active={page !== 'player'} class='bg-dark-light z-10 {page === 'player' ? 'h-full' : ''}' minwidth='35rem' maxwidth='45rem' width='300px' padding='2rem'>
+<Miniplayer active={page !== 'player'} class='bg-dark-light z-10 {page === 'player' ? 'h-full' : ''}' minwidth='5rem' maxwidth='45rem' width='300px' padding='2rem'>
   <MediaHandler miniplayer={page !== 'player'} bind:page />
 </Miniplayer>
 {#if page === 'settings'}

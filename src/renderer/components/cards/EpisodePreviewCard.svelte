@@ -7,7 +7,7 @@
   const episodeThumbnail = data.episodeData?.image || media?.bannerImage || media?.coverImage.extraLarge || ''
 </script>
 
-<div class='position-absolute w-400 mh-400 absolute-container top-0 m-auto bg-dark-light z-30 rounded overflow-hidden pointer d-flex flex-column'>
+<div class='position-absolute w-400 mh-400 absolute-container top-0 m-auto bg-dark-light z-30 rounded-3 overflow-hidden pointer d-flex flex-column'>
   <div class='image h-200 w-full position-relative d-flex justify-content-between align-items-end text-white' class:bg-black={!episodeThumbnail}>
     <img loading='lazy' src={episodeThumbnail} alt='cover' class='img-cover w-full h-full position-absolute' style:--color={media?.coverImage.color || '#1890ff'} />
     <div class='pl-15 pb-10 material-symbols-outlined filled z-10'>play_arrow</div>

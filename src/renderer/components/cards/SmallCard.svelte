@@ -21,7 +21,7 @@
     <PreviewCard {media} />
   {/if}
   <div class='item d-flex flex-column h-full pointer'>
-    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded' style:--color={media.coverImage.color || '#1890ff'} />
+    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-3' style:--color={media.coverImage.color || '#1890ff'} />
     {#if media.averageScore}
     <div class='rating position-absolute'>
       <span class='p-5 material-icons rating-icon'>grade</span>
@@ -57,11 +57,11 @@
     -webkit-box-orient: vertical;
   }
   img {
-    height: 27rem;
+    height: 265px;
   }
   .item {
     animation: 0.3s ease 0s 1 load-in;
-    width: 19rem
+    width: 185px
   }
   .cover-img {
     object-fit: cover;
@@ -76,7 +76,7 @@
   .rating {
     background:black !important;
     width:50px;
-    border-radius: 0.2rem 0 1rem 0;
+    border-radius: 0.8rem 0 0.8rem 0;
   }
   .rating-icon{
     color:yellow;

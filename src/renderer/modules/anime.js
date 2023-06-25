@@ -212,7 +212,7 @@ function getParseObjTitle (obj) {
   return title
 }
 
-export async function resolveFileMedia (fileName) {
+export async function resolveFileMedia (fileName, pubDate) {
   let parseObjs = await anitomyscript(fileName)
 
   if (parseObjs.constructor !== Array) parseObjs = [parseObjs]
@@ -222,6 +222,7 @@ export async function resolveFileMedia (fileName) {
   for (const parseObj of parseObjs) {
     let failed = false
     let episode
+    let date = pubDate
     let media = relations[getParseObjTitle(parseObj)]
     // resolve episode, if movie, dont.
     const maxep = media?.nextAiringEpisode?.episode || media?.episodes
@@ -271,6 +272,7 @@ export async function resolveFileMedia (fileName) {
     fileMedias.push({
       episode: episode || parseObj.episode_number,
       parseObject: parseObj,
+      date,
       media,
       failed
     })

@@ -13,7 +13,7 @@
     <EpisodePreviewCard {data} />
   {/if}
   <div class='item d-flex flex-column h-full pointer'>
-    <div class='image h-200 w-full position-relative rounded overflow-hidden d-flex justify-content-between align-items-end text-white' class:bg-black={!episodeThumbnail}>
+    <div class='image item-2 w-full position-relative rounded-3 overflow-hidden d-flex justify-content-between align-items-end text-white' class:bg-black={!episodeThumbnail}>
       <img loading='lazy' src={episodeThumbnail} alt='cover' class='cover-img w-full h-full position-absolute' style:--color={data.media?.coverImage?.color || '#1890ff'} />
       <div class='pl-10 pb-10 material-symbols-outlined filled z-10'>play_arrow</div>
       <div class='pr-15 pb-10 font-size-16 font-weight-medium z-10'>
@@ -31,16 +31,17 @@
           {data.media?.title.userPreferred || data.parseObject.anime_title}
         </div>
       </div>
-      {#if data.episode}
         <div class='col-5 d-flex flex-column align-items-end text-right'>
+          {#if data.episode}
           <div class='text-white'>
             Episode {data.episode} / {data.media?.episodes || '?'}
           </div>
+          {/if}
           <div class='text-muted font-size-12 title overflow-hidden'>
-            {data.episodeData?.title || ''}
+            {data.date}
           </div>
         </div>
-      {/if}
+      
     </div>
   </div>
 </div>
@@ -63,7 +64,11 @@
   }
   .item {
     animation: 0.3s ease 0s 1 load-in;
-    width: 36rem
+    width: 33rem;
+    
+  }
+  .item-2 {
+    height:150px;
   }
   .cover-img {
     object-fit: cover;

@@ -4,7 +4,7 @@
   export let data
 </script>
 
-<div class='w-full h-450 position-relative gradient'>
+<div class='w-full h-400 position-relative gradient'>
   {#await data}
     <SkeletonBanner />
   {:then { data }}

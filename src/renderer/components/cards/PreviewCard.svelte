@@ -42,7 +42,7 @@
   }
 </script>
 
-<div class='position-absolute w-350 h-400 absolute-container top-0 bottom-0 m-auto bg-dark-light z-30 rounded overflow-hidden pointer'>
+<div class='position-absolute w-400 h-480 absolute-container top-0 bottom-0 m-auto bg-dark-light z-30 rounded-3 overflow-hidden pointer'>
   <div class='banner position-relative overflow-hidden bg-black'>
     <img src={media.bannerImage || ''} alt='banner' class='img-cover w-full h-full' />
     {#if media.trailer?.id}
@@ -61,19 +61,19 @@
       {media.title.userPreferred}
     </div>
     <div class='d-flex flex-row pt-5'>
-      <button class='btn btn-secondary flex-grow-1 text-dark font-weight-bold shadow-none border-0'
+      <button class='btn btn-primary h-50 flex-grow-1 font-size-20 text-dark font-weight-bold shadow-none border-0'
         on:pointerdown|stopPropagation={() => media.status !== 'NOT_YET_RELEASED' && playMedia(media)}
         disabled={media.status === 'NOT_YET_RELEASED'}>
         {playButtonText}
       </button>
-      <button class='btn btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={media.isFavourite} on:pointerdown|stopPropagation={toggleFavourite}>
+      <button class='btn h-50 btn-square ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.isFavourite} on:pointerdown|stopPropagation={toggleFavourite}>
         favorite
       </button>
-      <button class='btn btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={media.mediaListEntry} on:pointerdown|stopPropagation={toggleStatus}>
+      <button class='btn h-50 btn-square ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.mediaListEntry} on:pointerdown|stopPropagation={toggleStatus}>
         bookmark
       </button>
     </div>
-    <div class='details text-white text-capitalize pt-15 pb-10 d-flex'>
+    <div class='details font-weight-bold text-white text-capitalize pt-15 pb-10 d-flex'>
       <span class='text-nowrap d-flex align-items-center'>
         {#if media.format}
           {formatMap[media.format]}
@@ -98,7 +98,7 @@
         </span>
       {/if}
     </div>
-    <div class='w-full h-full text-muted description overflow-hidden'>
+    <div class='w-full pb-5 h-full text-muted font-size-18 description overflow-hidden'>
       {media.description?.replace(/<[^>]*>/g, '')}
     </div>
   </div>
