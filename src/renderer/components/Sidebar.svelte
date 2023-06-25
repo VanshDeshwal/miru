@@ -63,6 +63,13 @@
     },
     {
       click: () => {
+        location.reload()
+      },
+      icon: 'cached',
+      text: 'Reload'
+    },
+    {
+      click: () => {
         window.IPC.emit('open', 'https://github.com/sponsors/ThaUnknown/')
       },
       icon: 'favorite',

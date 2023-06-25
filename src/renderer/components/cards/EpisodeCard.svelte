@@ -33,7 +33,7 @@
       </div>
       <div class='col-5 d-flex flex-column align-items-end text-right'>
         <div class='text-white'>
-          Episode {data.episode}
+          Episode {data.episode} / {data.media?.episodes || '?'}
         </div>
         <div class='text-muted font-size-12 title overflow-hidden'>
           {data.episodeData?.title || ''}

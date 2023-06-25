@@ -32,6 +32,7 @@
 
 <div id='player' />
 <Toasts />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <div class='page-wrapper with-sidebar with-transitions bg-dark' data-sidebar-type='overlayed-all'>
   <div class='sticky-alerts' />
   <CatBlock />

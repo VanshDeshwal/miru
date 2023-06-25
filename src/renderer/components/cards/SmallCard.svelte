@@ -9,6 +9,11 @@
   function viewMedia () {
     $view = media
   }
+
+  function rating (s) {
+    s = (s/10).toFixed(1)
+    return s
+  }
 </script>
 
 <div class='d-flex p-20 position-relative first-check' on:pointerenter={() => { preview = true }} on:pointerleave={() => { preview = false }} on:pointerdown={viewMedia}>
@@ -17,6 +22,12 @@
   {/if}
   <div class='item d-flex flex-column h-full pointer'>
     <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded' style:--color={media.coverImage.color || '#1890ff'} />
+    {#if media.averageScore}
+    <div class='rating position-absolute'>
+      <span class='p-5 material-icons rating-icon'>grade</span>
+      <span class='pt-5 pr-5 rating-number position-absolute'>{rating(media.averageScore)}</span>
+    </div>
+    {/if}
     <div class='text-white font-weight-very-bold font-size-16 pt-15 title overflow-hidden'>
       {#if media.mediaListEntry?.status}
         <div style:--statusColor={statusColorMap[media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={media.mediaListEntry.status} />
@@ -61,5 +72,17 @@
     height: 1.1rem;
     width: 1.1rem;
     border-radius: 50%;
+  }
+  .rating {
+    background:black !important;
+    width:50px;
+    border-radius: 0.2rem 0 1rem 0;
+  }
+  .rating-icon{
+    color:yellow;
+    font-size:18px;
+  }
+  .rating-number{
+    top:0px;
   }
 </style>
