@@ -20,7 +20,8 @@
     doHURL: 'https://cloudflare-dns.com/dns-query',
     disableSubtitleBlur: false,
     catURL: decodeURIComponent(atob('aHR0cHMlM0ElMkYlMkZueWFhLnNp')),
-    showDetailsInRPC: true
+    showDetailsInRPC: true,
+    theme: 'bg-dark'
   }
   localStorage.removeItem('relations') // TODO: remove
   export const set = { ...defaults, ...(JSON.parse(localStorage.getItem('settings')) || {}) }
@@ -119,9 +120,14 @@
       icon: 'hub',
       desc: 'Torrent client settings, and preferences.'
     },
+    ui:{
+      name: 'UI',
+      icon: 'palette',
+      desc: 'change how the app looks'
+    },
     discord: {
       name: 'Discord',
-      icon: 'discord',
+      icon: '',
       desc: 'Discord Rich Presence settings.'
     },
     changelog: {
@@ -472,6 +478,23 @@
             data-title='Disables Peer Exchange For Use In Private Trackers To Improve Privacy'>
             <input type='checkbox' id='torrent-pex' bind:checked={settings.torrentPeX} />
             <label for='torrent-pex'>Disable PeX</label>
+          </div>
+        </div>
+      </Tab>
+      <Tab>
+        <div class='root p-20 m-20'>
+          <div class='input-group mb-10 w-300 form-control-lg' data-toggle='tooltip' data-placement='top' data-title='Choose a theme' >
+            <div class='input-group-prepend'>
+              <span class='input-group-text w-100 justify-content-center'>Theme</span>
+            </div>
+            <select class='form-control form-control-lg' bind:value={settings.theme} placeholder={defaults.theme} onchange="location.reload()">
+              <option value='bg-dark' selected>Default</option>
+              <option value='bg-very-dark'>Dark-2</option>
+              <option value='black-mode'>Black</option>
+              <option value='marin-blue'>Marin Blue</option>
+              <option value='spot-green'>Spot Green</option>
+              <option value='anilist-blue'>Anilist-Blue</option>
+            </select>
           </div>
         </div>
       </Tab>

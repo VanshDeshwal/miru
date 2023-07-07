@@ -3,6 +3,7 @@
   export let data
 
   const media = data.media
+  console.log(data)
 
   const episodeThumbnail = data.episodeData?.image || media?.bannerImage || media?.coverImage.extraLarge || ''
 </script>
@@ -47,6 +48,12 @@
           <span class='material-symbols-outlined font-size-24 pr-5'>calendar_month</span>
           {media.seasonYear || 'N/A'}
         </div>
+        {#if media.averageScore}
+        <div class='d-flex align-items-center' style='margin-left: -3px'>
+          <span class='material-symbols-outlined font-size-24 pr-5'>trending_up</span>
+          {media?.averageScore}<span>%</span>
+        </div>
+        {/if}
         <div class='d-flex align-items-center'>
           {formatMap[media.format]}
           <span class='material-symbols-outlined font-size-24 pl-5'>monitor</span>

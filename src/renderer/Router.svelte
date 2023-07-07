@@ -1,6 +1,7 @@
 <script>
   import { getContext } from 'svelte'
   import Home from './views/Home/Home.svelte'
+  import Dome from './views/Home/Dome.svelte'
   import MediaHandler from './views/Player/MediaHandler.svelte'
   import Settings from './views/Settings.svelte'
   import WatchTogether from './views/WatchTogether/WatchTogether.svelte'
@@ -17,6 +18,8 @@
   <Settings />
 {:else if page === 'home'}
   <Home bind:current={$current} />
+{:else if page === 'schedule'}
+  <Dome bind:current={$current} />
 {:else if page === 'watchtogether'}
   <WatchTogether />
 {/if}

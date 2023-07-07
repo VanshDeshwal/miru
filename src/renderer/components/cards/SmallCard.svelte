@@ -2,6 +2,7 @@
   import { getContext } from 'svelte'
   import PreviewCard from './PreviewCard.svelte'
   import { formatMap, statusColorMap } from '@/modules/anime.js'
+  import {release_time} from '@/modules/util.js'
   export let media
   let preview = false
 
@@ -43,6 +44,14 @@
         {formatMap[media.format]}
         <span class='material-symbols-outlined font-size-24 pl-5'>monitor</span>
       </div>
+      <div>
+        {#if media.schedule && media.nextAiringEpisode}
+      <span class=' font-weight-bold badge-color'>
+        {'EP ' + media.nextAiringEpisode.episode + ' releasing at ' + release_time(media.nextAiringEpisode.timeUntilAiring)}
+      </span>
+      {/if}
+      </div>
+      
     </div>
   </div>
 </div>

@@ -1,13 +1,5 @@
 <script>
-  import Cards from './Cards.svelte'
   import CompactCards from './CompactCards.svelte'
-  import { set } from '../Settings.svelte'
-  let gallery
-  if (set.compactCards)
-    gallery = 'gallery-compact'
-  else
-    gallery = 'gallery-full'
-
   export let media
   $: update(media)
   let loading = true
@@ -19,35 +11,21 @@
   }
 </script>
 
-<div class='{gallery} browse' class:loading>
+<div class='gallery browse' class:loading>
   {#each media as cards, i (i)}
 
-    {#if set.compactCards == true}
       <CompactCards {cards} length={4} tabable={true} />
-    {:else if set.compactCards == false}
-      <Cards {cards} length={4} tabable={true} />
-    {/if}
     
   {/each}
 </div>
 
 <style>
-  .gallery-full {
+  .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 50rem);    /* 24rem for small, 50 rem for large*/
+    grid-template-columns: repeat(auto-fill, 27rem);
     grid-auto-rows: auto;
     justify-content: center;
-    grid-gap: 2rem;                /* 2 rem original, 1rem mine*/
-    padding: 2rem 4rem;
-    position: relative;
-  }
-
-  .gallery-compact {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 24rem);    /* 24rem for small, 50 rem for large*/
-    grid-auto-rows: auto;
-    justify-content: center;
-    grid-gap: 1rem;                /* 2 rem original, 1rem mine*/
+    grid-gap: 2rem;   
     padding: 2rem 4rem;
     position: relative;
   }
@@ -58,7 +36,7 @@
     bottom: 0;
     height: 40rem;
     width: 100%;
-    background: linear-gradient(0deg, rgba(23, 25, 29, 1) 0%, rgba(23, 25, 29, 1) 70%, rgba(23, 25, 29, 1) 75%, rgba(23, 25, 29, 0.45) 90%, rgba(23, 25, 29, 0) 100%);
+    background: linear-gradient(0deg, rgba(18,20,22,255) 0%, rgba(18,20,22,255) 70%, rgba(18,20,22,255) 75%, rgba(18,20,22,255) 90%, rgba(18,20,22,255) 100%);
     backdrop-filter: blur(0.5px);
   }
 </style>

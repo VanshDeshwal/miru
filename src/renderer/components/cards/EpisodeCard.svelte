@@ -4,6 +4,7 @@
   export let data
 
   let preview = false
+  console.log(data)
 
   const episodeThumbnail = data.episodeData?.image || data.media?.bannerImage || data.media?.coverImage?.extraLarge || ''
 </script>

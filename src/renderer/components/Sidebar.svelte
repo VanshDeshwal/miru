@@ -33,6 +33,14 @@
     },
     {
       click: () => {
+        page = 'schedule'
+        $gallery = null
+      },
+      icon: 'search',
+      text: 'Search'
+    },
+    {
+      click: () => {
         page = 'home'
         $gallery = null
       },
@@ -41,7 +49,7 @@
     },
     {
       click: () => {
-        page = 'home'
+        page = 'schedule'
         $gallery = 'schedule'
       },
       icon: 'schedule',

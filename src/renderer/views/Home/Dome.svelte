@@ -86,57 +86,6 @@
 
   let lastDate = null
   let sections = {
-    // continue: {
-    //   title: 'Continue Watching',
-    //   preview: () => sections.continue.load(1, 6),
-    //   load: (page = 1, perPage = 50, initial = false) => {
-    //     if (initial) search.value = { ...search.value, sort: 'UPDATED_TIME_DESC' }
-    //     return alRequest({ method: 'UserLists', status_in: ['CURRENT', 'REPEATING'], page }).then(res => {
-    //       hasNext = res?.data?.Page.pageInfo.hasNextPage
-    //       return customFilter(
-    //         res?.data?.Page.mediaList
-    //           .filter(i => {
-    //             return i.media.status !== 'RELEASING' || i.media.mediaListEntry?.progress < i.media.nextAiringEpisode?.episode - 1
-    //           })
-    //           .slice(0, perPage)
-    //       )
-    //     })
-    //   },
-    //   hide: !alToken
-    // },
-    // newSeasons: {
-    //   title: 'Sequels You Missed',
-    //   data: (async () => {
-    //     if (!alToken) return
-    //     const { data } = await alRequest({ method: 'NewSeasons' })
-    //     const res = data.MediaListCollection.lists[0]
-    //     return res?.entries?.flatMap(({ media }) => {
-    //       return media.relations.edges.filter(edge => {
-    //         return edge.relationType === 'SEQUEL' && !edge.node.mediaListEntry
-    //       })
-    //     }).map(({ node }) => node.id)
-    //   })(),
-    //   preview: () => sections.newSeasons.load(1, 6),
-    //   load: async (page = 1, perPage = 50, initial = false) => {
-    //     if (initial) search.value = { ...search.value, status: 'FINISHED' }
-    //     const id = await sections.newSeasons.data
-    //     const res = await alRequest({ method: 'SearchIDS', page, perPage, id, ...sanitiseObject(search.value), status: ['FINISHED', 'RELEASING'], onList: false })
-    //     return processMedia(res)
-    //   },
-    //   hide: !alToken
-    // },
-    // planning: {
-    //   title: 'Your List',
-    //   preview: () => sections.planning.load(1, 6),
-    //   load: (page = 1, perPage = 50, initial = false) => {
-    //     if (initial) search.value = { ...search.value, sort: 'UPDATED_TIME_DESC' }
-    //     return alRequest({ method: 'UserLists', page, perPage, status_in: 'PLANNING' }).then(res => {
-    //       hasNext = res?.data?.Page.pageInfo.hasNextPage
-    //       return customFilter(res?.data?.Page.mediaList)
-    //     })
-    //   },
-    //   hide: !alToken
-    // },
     seasonal: {
       title: 'Popular This Season',
       preview: function () {
@@ -367,12 +316,6 @@
     <Search bind:media bind:search={$search} bind:current {loadCurrent} />
     {#if media.length}
       <Gallery {media} />
-    {:else}
-      {#each Object.entries(sections) as [key, opts] (key)}
-        {#if !opts.hide}
-          <Section opts={{ ...opts, onclick: () => (current = key) }} />
-        {/if}
-      {/each}
     {/if}
   </div>
 </div>

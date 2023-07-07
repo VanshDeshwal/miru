@@ -84,11 +84,10 @@
 <script>
   import Section from './Section.svelte'
   import Banner from '@/components/banner/Banner.svelte'
-  import smoothScroll from '@/modules/scroll.js'
-  export let current
+  // import smoothScroll from '@/modules/scroll.js'
 </script>
 
-<div class='h-full w-full overflow-y-scroll root overflow-x-hidden' use:smoothScroll>
+<div class='h-full w-full overflow-y-scroll root overflow-x-hidden'>
   <Banner data={bannerData} />
   <div class='d-flex flex-column h-full w-full'>
     {#each manager.sections as section, i (i)}

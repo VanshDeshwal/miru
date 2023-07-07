@@ -1,5 +1,6 @@
 <script>
-  import { since, release_time, wrapEnter } from '@/modules/util.js'
+  import { release_time, wrapEnter } from '@/modules/util.js'
+  import { formatMap, statusColorMap } from '@/modules/anime.js'
   import { getContext } from 'svelte'
   export let cards = new Promise(() => {})
   const view = getContext('view')
@@ -8,6 +9,11 @@
   }
   export let length = 8
   export let tabable = false
+
+  function rating (s) {
+    s = (s/10).toFixed(1)
+    return s
+  }
 </script>
 
 {#await cards}
@@ -29,62 +35,48 @@
       <div class='card m-0 p-0' on:click={card.onclick} on:keydown={wrapEnter(card.onclick)} tabindex={tabable ? 0 : null} role='button'>
       </div>
     {:else}
-      <div class='card m-0 p-0'
-        on:click={card.onclick || (() => viewMedia(card.media))}
-        on:keydown={wrapEnter(card.onclick || (() => viewMedia(card.media)))}
-        tabindex={tabable ? 0 : null} role='button'
-        style:--color={card.media.coverImage.color || '#1890ff'}
-        title={card.parseObject?.file_name}>
-        <div class='row h-full  title'>
-          <div class='col-12'>
-            <img loading='lazy' src={card.media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full' />
-          </div>
-          <div class="badge flex-fill d-flex text-dark font-weight-bold rating">
-            <span class="material-icons mr-5 font-size-16" style="color:yellow">star</span>
-            <span class="d-flex font-size-13"style="color: white;">{card.media.averageScore}</span>
-          </div>
-          {#if card.date}
-          <div class="bg-very-dark since">
-            <span class="text-muted font-weight-bold">{since(card.date)}</span>
+    <div class='d-flex p-20 position-relative first-check'
+    on:click={card.onclick || (() => viewMedia(card.media))}
+    on:keydown={wrapEnter(card.onclick || (() => viewMedia(card.media)))}
+    tabindex={tabable ? 0 : null} role='button'
+    style:--color={card.media.coverImage.color || '#1890ff'}
+    title={card.parseObject?.file_name}>
+      <div class='item d-flex flex-column h-full pointer'>
+          <img loading='lazy' src={card.media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-3' style:--color={card.media.coverImage.color || '#1890ff'} />
+          {#if card.media.averageScore}
+          <div class='rating position-absolute'>
+            <span class='p-5 material-icons rating-icon'>grade</span>
+            <span class='pt-5 pr-5 rating-number position-absolute'>{rating(card.media.averageScore)}</span>
           </div>
           {/if}
-          <div class='col-12 mid-card text-overflow-hidden'>
-            <div class='px-10'>
-              <h5 class='m-0 text-capitalize font-weight-bold' >
-                {[card.media.title.userPreferred, card.episode].filter(s => s).join(' - ')}
-              </h5>
-            </div>
+          <div class='text-white font-weight-very-bold font-size-16 pt-15 title overflow-hidden'>
+            {#if card.media.mediaListEntry?.status}
+              <div style:--statusColor={statusColorMap[card.media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={card.media.mediaListEntry.status} />
+            {/if}
+            {[card.media.title.userPreferred, card.episode].filter(s => s).join(' - ')}
           </div>
-          <div class="col-12 end-card text-overflow-hidden-oneline">
-            <div class='px-10' >
               <p class=' m-0 text-capitalize details'>
                 {#if card.schedule && card.media.nextAiringEpisode}
                 <span class=' font-weight-bold badge-color'>
                   {'EP ' + card.media.nextAiringEpisode.episode + ' releasing at ' + release_time(card.media.nextAiringEpisode.timeUntilAiring)}
                 </span>
                 {/if}
-
-
-                {#if (card.media.format === 'TV') && !(card.schedule && card.media.nextAiringEpisode)}
-                  <span>TV</span>
-                {:else if (card.media.format) && !(card.schedule && card.media.nextAiringEpisode)}
-                  <span>{card.media.format?.toLowerCase().replace(/_/g, ' ')}</span>
-                {/if}
-                {#if (card.media.episodes) && !(card.schedule && card.media.nextAiringEpisode)}
-                  <span>{card.media.episodes + ' Episodes'}</span>
-                {:else if (card.media.duration) && !(card.schedule && card.media.nextAiringEpisode)}
-                  <span>{card.media.duration + ' Minutes'}</span>
-                {/if}
-                {#if (card.media.season || card.media.seasonYear) && !(card.schedule && card.media.nextAiringEpisode)}
-                  <span>
-                    {[card.media.season?.toLowerCase(), card.media.seasonYear].filter(s => s).join(' ')}
-                  </span>
-                {/if}
               </p>
+          <div class='d-flex flex-row mt-auto pt-10 font-weight-medium justify-content-between w-full text-muted'>
+            <div class='d-flex align-items-center' style='margin-left: -3px'>
+              <span class='material-symbols-outlined font-size-24 pr-5'>calendar_month</span>
+              {card.media.seasonYear || 'N/A'}
             </div>
+            <div class='d-flex align-items-center'>
+              {formatMap[card.media.format]}
+              <span class='material-symbols-outlined font-size-24 pl-5'>monitor</span>
+            </div>   
           </div>
-        </div>
+
       </div>
+      </div>
+      
+      
     {/if}
   {:else}
     <div class='empty d-flex flex-column align-items-center justify-content-center'>
@@ -94,41 +86,32 @@
   {/each}
 {/await}
 
+
 <style>
-  .pre-wrap {
+
+.pre-wrap {
     white-space: pre-wrap
   }
   .empty {
-    height: 31rem;
+    height: 27rem;
     grid-column: 1 / -1;
   }
   .h-10 {
     height: 1rem !important;
   }
 
-  .card-desc :global(p) {
-    margin: 0;
-  }
-
-  .details span + span::before {
-    content: ' • ';
-    white-space: normal;
-  }
   .card {
     animation: 0.3s ease 0s 1 load-in;
     cursor: pointer;
     overflow: hidden;
     transition: transform 0.2s ease;
-    height: 35rem !important;
-    border-radius: 0.6rem !important;
+    height: 27rem !important;
     box-shadow: rgba(0, 4, 12, 0.3) 0px 7px 15px, rgba(0, 4, 12, 0.05) 0px 4px 4px;
   }
-  .card-grid {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-  }
+
   .badge-color {
     color: var(--color) !important;
+    border-color: var(--color) !important;
   }
 
   .card:hover {
@@ -156,12 +139,6 @@
       transform: scale(1);
     }
   }
-
-  .small-skeloader {
-    position:absolute;
-    bottom:0px;
-    top:210px;
-  }
   .skeloader {
     position: relative;
     overflow: hidden;
@@ -176,13 +153,28 @@
     background: linear-gradient(to right, transparent 0%, #25282c 50%, transparent 100%);
     animation: load 1s infinite cubic-bezier(0.4, 0, 0.2, 1);
   }
+    .day-row {
+    grid-column: 1 / -1;
+  }
+
+  .first-check:first-child :global(.absolute-container) {
+    left: -48% !important
+  }
+  .title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  img {
+    height: 265px;
+  }
+  .item {
+    animation: 0.3s ease 0s 1 load-in;
+    width: 185px
+  }
   .cover-img {
     object-fit: cover;
     background-color: var(--color) !important;
-    height: 27rem;
-  }
-  .day-row {
-    grid-column: 1 / -1;
   }
   .list-status-circle {
     background: var(--statusColor);
@@ -190,48 +182,16 @@
     width: 1.1rem;
     border-radius: 50%;
   }
-  .text-overflow-hidden{
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .rating {
+    background:black !important;
+    width:50px;
+    border-radius: 0.8rem 0 0.8rem 0;
   }
-  .rating{
-    position:absolute;
-    background-color: rgba(0,0,0,.7);
-    border-top-width: 0px;
-    border-left-width: 0px;
-    border-radius: 0.6rem 0 4px 0px;
+  .rating-icon{
+    color:yellow;
+    font-size:18px;
   }
-  .mid-card{
-    position:absolute;
-    top:220px;
-    height:45px;
+  .rating-number{
+    top:0px;
   }
-  .end-card{
-    position:absolute; 
-    bottom:0px;
-  }
-
-  .text-overflow-hidden-oneline{
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .since{
-    position:absolute; 
-    top:200px;
-    right:0px;
-    border-top-width: 0px;
-    border-left-width: 0px;
-    border-radius: 0.5rem 0px 0px 0px;
-    padding-left: 8px;
-    padding-right: 8px;
-    
-}
-
-
 </style>

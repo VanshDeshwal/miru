@@ -1,4 +1,5 @@
 <script>
+  import {set} from '../Settings.svelte'
   import { playAnime } from '../RSSView.svelte'
   import { alRequest } from '@/modules/anilist.js'
   import { getMediaMaxEp } from '@/modules/anime.js'
@@ -11,6 +12,7 @@
 
   const view = getContext('view')
   const trailer = getContext('trailer')
+  let type = null
   function close () {
     $view = null
   }
@@ -22,6 +24,8 @@
   function checkClose ({ keyCode }) {
     if (keyCode === 27) close()
   }
+
+
 </script>
 
 <div class='modal modal-full z-40' class:show={media} on:keydown={checkClose} tabindex='-1' bind:this={modal}>
@@ -107,18 +111,35 @@
                     {#each Array(maxPlayEp) as _, i}
                       {@const ep = maxPlayEp - i}
                       <tr class="font-size-20 py-10 pointer {ep <= media.mediaListEntry?.progress ? 'text-muted' : 'text-white'}"
-                        on:click={() => {
+                        
+                        tabindex='0' role='button'
+                      >
+                        <td class='w-full font-weight-semi-bold' on:click={() => {
                           playAnime(media, ep)
+                          set.action='play'
                           close()
                         }}
                         on:keydown={wrapEnter(() => {
                           playAnime(media, ep)
+                          set.action='play'
                           close()
-                        })}
-                        tabindex='0' role='button'
-                      >
-                        <td class='w-full font-weight-semi-bold'>Episode {ep}</td>
-                        <td class='material-symbols-outlined text-right h-full d-table-cell'>play_arrow</td>
+                        })}>Episode {ep}</td>
+                        <td class='material-symbols-outlined text-right h-full d-table-cell' on:click={() => {
+                          playAnime(media, ep)
+                          set.action='play'
+                          close()
+                        }}
+                        on:keydown={wrapEnter(() => {
+                          playAnime(media, ep)
+                          set.action='play'
+                          close()
+                        })}>play_arrow</td>
+                        <td class='material-symbols-outlined text-right h-full d-table-cell' 
+                        on:click={() => {
+                          playAnime(media, ep)
+                          set.action='download'
+                          close()
+                        }}>download</td>
                       </tr>
                     {/each}
                   </tbody>

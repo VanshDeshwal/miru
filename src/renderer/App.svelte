@@ -13,6 +13,7 @@
 </script>
 
 <script>
+  import {set} from './views/Settings.svelte'
   import Sidebar from './components/Sidebar.svelte'
   import Router from './Router.svelte'
   import ViewAnime from './views/ViewAnime/ViewAnime.svelte'
@@ -33,7 +34,7 @@
 <div id='player' />
 <Toasts />
 <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
-<div class='page-wrapper with-sidebar with-transitions bg-dark' data-sidebar-type='overlayed-all'>
+<div class='page-wrapper with-sidebar with-transitions {set.theme}' data-sidebar-type='overlayed-all'>
   <div class='sticky-alerts' />
   <CatBlock />
   <Menubar bind:page={$page} />
