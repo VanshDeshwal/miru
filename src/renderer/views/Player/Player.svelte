@@ -120,8 +120,13 @@
       src = ''
       currentTime = 0
       targetTime = 0
-      tick().then(() => video?.play())
     }
+  }
+
+  let loadInterval
+
+  function clearLoadInterval () {
+    clearInterval(loadInterval)
   }
 
   async function handleCurrent (file) {
@@ -143,8 +148,7 @@
       src = file.url
       client.send('current', file)
       subs = new Subtitles(video, files, current, handleHeaders)
-      await tick()
-      video?.play()
+      video.load()
     }
   }
 
@@ -712,7 +716,7 @@
   }
 
   function getThumbnail (percent) {
-    return thumbnailData.thumbnails[Math.floor(percent / 100 * safeduration / thumbnailData.interval)] || ''
+    return thumbnailData.thumbnails[Math.floor(percent / 100 * safeduration / thumbnailData.interval)] || ' '
   }
   function createThumbnail (vid = video) {
     if (vid?.readyState >= 2) {
@@ -916,6 +920,7 @@
     on:loadedmetadata={findChapters}
     on:loadedmetadata={autoPlay}
     on:loadedmetadata={checkAudio}
+    on:loadedmetadata={clearLoadInterval}
     on:leavepictureinpicture={() => (pip = false)} />
   {#if stats}
     <div class='position-absolute top-0 bg-tp p-10 m-15 text-monospace rounded z-50'>

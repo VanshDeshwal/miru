@@ -176,19 +176,19 @@ async function resolveTitle (name) {
       media = (await alSearch(method)).data.Page.media[0]
     }
 
-    // remove (TV)
-    if (!media) {
-      const match = method.name.match(/\(TV\)/)
-      if (match) {
-        method.name = method.name.replace('(TV)', '')
-        media = (await alSearch(method)).data.Page.media[0]
-      }
-    }
     // remove - :
     if (!media) {
       const match = method.name.match(/[-:]/g)
       if (match) {
         method.name = method.name.replace(/[-:]/g, '')
+        media = (await alSearch(method)).data.Page.media[0]
+      }
+    }
+    // remove (TV)
+    if (!media) {
+      const match = method.name.match(/\(TV\)/)
+      if (match) {
+        method.name = method.name.replace('(TV)', '')
         media = (await alSearch(method)).data.Page.media[0]
       }
     }
@@ -212,7 +212,8 @@ function getParseObjTitle (obj) {
   return title
 }
 
-export async function resolveFileMedia (fileName, pubDate) {
+// TODO: anidb aka true episodes need to be mapped to anilist episodes a bit better
+export async function resolveFileMedia (fileName) {
   let parseObjs = await anitomyscript(fileName)
 
   if (parseObjs.constructor !== Array) parseObjs = [parseObjs]
@@ -388,7 +389,7 @@ const episodeMetadataMap = {}
 
 export async function getEpisodeMetadataForMedia (media) {
   if (episodeMetadataMap[media.id]) return episodeMetadataMap[media.id]
-  const res = await fetch('https://api.enime.moe/mapping/anilist/' + media.id)
+  const res = await fetch('https://api.ani.zip/mappings?anilist_id=' + media.id)
   const { episodes } = await res.json()
   episodeMetadataMap[media.id] = episodes
   return episodes

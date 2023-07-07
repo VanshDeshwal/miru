@@ -153,20 +153,22 @@ function createWindow () {
   protocol.registerHttpProtocol('miru', (req, cb) => {
     const token = req.url.slice(7)
     if (development) {
-      mainWindow.loadURL(path.join(__dirname, '/index.html' + token))
+      mainWindow.loadURL(path.join(__dirname, '/app.html' + token))
     } else {
-      mainWindow.loadURL('http://localhost:5000/' + token)
+      mainWindow.loadURL('http://localhost:5000/app.html' + token)
     }
   })
 
-  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    const { responseHeaders } = details
+  mainWindow.webContents.session.webRequest.onHeadersReceived((details, fn) => {
+    const { responseHeaders, method } = details
+
+    if (method === 'OPTIONS') return fn({ responseHeaders })
+
     if (!responseHeaders['access-control-allow-origin']) UpsertKeyValue(responseHeaders, 'Access-Control-Allow-Origin', ['*'])
     if (!responseHeaders['access-control-allow-credentials']) UpsertKeyValue(responseHeaders, 'Access-Control-Allow-Origin', ['*'])
     if (!responseHeaders['access-control-allow-credentials']) UpsertKeyValue(responseHeaders, 'Access-Control-Allow-Headers', ['*'])
 
-    const headers = { responseHeaders }
-    callback(headers)
+    fn({ responseHeaders })
   })
 
   let torrentLoad = null
@@ -174,13 +176,13 @@ function createWindow () {
   if (!development) {
     // Load production build
     torrentLoad = webtorrentWindow.loadFile(path.join(__dirname, '/background.html'))
-    mainWindow.loadFile(path.join(__dirname, '/index.html'))
+    mainWindow.loadFile(path.join(__dirname, '/app.html'))
   } else {
     // Load vite dev server page
     console.log('Development mode')
     torrentLoad = webtorrentWindow.loadURL('http://localhost:5000/background.html')
     webtorrentWindow.webContents.openDevTools()
-    mainWindow.loadURL('http://localhost:5000/index.html')
+    mainWindow.loadURL('http://localhost:5000/app.html')
     mainWindow.webContents.openDevTools()
   }
 
@@ -238,7 +240,31 @@ let status = null
 const discord = new Client({
   transport: 'ipc'
 })
-function setDiscordRPC (event, data) {
+
+function setDiscordRPC (data) {
+  if (!data) {
+    data = {
+      activity: {
+        timestamps: {
+          start: Date.now()
+        },
+        details: 'Stream anime torrents, real-time.',
+        state: 'Watching anime',
+        assets: {
+          small_image: 'logo',
+          small_text: 'https://github.com/ThaUnknown/miru'
+        },
+        buttons: [
+          {
+            label: 'Download app',
+            url: 'https://github.com/ThaUnknown/miru/releases/latest'
+          }
+        ],
+        instance: true,
+        type: 3
+      }
+    }
+  }
   status = data
   if (discord?.user && status) {
     status.pid = process.pid
@@ -246,9 +272,39 @@ function setDiscordRPC (event, data) {
   }
 }
 
-ipcMain.on('discord', setDiscordRPC)
+let allowDiscordDetails = false
+let requestedDiscordDetails = false
+let rpcStarted = false
+let cachedPresence = null
+
+ipcMain.on('discord_status', (event, data) => {
+  requestedDiscordDetails = data;
+  if (!rpcStarted) {
+    handleRPC()
+    setInterval(handleRPC, 5000) //According to Discord documentation, clients can only update their presence 5 times per 20 seconds. We will add an extra second to be safe.
+    rpcStarted = true
+  }
+})
+
+function handleRPC() {
+  if (allowDiscordDetails === requestedDiscordDetails) return
+
+  allowDiscordDetails = requestedDiscordDetails
+  if (!allowDiscordDetails) {
+    setDiscordRPC(null)
+  } else if (cachedPresence) {
+    setDiscordRPC(cachedPresence)
+  }
+}
+
+ipcMain.on('discord', (event, data) => {
+  cachedPresence = data
+  if (allowDiscordDetails) {
+    setDiscordRPC(data)
+  }
+})
 discord.on('ready', async () => {
-  setDiscordRPC(null, status)
+  setDiscordRPC(status)
   discord.subscribe('ACTIVITY_JOIN_REQUEST')
   discord.subscribe('ACTIVITY_JOIN')
   discord.subscribe('ACTIVITY_SPECTATE')

@@ -4,23 +4,34 @@
 
 <script>
   import Card from '@/components/cards/Card.svelte'
-
+  import { search } from '../Search.svelte'
+  import { page } from '@/App.svelte'
   import { wrapEnter } from '@/modules/util.js'
+
   export let opts
 
   async function deferredLoad (element) {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        if (!opts.preview) opts.preview = opts.load(1, 10)
+        if (!opts.preview.value) opts.preview.value = opts.load(1, 10)
         observer.unobserve(element)
       }
-    }, { hreshold: 0 })
+    }, { threshold: 0 })
     observer.observe(element)
   }
+
+  function click () {
+    $search = {
+      ...opts.variables,
+      load: opts.load
+    }
+    $page = 'search'
+  }
+  const preview = opts.preview
 </script>
 
 <span class='d-flex px-20 align-items-end pointer text-decoration-none text-muted'
-  on:click={opts.onclick} on:keydown={wrapEnter(opts.onclick)}
+  on:click={click} on:keydown={wrapEnter(click)}
   tabindex='0'
   use:deferredLoad
   role='button'>
@@ -28,7 +39,7 @@
   <div class='pr-10 ml-auto font-size-12'>View More</div>
 </span>
 <div class='pb-10 w-full position-relative d-flex flex-row justify-content-start gallery'>
-  {#each opts.preview || fakecards as card}
+  {#each $preview || fakecards as card}
     <Card {card} />
   {/each}
 </div>

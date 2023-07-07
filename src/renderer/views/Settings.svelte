@@ -21,7 +21,7 @@
     disableSubtitleBlur: false,
     catURL: decodeURIComponent(atob('aHR0cHMlM0ElMkYlMkZueWFhLnNp')),
     showDetailsInRPC: true,
-    theme: 'bg-dark'
+    cards: 'small'
   }
   localStorage.removeItem('relations') // TODO: remove
   export const set = { ...defaults, ...(JSON.parse(localStorage.getItem('settings')) || {}) }
@@ -127,7 +127,7 @@
     },
     discord: {
       name: 'Discord',
-      icon: '',
+      icon: 'settings',
       desc: 'Discord Rich Presence settings.'
     },
     changelog: {

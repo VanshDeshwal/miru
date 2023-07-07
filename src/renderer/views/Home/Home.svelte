@@ -1,7 +1,8 @@
 <script context='module'>
+  import { writable } from 'simple-store-svelte'
   import Sections from '@/modules/sections.js'
   import { alToken, set } from '../Settings.svelte'
-  import { alRequest } from '@/modules/anilist.js'
+  import { alRequest, userLists } from '@/modules/anilist.js'
   import { RSSManager } from '@/modules/rss.js'
 
   const seasons = ['WINTER', 'SPRING', 'SUMMER', 'FALL']
@@ -14,58 +15,71 @@
   const manager = new Sections()
 
   for (const [title, url] of set.rssFeeds.reverse()) {
+    const load = (page = 1, perPage = 6) => RSSManager.getMediaForRSS(page, perPage, url)
     manager.add([
       {
         title,
-        load: (page = 1, perPage = 50) => RSSManager.getMediaForRSS(page, perPage, url),
-        preview: RSSManager.getMediaForRSS(1, 6, url)
+        load,
+        preview: writable(RSSManager.getMediaForRSS(1, 6, url)),
+        variables: { disableSearch: true }
       }
     ])
+    const entry = manager.sections.find(section => section.load === load)
+    setInterval(async () => {
+      if (await RSSManager.getContentChanged(1, 6, url)) {
+        entry.preview.value = RSSManager.getMediaForRSS(1, 6, url)
+      }
+    }, 30000)
   }
   if (alToken) {
-    const userLists = alRequest({ method: 'UserLists' })
-
-    manager.add([
+    const sections = [
       {
         title: 'Continue Watching',
-        load: (page = 1, perPage = 50) => {
-          const res = userLists.then(res => {
+        load: (page = 1, perPage = 50, variables = {}) => {
+          const res = userLists.value.then(res => {
             const mediaList = res.data.MediaListCollection.lists.find(({ status }) => status === 'CURRENT').entries
             const ids = mediaList.filter(({ media }) => {
               if (media.status === 'FINISHED') return true
               return media.mediaListEntry?.progress < media.nextAiringEpisode?.episode - 1
             }).map(({ media }) => media.id)
-            return alRequest({ method: 'SearchIDS', page, perPage, id: ids })
+            return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...Sections.sanitiseObject(variables) })
           })
-          return manager.wrapResponse(res, perPage)
+          return Sections.wrapResponse(res, perPage)
         }
       },
       {
         title: 'Sequels You Missed',
-        load: (page = 1, perPage = 50) => {
-          const res = userLists.then(res => {
+        load: (page = 1, perPage = 50, variables = {}) => {
+          const res = userLists.value.then(res => {
             const mediaList = res.data.MediaListCollection.lists.find(({ status }) => status === 'COMPLETED').entries
             const ids = mediaList.flatMap(({ media }) => {
               return media.relations.edges.filter(edge => {
                 return edge.relationType === 'SEQUEL'
               })
             }).map(({ node }) => node.id)
-            return alRequest({ method: 'SearchIDS', page, perPage, id: ids, status: ['FINISHED', 'RELEASING'], onList: false })
+            return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...Sections.sanitiseObject(variables), status: ['FINISHED', 'RELEASING'], onList: false })
           })
-          return manager.wrapResponse(res, perPage)
+          return Sections.wrapResponse(res, perPage)
         }
       },
       {
         title: 'Your List',
-        load: (page = 1, perPage = 50) => {
-          const res = userLists.then(res => {
+        load: (page = 1, perPage = 50, variables = {}) => {
+          const res = userLists.value.then(res => {
             const ids = res.data.MediaListCollection.lists.find(({ status }) => status === 'PLANNING').entries.map(({ media }) => media.id)
-            return alRequest({ method: 'SearchIDS', page, perPage, id: ids })
+            return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...Sections.sanitiseObject(variables) })
           })
-          return manager.wrapResponse(res, perPage)
+          return Sections.wrapResponse(res, perPage)
         }
       }
-    ])
+    ]
+    userLists.subscribe(() => {
+      const titles = sections.map(({ title }) => title)
+      for (const section of manager.sections) {
+        if (titles.includes(section.title)) delete section.preview
+      }
+    })
+    manager.add(sections)
   }
   manager.add([
     {
@@ -84,7 +98,7 @@
 <script>
   import Section from './Section.svelte'
   import Banner from '@/components/banner/Banner.svelte'
-  // import smoothScroll from '@/modules/scroll.js'
+  import smoothScroll from '@/modules/scroll.js'
 </script>
 
 <div class='h-full w-full overflow-y-scroll root overflow-x-hidden'>
