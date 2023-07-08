@@ -1,6 +1,7 @@
 <script>
   import { statusColorMap } from '@/modules/anime.js'
   import EpisodePreviewCard from './EpisodePreviewCard.svelte'
+  import { since } from '@/modules/util'
   export let data
 
   let preview = false
@@ -11,7 +12,7 @@
   {#if preview}
     <EpisodePreviewCard {data} />
   {/if}
-  <div class='item d-flex flex-column h-full pointer'>
+  <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
     <div class='image item-2 w-full position-relative rounded-3 overflow-hidden d-flex justify-content-between align-items-end text-white' class:bg-black={episodeThumbnail === ' '}>
       <img loading='lazy' src={episodeThumbnail} alt='cover' class='cover-img w-full h-full position-absolute' style:--color={data.media?.coverImage?.color || '#1890ff'} />
       <div class='pl-10 pb-10 material-symbols-outlined filled z-10'>play_arrow</div>
@@ -22,22 +23,25 @@
       </div>
     </div>
     <div class='row pt-15'>
-      <div class='col-7'>
+      <div class='col pr-10'>
         <div class='text-white font-weight-very-bold font-size-16 title overflow-hidden'>
           {#if data.media?.mediaListEntry?.status}
             <div style:--statusColor={statusColorMap[data.media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={data.media.mediaListEntry.status} />
           {/if}
           {data.media?.title.userPreferred || data.parseObject.anime_title}
         </div>
+        <div class='text-muted font-size-12 title overflow-hidden'>
+          {data.episodeData?.title.en || ''}
+        </div>
       </div>
-        <div class='col-5 d-flex flex-column align-items-end text-right'>
+        <div class='col-auto d-flex flex-column align-items-end text-right'>
           {#if data.episode}
-          <div class='text-white'>
+          <div class='text-white font-weight-bold'>
             Episode {data.episode} / {data.media?.episodes || '?'}
           </div>
           {/if}
           <div class='text-muted font-size-12 title overflow-hidden'>
-            {data.date}
+            {since(data.date)}
           </div>
         </div>
       
@@ -51,7 +55,7 @@
   }
   .title {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
   }
   .image:after {
@@ -64,6 +68,7 @@
   .item {
     animation: 0.3s ease 0s 1 load-in;
     width: 33rem;
+    contain-intrinsic-height: 25.7rem;;
     
   }
   .item-2 {

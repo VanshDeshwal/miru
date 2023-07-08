@@ -21,12 +21,10 @@ video.remove()
 export function parseRSSNodes (nodes) {
   return nodes.map(item => {
     const pubDate = item.querySelector('pubDate')?.textContent
-    const modlink = item.querySelector('link')?.textContent
-    let modlink2 = modlink.replace(/nyaa.si/, "45.14.106.246");
 
     return {
       title: item.querySelector('title')?.textContent || '?',
-      link: modlink2 || '?',
+      link: item.querySelector('enclosure')?.attributes.url.value || '?',
       seeders: item.querySelector('seeders')?.textContent ?? '?',
       leechers: item.querySelector('leechers')?.textContent ?? '?',
       downloads: item.querySelector('downloads')?.textContent ?? '?',
@@ -37,9 +35,9 @@ export function parseRSSNodes (nodes) {
 }
 
 const rssmap = {
-  SubsPlease: `${set.catURL}/?page=rss&c=0_0&f=0&u=subsplease&q=`,
-  'Erai-raws [Multi-Sub]': `${set.catURL}/?page=rss&c=0_0&f=0&u=Erai-raws&q=`,
-  'NC-Raws': `${set.catURL}/?page=rss&c=0_0&f=0&u=BraveSail&q=`
+  SubsPlease: set.toshoURL + 'rss2?qx=1&q="[SubsPlease] "',
+  'NC-Raws': set.toshoURL + 'rss2?qx=1&q="[NC-Raws] "',
+  'Erai-raws [Multi-Sub]': set.toshoURL + 'rss2?qx=1&q="[Erai-raws] "'
 }
 export function getReleasesRSSurl (val) {
   const rss = rssmap[val] || val
@@ -99,18 +97,19 @@ class RSSMediaManager {
     return result
   }
 
-  resolveAnimeFromRSSItem ({ title, link, date }) {
-    this.lastResult = this.queueResolve(title, link, date)
+  resolveAnimeFromRSSItem (item) {
+    this.lastResult = this.queueResolve(item)
     return this.lastResult
   }
 
-  async queueResolve (title, link, date) {
+  async queueResolve ({ title, link, date }) {
     await this.lastResult
     date = since(date)
     const res = (await resolveFileMedia(title, date))[0]
     if (res.media?.id) {
       res.episodeData = (await getEpisodeMetadataForMedia(res.media))?.[res.episode]
     }
+    res.date = date
     res.onclick = () => add(link)
     return res
   }

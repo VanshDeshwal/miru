@@ -14,7 +14,7 @@
 
   const manager = new Sections()
 
-  for (const [title, url] of set.rssFeeds.reverse()) {
+  for (const [title, url] of set.rssFeedsNew.reverse()) {
     const load = (page = 1, perPage = 6) => RSSManager.getMediaForRSS(page, perPage, url)
     manager.add([
       {
@@ -76,7 +76,7 @@
     userLists.subscribe(() => {
       const titles = sections.map(({ title }) => title)
       for (const section of manager.sections) {
-        if (titles.includes(section.title)) delete section.preview
+        if (titles.includes(section.title)) section.preview.value = undefined
       }
     })
     manager.add(sections)

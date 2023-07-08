@@ -21,7 +21,7 @@
   {#if preview}
     <PreviewCard {media} />
   {/if}
-  <div class='item d-flex flex-column h-full pointer'>
+  <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
     <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-3' style:--color={media.coverImage.color || '#1890ff'} />
     {#if media.averageScore}
     <div class='rating position-absolute'>
@@ -70,7 +70,8 @@
   }
   .item {
     animation: 0.3s ease 0s 1 load-in;
-    width: 185px
+    width: 185px;
+    contain-intrinsic-height: 36.7rem;
   }
   .cover-img {
     object-fit: cover;
