@@ -7,6 +7,7 @@
   const items = writable([])
 </script>
 
+
 <script>
   import Search, { searchCleanup } from '../components/Search.svelte'
   import Card from '../components/cards/Card.svelte'

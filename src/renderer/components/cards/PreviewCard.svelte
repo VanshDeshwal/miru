@@ -1,10 +1,11 @@
 <script>
   import { formatMap, setStatus, playMedia } from '@/modules/anime.js'
   import { alRequest } from '@/modules/anilist.js'
+  import { countdown } from '@/modules/util.js'
   export let media
 
   let hide = true
-
+  
   function getPlayButtonText (media) {
     if (media.mediaListEntry) {
       const { status, progress } = media.mediaListEntry
@@ -79,8 +80,19 @@
       <button class='btn btn-primary h-50 flex-grow-1 font-size-20 text-dark font-weight-bold shadow-none border-0'
         on:pointerdown|stopPropagation={() => media.status !== 'NOT_YET_RELEASED' && playMedia(media)}
         disabled={media.status === 'NOT_YET_RELEASED'}>
-        {playButtonText}
+        <div>
+          {playButtonText}
+        </div>
+        <div style="position:relative; bottom:4px; font-size:10px;">
+          {#if media.status === 'NOT_YET_RELEASED' && media.nextAiringEpisode}
+          <span class="material-symbols-outlined lock">
+            lock
+            </span>
+          {countdown(media.nextAiringEpisode.timeUntilAiring)}
+          {/if}
+        </div>
       </button>
+
       <button class='btn h-50 btn-square ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.isFavourite} on:pointerdown|stopPropagation={toggleFavourite}>
         favorite
       </button>
@@ -161,6 +173,15 @@
     left: -100%;
     right: -100%;
   }
+  .lock {
+    font-size: 10px;
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 700,
+  'GRAD' 200,
+  'opsz' 20
+}
+
   /* @keyframes delayedShow {
     to {
       visibility: visible;

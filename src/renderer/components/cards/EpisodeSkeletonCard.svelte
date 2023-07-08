@@ -1,13 +1,13 @@
 <div class='d-flex pt-20 px-20 position-relative wrapper'>
   <div class='item d-flex flex-column h-full'>
-    <div class='image h-200 w-full rounded-3 skeloader bg-dark-light' />
+    <div class='image item-2 w-full rounded-3 skeloader bg-dark-light' />
     <div class='row pt-15'>
       <div class='col-7'>
-        <div class='h-10 skeloader w-150 bg-dark-light rounded ' />
+        <div class='h-10 skeloader w-150 bg-dark-light rounded-3 ' />
       </div>
       <div class='col-5 d-flex flex-column align-items-end'>
-        <div class='h-10 skeloader w-100 bg-dark-light mb-5 rounded ' />
-        <div class='h-10 skeloader w-50 bg-dark-light rounded ' />
+        <div class='h-10 skeloader w-100 bg-dark-light mb-5 rounded-3 ' />
+        <div class='h-10 skeloader w-50 bg-dark-light rounded-3 ' />
       </div>
     </div>
   </div>
@@ -16,9 +16,12 @@
 <style>
   .item {
     animation: 0.3s ease 0s 1 load-in;
-    width: 36rem
+    width: 33rem
   }
   .wrapper {
     height: 29.2rem;
+  }
+  .item-2 {
+    height:150px !important;
   }
 </style>

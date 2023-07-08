@@ -7,6 +7,7 @@
     export let loadCurrent
     let searchTimeout = null
     let searchTextInput
+
   
     function searchClear () {
       search = {
@@ -70,7 +71,7 @@
           autocomplete='off'
           bind:value={search.search}
           data-option='search'
-          placeholder='Title' />
+          placeholder='' />
       </div>
     </div>
     <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>

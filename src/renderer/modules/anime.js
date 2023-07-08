@@ -213,7 +213,7 @@ function getParseObjTitle (obj) {
 }
 
 // TODO: anidb aka true episodes need to be mapped to anilist episodes a bit better
-export async function resolveFileMedia (fileName) {
+export async function resolveFileMedia (fileName, pubDate) {
   let parseObjs = await anitomyscript(fileName)
 
   if (parseObjs.constructor !== Array) parseObjs = [parseObjs]

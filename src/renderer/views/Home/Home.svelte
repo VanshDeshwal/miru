@@ -101,7 +101,7 @@
   import smoothScroll from '@/modules/scroll.js'
 </script>
 
-<div class='h-full w-full overflow-y-scroll root overflow-x-hidden'>
+<div class='h-full w-full overflow-y-scroll root overflow-x-hidden' use:smoothScroll>
   <Banner data={bannerData} />
   <div class='d-flex flex-column h-full w-full'>
     {#each manager.sections as section, i (i)}
