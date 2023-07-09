@@ -1,7 +1,7 @@
 <script>
   import { statusColorMap, formatMap } from '@/modules/anime.js'
-  import { since } from '@/modules/util'
   export let data
+  console.log(data)
 
   const media = data.media
   const episodeThumbnail = data.episodeData?.image || media?.bannerImage || media?.coverImage.extraLarge || ' '
@@ -34,9 +34,6 @@
         <div class='col-auto d-flex flex-column align-items-end text-right'>
           <div class='text-white font-weight-bold'>
             Episode {data.episode}
-          </div>
-          <div class='text-muted font-size-12 title overflow-hidden'>
-            {since(data.date)}
           </div>
         </div>
       {/if}

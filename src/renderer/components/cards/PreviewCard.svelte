@@ -5,6 +5,8 @@
   export let media
 
   let hide = true
+
+ console.log(media)
   
   function getPlayButtonText (media) {
     if (media.mediaListEntry) {

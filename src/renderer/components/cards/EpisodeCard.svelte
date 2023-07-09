@@ -1,7 +1,6 @@
 <script>
   import { statusColorMap } from '@/modules/anime.js'
   import EpisodePreviewCard from './EpisodePreviewCard.svelte'
-  import { since } from '@/modules/util'
   export let data
 
   let preview = false
@@ -12,7 +11,7 @@
   {#if preview}
     <EpisodePreviewCard {data} />
   {/if}
-  <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
+  <div class='item d-flex flex-column h-full pointer  content-visibility-auto'>
     <div class='image item-2 w-full position-relative rounded-3 overflow-hidden d-flex justify-content-between align-items-end text-white' class:bg-black={episodeThumbnail === ' '}>
       <img loading='lazy' src={episodeThumbnail} alt='cover' class='cover-img w-full h-full position-absolute' style:--color={data.media?.coverImage?.color || '#1890ff'} />
       <div class='pl-10 pb-10 material-symbols-outlined filled z-10'>play_arrow</div>
@@ -34,14 +33,14 @@
           {data.episodeData?.title.en || ''}
         </div>
       </div>
-        <div class='col-auto d-flex flex-column align-items-end text-right'>
+        <div class='col-5 d-flex flex-column align-items-end text-right'>
           {#if data.episode}
-          <div class='text-white font-weight-bold'>
+          <div class='text-white'>
             Episode {data.episode} / {data.media?.episodes || '?'}
           </div>
           {/if}
           <div class='text-muted font-size-12 title overflow-hidden'>
-            {since(data.date)}
+            {data.date}
           </div>
         </div>
       
@@ -68,11 +67,12 @@
   .item {
     animation: 0.3s ease 0s 1 load-in;
     width: 33rem;
-    contain-intrinsic-height: 25.7rem;;
     
   }
   .item-2 {
     height:150px !important;
+    width: 36rem;
+    contain-intrinsic-height: 25.7rem;
   }
   .cover-img {
     object-fit: cover;

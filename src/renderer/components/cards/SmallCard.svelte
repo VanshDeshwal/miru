@@ -6,6 +6,8 @@
   export let media
   let preview = false
 
+
+
   const view = getContext('view')
   function viewMedia () {
     $view = media
