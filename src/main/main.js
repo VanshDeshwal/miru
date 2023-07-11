@@ -1,8 +1,8 @@
-const { app, BrowserWindow, protocol, shell, ipcMain, dialog, MessageChannelMain } = require('electron')
-const path = require('path')
-const { Client } = require('discord-rpc')
-const log = require('electron-log')
-const { autoUpdater } = require('electron-updater')
+import { app, BrowserWindow, protocol, shell, ipcMain, dialog, MessageChannelMain } from 'electron'
+import path from 'path'
+import { Client } from 'discord-rpc'
+import log from 'electron-log'
+import { autoUpdater } from 'electron-updater'
 
 const flags = [
   ['enable-gpu-rasterization'],
@@ -91,20 +91,6 @@ ipcMain.on('open', (event, url) => {
 let mainWindow
 let webtorrentWindow
 
-function UpsertKeyValue (obj, keyToChange, value) {
-  const keyToChangeLower = keyToChange.toLowerCase()
-  for (const key of Object.keys(obj)) {
-    if (key.toLowerCase() === keyToChangeLower) {
-      // Reassign old key
-      obj[key] = value
-      // Done
-      return
-    }
-  }
-  // Insert at end instead
-  obj[keyToChange] = value
-}
-
 ipcMain.on('devtools', () => {
   webtorrentWindow.webContents.openDevTools()
 })
@@ -159,14 +145,8 @@ function createWindow () {
     }
   })
 
-  mainWindow.webContents.session.webRequest.onHeadersReceived((details, fn) => {
-    const { responseHeaders, method } = details
-
-    if (method === 'OPTIONS') return fn({ responseHeaders })
-
-    if (!responseHeaders['access-control-allow-origin']) UpsertKeyValue(responseHeaders, 'Access-Control-Allow-Origin', ['*'])
-    if (!responseHeaders['access-control-allow-credentials']) UpsertKeyValue(responseHeaders, 'Access-Control-Allow-Origin', ['*'])
-    if (!responseHeaders['access-control-allow-credentials']) UpsertKeyValue(responseHeaders, 'Access-Control-Allow-Headers', ['*'])
+  mainWindow.webContents.session.webRequest.onHeadersReceived({ urls: ['https://sneedex.moe/api/public/nyaa', 'http://animetosho.org/storage/torrent/*'] }, ({ responseHeaders }, fn) => {
+    responseHeaders['Access-Control-Allow-Origin'] = '*'
 
     fn({ responseHeaders })
   })
@@ -278,15 +258,15 @@ let rpcStarted = false
 let cachedPresence = null
 
 ipcMain.on('discord_status', (event, data) => {
-  requestedDiscordDetails = data;
+  requestedDiscordDetails = data
   if (!rpcStarted) {
     handleRPC()
-    setInterval(handleRPC, 5000) //According to Discord documentation, clients can only update their presence 5 times per 20 seconds. We will add an extra second to be safe.
+    setInterval(handleRPC, 5000) // According to Discord documentation, clients can only update their presence 5 times per 20 seconds. We will add an extra second to be safe.
     rpcStarted = true
   }
 })
 
-function handleRPC() {
+function handleRPC () {
   if (allowDiscordDetails === requestedDiscordDetails) return
 
   allowDiscordDetails = requestedDiscordDetails

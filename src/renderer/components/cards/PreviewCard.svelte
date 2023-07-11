@@ -1,6 +1,7 @@
 <script>
   import { formatMap, setStatus, playMedia } from '@/modules/anime.js'
   import { alRequest } from '@/modules/anilist.js'
+  import { click } from '@/modules/click.js'
   import { countdown } from '@/modules/util.js'
   export let media
 
@@ -43,6 +44,10 @@
     })
     media.isFavourite = !media.isFavourite
   }
+  function play () {
+    if (media.status === 'NOT_YET_RELEASED') return
+    playMedia(media)
+  }
   // TODO: add a volume toggle icon for trailer
   function volume (video) {
     video.volume = 0.05
@@ -54,8 +59,9 @@
     <img src={media.bannerImage || ' '} alt='banner' class='img-cover w-full h-full' />
     {#if media.trailer?.id}
       <!-- for now we use some invidious instance, would be nice to somehow get these links outselves, this redirects straight to some google endpoint -->
+      <!-- `https://yewtu.be/latest_version?id=${media.trailer.id}&itag=18` -->
       <!-- eslint-disable-next-line svelte/valid-compile -->
-      <video src={`https://yewtu.be/latest_version?id=${media.trailer.id}&itag=18`}
+      <video src={`https://proxy2.vnxservers.com/youtube/${media.trailer.id}`}
         class='w-full position-absolute left-0'
         class:d-none={hide}
         playsinline
@@ -80,7 +86,7 @@
     </div>
     <div class='d-flex flex-row pt-5'>
       <button class='btn btn-primary h-50 flex-grow-1 font-size-20 text-dark font-weight-bold shadow-none border-0'
-        on:pointerdown|stopPropagation={() => media.status !== 'NOT_YET_RELEASED' && playMedia(media)}
+        use:click={play}
         disabled={media.status === 'NOT_YET_RELEASED'}>
         <div>
           {playButtonText}
@@ -95,10 +101,10 @@
         </div>
       </button>
 
-      <button class='btn h-50 btn-square ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.isFavourite} on:pointerdown|stopPropagation={toggleFavourite}>
+      <button class='btn h-50 btn-square ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.isFavourite} use:click={toggleFavourite}>
         favorite
       </button>
-      <button class='btn h-50 btn-square ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.mediaListEntry} on:pointerdown|stopPropagation={toggleStatus}>
+      <button class='btn h-50 btn-square ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.mediaListEntry} use:click={toggleStatus}>
         bookmark
       </button>
     </div>

@@ -1,5 +1,6 @@
 <script context='module'>
   import { addToast } from '../components/Toasts.svelte'
+  import { click } from '@/modules/click.js'
   export let alToken = localStorage.getItem('ALtoken') || null
   const defaults = {
     playerAutoplay: true,
@@ -21,9 +22,10 @@
     disableSubtitleBlur: false,
     toshoURL: decodeURIComponent(atob('aHR0cHM6Ly9mZWVkLmFuaW1ldG9zaG8ub3JnLw==')),
     showDetailsInRPC: true,
+    smoothScroll: true,
     cards: 'small'
   }
-  localStorage.removeItem('relations') // TODO: remove
+
   export const set = { ...defaults, ...(JSON.parse(localStorage.getItem('settings')) || {}) }
   if (set.enableDoH) window.IPC.emit('doh', set.doHURL)
   window.addEventListener('paste', ({ clipboardData }) => {
@@ -123,6 +125,11 @@
       icon: 'settings',
       desc: 'Discord Rich Presence settings.'
     },
+    interface: {
+      name: 'Interface',
+      icon: 'settings',
+      desc: 'Interface settings.'
+    },
     changelog: {
       name: 'Changelog',
       icon: 'list',
@@ -182,7 +189,7 @@
         </TabLabel>
       {/each}
       <button
-        on:click={() => window.IPC.emit('open', 'https://github.com/sponsors/ThaUnknown/')}
+        use:click={() => window.IPC.emit('open', 'https://github.com/sponsors/ThaUnknown/')}
         class='btn btn-primary mx-20 mt-auto'
         type='button'
         data-toggle='tooltip'
@@ -191,7 +198,7 @@
         Donate
       </button>
       <button
-        on:click={checkUpdate}
+        use:click={checkUpdate}
         class='btn btn-primary mx-20 mt-10'
         type='button'
         data-toggle='tooltip'
@@ -200,7 +207,7 @@
         Check For Updates
       </button>
       <button
-        on:click={restoreSettings}
+        use:click={restoreSettings}
         class='btn btn-danger mx-20 mt-10'
         type='button'
         data-toggle='tooltip'
@@ -356,12 +363,12 @@
                 <option value='Erai-raws [Multi-Sub]'>{set.toshoURL + 'rss2?qx=1&q="[Erai-raws] "'}</option>
               </datalist>
               <div class='input-group-append'>
-                <button type='button' on:click={() => { settings.rssFeedsNew.splice(i, 1); settings.rssFeedsNew = settings.rssFeedsNew }} class='btn btn-danger btn-lg input-group-append'>Remove</button>
+                <button type='button' use:click={() => { settings.rssFeedsNew.splice(i, 1); settings.rssFeedsNew = settings.rssFeedsNew }} class='btn btn-danger btn-lg input-group-append'>Remove</button>
               </div>
             </div>
           {/each}
           <div class='input-group input-group-lg form-control-lg mb-10 w-500'>
-            <button type='button' on:click={() => { settings.rssFeedsNew[settings.rssFeedsNew.length] = ['New Releases', null] }} class='btn btn-lg btn-primary mb-10'>Add Feed</button>
+            <button type='button' use:click={() => { settings.rssFeedsNew[settings.rssFeedsNew.length] = ['New Releases', null] }} class='btn btn-lg btn-primary mb-10'>Add Feed</button>
           </div>
           <div class='input-group mb-10 w-300 form-control-lg' data-toggle='tooltip' data-placement='top' data-title='What Quality To Find Torrents In'>
             <div class='input-group-prepend'>
@@ -421,7 +428,7 @@
             data-placement='bottom'
             data-title='Path To Folder Which To Use To Store Torrent Files'>
             <div class='input-group-prepend'>
-              <button type='button' on:click={handleFolder} class='btn btn-primary input-group-append'>Select Folder</button>
+              <button type='button' use:click={handleFolder} class='btn btn-primary input-group-append'>Select Folder</button>
             </div>
             <input type='text' class='form-control' bind:value={settings.torrentPath} placeholder='Folder Path' />
           </div>
@@ -500,6 +507,18 @@
             data-title='Shows currently played anime and episode in Discord Rich Presence.'>
             <input type='checkbox' id='rpc-details' bind:checked={settings.showDetailsInRPC} />
             <label for='rpc-details'>Show details in Discord Rich Presence</label>
+          </div>
+        </div>
+      </Tab>
+      <Tab>
+        <div class='root p-20 m-20'>
+          <div
+            class='custom-switch mb-10 pl-10 font-size-16 w-300'
+            data-toggle='tooltip'
+            data-placement='bottom'
+            data-title='Enables smooth scrolling for long vertical containers. Impacts performance.'>
+            <input type='checkbox' id='smooth-scroll' bind:checked={settings.smoothScroll} />
+            <label for='smooth-scroll'>Enable smooth scrolling</label>
           </div>
         </div>
       </Tab>
