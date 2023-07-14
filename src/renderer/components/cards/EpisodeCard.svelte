@@ -8,7 +8,7 @@
   const episodeThumbnail = data.episodeData?.image || data.media?.bannerImage || data.media?.coverImage?.extraLarge || ' '
 </script>
 
-<div class='d-flex pt-20 px-20 position-relative' on:pointerenter={() => { preview = true }} on:custom-pointerleave={() => { preview = false }} use:hoverClick={data.onclick}>
+<div class='d-flex p-20 pb-10 position-relative' on:pointerenter={() => { preview = true }} on:custom-pointerleave={() => { preview = false }} use:hoverClick={data.onclick}>
   {#if preview}
     <EpisodePreviewCard {data} />
   {/if}
@@ -76,7 +76,6 @@
     contain-intrinsic-height: 25.7rem;
   }
   .cover-img {
-    object-fit: cover;
     background-color: var(--color) !important;
   }
   .list-status-circle {

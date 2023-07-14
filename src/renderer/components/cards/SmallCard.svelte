@@ -3,6 +3,10 @@
   import PreviewCard from './PreviewCard.svelte'
   import { formatMap, statusColorMap } from '@/modules/anime.js'
   import { hoverClick } from '@/modules/click.js'
+  import { countdown } from '@/modules/util.js'
+
+  import { page } from '@/App.svelte'
+
   import {release_time} from '@/modules/util.js'
   export let media
   let preview = false
@@ -25,13 +29,19 @@
     <PreviewCard {media} />
   {/if}
   <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
-    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-3' style:--color={media.coverImage.color || '#1890ff'} />
-    {#if media.averageScore}
-    <div class='rating position-absolute'>
-      <span class='p-5 material-icons rating-icon'>grade</span>
-      <span class='pt-5 pr-5 rating-number position-absolute'>{rating(media.averageScore)}</span>
-    </div>
+    {#if $page === 'schedule'}
+      <div class='w-full text-center pb-10'>
+        {#if media.airingSchedule?.nodes?.[0]?.airingAt}
+          Episode {media.airingSchedule.nodes[0].episode } in
+          <span class='font-weight-bold text-light'>
+            {countdown(media.airingSchedule.nodes[0].airingAt - Date.now() / 1000)}
+          </span>
+        {:else}
+          &nbsp;
+        {/if}
+      </div>
     {/if}
+    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded' style:--color={media.coverImage.color || '#1890ff'} />
     <div class='text-white font-weight-very-bold font-size-16 pt-15 title overflow-hidden'>
       {#if media.mediaListEntry?.status}
         <div style:--statusColor={statusColorMap[media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={media.mediaListEntry.status} />
@@ -77,7 +87,6 @@
     contain-intrinsic-height: 36.7rem;
   }
   .cover-img {
-    object-fit: cover;
     background-color: var(--color) !important;
   }
   .list-status-circle {

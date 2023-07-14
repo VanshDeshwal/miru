@@ -83,20 +83,10 @@
       {media.title.userPreferred}
     </div>
     <div class='d-flex flex-row pt-5'>
-      <button class='btn btn-primary h-50 flex-grow-1 font-size-20 text-dark font-weight-bold shadow-none border-0'
+      <button class='btn btn-primary h-50 flex-grow-1 font-size-20 text-dark font-weight-bold shadow-none border-0 d-flex align-items-center justify-content-center'
         use:click={play}
         disabled={media.status === 'NOT_YET_RELEASED'}>
-        <div>
-          {playButtonText}
-        </div>
-        <div style="position:relative; bottom:4px; font-size:10px;">
-          {#if media.status === 'NOT_YET_RELEASED' && media.nextAiringEpisode}
-          <span class="material-symbols-outlined lock">
-            lock
-            </span>
-          {countdown(media.nextAiringEpisode.timeUntilAiring)}
-          {/if}
-        </div>
+        {playButtonText}
       </button>
 
       <button class='btn h-50 btn-square ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.isFavourite} use:click={toggleFavourite}>
