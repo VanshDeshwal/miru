@@ -32,7 +32,7 @@
     items.value = []
     key = {}
     loadSearchData()
-  }, 150)
+  }, 300)
 
   let canScroll = true
 
