@@ -29,26 +29,22 @@
     <PreviewCard {media} />
   {/if}
   <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
-    {#if $page === 'schedule'}
-      <div class='w-full text-center pb-10'>
-        {#if media.airingSchedule?.nodes?.[0]?.airingAt}
-          Episode {media.airingSchedule.nodes[0].episode } in
-          <span class='font-weight-bold text-light'>
-            {countdown(media.airingSchedule.nodes[0].airingAt - Date.now() / 1000)}
-          </span>
-        {:else}
-          &nbsp;
-        {/if}
-      </div>
+    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-3' style:--color={media.coverImage.color || '#1890ff'} />
+    {#if media.averageScore}
+    <div class='rating position-absolute'>
+      <span class='p-5 material-icons rating-icon'>grade</span>
+      <span class='pt-5 pr-5 rating-number position-absolute'>{rating(media.averageScore)}</span>
+    </div>
     {/if}
-    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded' style:--color={media.coverImage.color || '#1890ff'} />
     <div class='text-white font-weight-very-bold font-size-16 pt-15 title overflow-hidden'>
       {#if media.mediaListEntry?.status}
         <div style:--statusColor={statusColorMap[media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={media.mediaListEntry.status} />
       {/if}
       {media.title.userPreferred}
     </div>
+   
     <div class='d-flex flex-row mt-auto pt-10 font-weight-medium justify-content-between w-full text-muted'>
+      {#if $page!== 'schedule'}
       <div class='d-flex align-items-center' style='margin-left: -3px'>
         <span class='material-symbols-outlined font-size-24 pr-5'>calendar_month</span>
         {media.seasonYear || 'N/A'}
@@ -57,14 +53,30 @@
         {formatMap[media.format]}
         <span class='material-symbols-outlined font-size-24 pl-5'>monitor</span>
       </div>
-      <div>
-        {#if media.schedule && media.nextAiringEpisode}
-      <span class=' font-weight-bold badge-color'>
-        {'EP ' + media.nextAiringEpisode.episode + ' releasing at ' + release_time(media.nextAiringEpisode.timeUntilAiring)}
-      </span>
       {/if}
+
+      {#if $page === 'schedule'}
+      <div class='d-flex align-items-center schedule'>
+        {#if media.airingSchedule?.nodes?.[0]?.airingAt}
+          <span class='material-symbols-outlined font-size-24 pr-5'>acute</span>
+          EP {media.airingSchedule.nodes[0].episode } in
+          <span class='font-weight-bold text-light pl-5'>
+            { countdown(media.airingSchedule.nodes[0].airingAt - Date.now() / 1000)}
+          </span>
+        {:else}
+          &nbsp;
+        {/if}
       </div>
+      {/if}
       
+
+
+
+
+
+
+      
+     
     </div>
   </div>
 </div>
@@ -106,5 +118,8 @@
   }
   .rating-number{
     top:0px;
+  }
+  .schedule{
+    font-size: larger;
   }
 </style>
