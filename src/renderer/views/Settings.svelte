@@ -1,5 +1,6 @@
 <script context='module'>
-  import { addToast } from '../components/Toasts.svelte'
+
+  import { toast } from 'svelte-sonner'
   import { click } from '@/modules/click.js'
   export let alToken = localStorage.getItem('ALtoken') || null
   const defaults = {
@@ -23,7 +24,8 @@
     toshoURL: decodeURIComponent(atob('aHR0cHM6Ly9mZWVkLmFuaW1ldG9zaG8ub3JnLw==')),
     showDetailsInRPC: true,
     smoothScroll: true,
-    cards: 'small'
+    cards: 'small',
+    expandingSidebar: true
   }
 
   export const set = { ...defaults, ...(JSON.parse(localStorage.getItem('settings')) || {}) }
@@ -64,17 +66,14 @@
   window.IPC.on('update-available', () => {
     if (!wasUpdated) {
       wasUpdated = true
-      addToast({
-        title: 'Auto Updater',
-        text: 'A new version of Miru is available. Downloading!'
+      toast('Auto Updater', {
+        description: 'A new version of Miru is available. Downloading!'
       })
     }
   })
   window.IPC.on('update-downloaded', () => {
-    addToast({
-      title: 'Auto Updater',
-      text: 'A new version of Miru has downloaded. You can restart to update!',
-      type: 'success'
+    toast.success('Auto Updater', {
+      description: 'A new version of Miru has downloaded. You can restart to update!'
     })
   })
   function checkUpdate () {
@@ -163,10 +162,8 @@
       }
     } catch (error) {
       console.warn(error)
-      addToast({
-        text: /* html */`${error.message}<br>Try using a different font.`,
-        title: 'File Error',
-        type: 'secondary',
+      toast.error('File Error', {
+        description: `${error.message}<br>Try using a different font.`,
         duration: 8000
       })
     }
@@ -504,9 +501,9 @@
             class='custom-switch mb-10 pl-10 font-size-16 w-300'
             data-toggle='tooltip'
             data-placement='bottom'
-            data-title='Shows currently played anime and episode in Discord Rich Presence.'>
+            data-title='Shows Currently Played Anime And Episode in Discord Rich Presence.'>
             <input type='checkbox' id='rpc-details' bind:checked={settings.showDetailsInRPC} />
-            <label for='rpc-details'>Show details in Discord Rich Presence</label>
+            <label for='rpc-details'>Show Details in Discord Rich Presence</label>
           </div>
         </div>
       </Tab>
@@ -516,9 +513,17 @@
             class='custom-switch mb-10 pl-10 font-size-16 w-300'
             data-toggle='tooltip'
             data-placement='bottom'
-            data-title='Enables smooth scrolling for long vertical containers. Impacts performance.'>
+            data-title='Enables Smooth Scrolling For Long Vertical Containers. Impacts Performance.'>
             <input type='checkbox' id='smooth-scroll' bind:checked={settings.smoothScroll} />
-            <label for='smooth-scroll'>Enable smooth scrolling</label>
+            <label for='smooth-scroll'>Enable Smooth Scrolling</label>
+          </div>
+          <div
+            class='custom-switch mb-10 pl-10 font-size-16 w-300'
+            data-toggle='tooltip'
+            data-placement='bottom'
+            data-title='Enables Sidebar Hover Animations'>
+            <input type='checkbox' id='disable-sidebar' bind:checked={settings.expandingSidebar} />
+            <label for='disable-sidebar'>Enable Sidebar Animations</label>
           </div>
         </div>
       </Tab>
