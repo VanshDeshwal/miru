@@ -1,7 +1,6 @@
 <script>
   import { statusColorMap, formatMap } from '@/modules/anime.js'
   export let data
-  console.log(data)
 
   const media = data.media
   const episodeThumbnail = data.episodeData?.image || media?.bannerImage || media?.coverImage.extraLarge || ' '

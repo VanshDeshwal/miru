@@ -32,7 +32,7 @@
     <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-3' style:--color={media.coverImage.color || '#1890ff'} />
     {#if media.averageScore}
     <div class='rating position-absolute'>
-      <span class='p-5 material-icons rating-icon'>grade</span>
+      <span class='p-5 material-symbols-outlined rating-icon'>grade</span>
       <span class='pt-5 pr-5 rating-number position-absolute'>{rating(media.averageScore)}</span>
     </div>
     {/if}
@@ -113,6 +113,8 @@
     border-radius: 0.8rem 0 0.8rem 0;
   }
   .rating-icon{
+    font-variation-settings: 
+    'FILL' 1;
     color:yellow;
     font-size:18px;
   }

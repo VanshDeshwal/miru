@@ -23,6 +23,7 @@
     disableSubtitleBlur: false,
     toshoURL: decodeURIComponent(atob('aHR0cHM6Ly9mZWVkLmFuaW1ldG9zaG8ub3JnLw==')),
     showDetailsInRPC: true,
+    theme: 'default',
     smoothScroll: true,
     cards: 'small',
     expandingSidebar: true
@@ -113,11 +114,6 @@
       name: 'Torrent',
       icon: 'hub',
       desc: 'Torrent client settings, and preferences.'
-    },
-    ui:{
-      name: 'UI',
-      icon: 'palette',
-      desc: 'change how the app looks'
     },
     discord: {
       name: 'Discord',
@@ -480,6 +476,18 @@
       </Tab>
       <Tab>
         <div class='root p-20 m-20'>
+          <div
+            class='custom-switch mb-10 pl-10 font-size-16 w-300'
+            data-toggle='tooltip'
+            data-placement='bottom'
+            data-title='Shows Currently Played Anime And Episode in Discord Rich Presence.'>
+            <input type='checkbox' id='rpc-details' bind:checked={settings.showDetailsInRPC} />
+            <label for='rpc-details'>Show Details in Discord Rich Presence</label>
+          </div>
+        </div>
+      </Tab>
+      <Tab>
+        <div class='root p-20 m-20'>
           <div class='input-group mb-10 w-300 form-control-lg' data-toggle='tooltip' data-placement='top' data-title='Choose a theme' >
             <div class='input-group-prepend'>
               <span class='input-group-text w-100 justify-content-center'>Theme</span>
@@ -493,22 +501,6 @@
               <option value='anilist-blue'>Anilist-Blue</option>
             </select>
           </div>
-        </div>
-      </Tab>
-      <Tab>
-        <div class='root p-20 m-20'>
-          <div
-            class='custom-switch mb-10 pl-10 font-size-16 w-300'
-            data-toggle='tooltip'
-            data-placement='bottom'
-            data-title='Shows Currently Played Anime And Episode in Discord Rich Presence.'>
-            <input type='checkbox' id='rpc-details' bind:checked={settings.showDetailsInRPC} />
-            <label for='rpc-details'>Show Details in Discord Rich Presence</label>
-          </div>
-        </div>
-      </Tab>
-      <Tab>
-        <div class='root p-20 m-20'>
           <div
             class='custom-switch mb-10 pl-10 font-size-16 w-300'
             data-toggle='tooltip'

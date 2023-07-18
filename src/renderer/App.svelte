@@ -16,7 +16,6 @@
 </script>
 
 <script>
-  import {set} from './views/Settings.svelte'
   import Sidebar from './components/Sidebar.svelte'
   import Router from './Router.svelte'
   import ViewAnime from './views/ViewAnime/ViewAnime.svelte'
@@ -24,7 +23,7 @@
   import RSSView from './views/RSSView.svelte'
   import Menubar from './components/Menubar.svelte'
   import IspBlock from './views/IspBlock.svelte'
-  import { Toaster, toast } from 'svelte-sonner'
+  import { Toaster} from 'svelte-sonner'
 
   setContext('view', view)
 
