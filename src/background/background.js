@@ -11,7 +11,9 @@ class TorrentClient extends WebTorrent {
       dht: !settings.torrentDHT,
       maxConns: settings.maxConns,
       downloadLimit: settings.torrentSpeed * 1048576 || 0,
-      uploadLimit: settings.torrentSpeed * 1572864 || 0 // :trolled:
+      uploadLimit: settings.torrentSpeed * 1572864 || 0, // :trolled:
+      torrentPort: settings.torrentPort || 0,
+      dhtPort: settings.dhtPort || 0
     })
     this.settings = settings
 
@@ -37,6 +39,10 @@ class TorrentClient extends WebTorrent {
     this.trackers = {
       cat: new HTTPTracker({}, atob('aHR0cDovL255YWEudHJhY2tlci53Zjo3Nzc3L2Fubm91bmNl'))
     }
+
+    this.on('error', e => {
+      this.dispatch('error', e)
+    })
   }
 
   handleTorrent (torrent) {

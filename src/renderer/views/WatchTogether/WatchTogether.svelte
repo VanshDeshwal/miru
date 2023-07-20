@@ -130,13 +130,10 @@
     index: 0
   }
 
-  function checkInvite (invite) {
+  window.IPC.on('w2glink', link => {
+    joinLobby(link)
     page.set('watchtogether')
-    joinLobby(invite?.match(inviteRx)[1])
-  }
-
-  const inviteRx = /([A-z0-9]{16})/i
-  window.IPC.on('w2glink', checkInvite)
+  })
 
   function cleanup () {
     state.set(false)
@@ -160,6 +157,17 @@
   import Lobby from './Lobby.svelte'
 
   let joinText
+
+  const inviteRx = /([A-z0-9]{16})/i
+  function checkInvite (invite) {
+    if (!invite) return
+    const match = invite?.match(inviteRx)?.[1]
+    if (!match) return
+    console.log(match)
+    page.set('watchtogether')
+    joinLobby(match)
+    joinText = ''
+  }
 
   $: checkInvite(joinText)
 </script>
