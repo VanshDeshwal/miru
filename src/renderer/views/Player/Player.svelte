@@ -254,7 +254,7 @@
     }
   }
   function toggleFullscreen () {
-    document.fullscreenElement ? document.exitFullscreen() : container.requestFullscreen()
+    document.fullscreenElement ? document.exitFullscreen() : document.querySelector('.content-wrapper').requestFullscreen()
   }
   function skip () {
     const current = findChapter(currentTime)
@@ -338,6 +338,12 @@
       })
     }
   }
+  function updatePiPState (paused) {
+    if (!document.pictureInPictureElement || document.pictureInPictureElement.id) return
+    if (paused) document.pictureInPictureElement.pause()
+    else document.pictureInPictureElement.play()
+  }
+  $: updatePiPState(paused)
   function togglePopout () {
     if (video.readyState) {
       if (!subs?.renderer) {
