@@ -29,7 +29,7 @@
     <PreviewCard {media} />
   {/if}
   <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
-    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-3' style:--color={media.coverImage.color || '#1890ff'} />
+    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-image' style:--color={media.coverImage.color || '#1890ff'} />
     {#if media.averageScore}
     <div class='rating position-absolute'>
       <span class='p-5 material-symbols-outlined rating-icon'>grade</span>
@@ -68,15 +68,6 @@
         {/if}
       </div>
       {/if}
-      
-
-
-
-
-
-
-      
-     
     </div>
   </div>
 </div>
@@ -123,5 +114,8 @@
   }
   .schedule{
     font-size: larger;
+  }
+  .rounded-image{
+    border-radius: 1rem 0.8rem 0.8rem 0.8rem;
   }
 </style>
