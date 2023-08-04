@@ -101,7 +101,7 @@
 </script>
 
 <div class='sidebar z-30' class:animated={set.expandingSidebar}>
-  <div class='sidebar-overlay pointer-events-none h-full position-absolute' />
+  <div class='sidebar-overlay {set.theme} pointer-events-none h-full position-absolute' />
   <div class='sidebar-menu h-full d-flex flex-column justify-content-center align-items-center m-0 pb-5' class:animate={page !== 'player'}>
     {#each links as { click: _click, icon, text, image, css, page: _page }, i (i)}
       <div
@@ -213,11 +213,35 @@
   .sidebar-overlay {
     width: var(--sidebar-width);
     transition: width .8s cubic-bezier(0.25, 0.8, 0.25, 1), left .8s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-    background: linear-gradient(90deg, #17191D 15.62%, rgba(23, 25, 29, 0.92) 36.46%, rgba(23, 25, 29, 0.619632) 70.83%, rgba(23, 25, 29, 0) 100%);
     backdrop-filter: blur(2px);
     z-index: -1;
   }
   .sidebar.animated:hover .sidebar-overlay {
     width: 63rem
   }
+  .dark{
+    background: linear-gradient(90deg, #17191D 15.62%, rgba(23, 25, 29, 0.92) 36.46%, rgba(23, 25, 29, 0.619632) 70.83%, rgba(23, 25, 29, 0) 100%);
+  }
+
+  .very-dark{
+    background: linear-gradient(90deg, #17191D 15.62%, rgba(23, 25, 29, 0.92) 36.46%, rgba(23, 25, 29, 0.619632) 70.83%, rgba(23, 25, 29, 0) 100%);
+  }
+
+  .pitch-black{
+    background: linear-gradient(90deg, #000000 15.62%, rgba(23, 25, 29, 0.92) 36.46%, rgba(23, 25, 29, 0.619632) 70.83%, rgba(23, 25, 29, 0) 100%);
+  }
+
+  .anilist-blue{
+    background: linear-gradient(90deg, #151F2E 15.62%, rgba(23, 25, 29, 0.92) 36.46%, rgba(23, 25, 29, 0.619632) 70.83%, rgba(23, 25, 29, 0) 100%);
+  }
+
+  .spot-green{
+    background: linear-gradient(90deg, #17191D 15.62%, rgba(23, 25, 29, 0.92) 36.46%, rgba(23, 25, 29, 0.619632) 70.83%, rgba(23, 25, 29, 0) 100%);
+  }
+
+  .marin-blue{
+    background: linear-gradient(90deg, #374151 15.62%, rgba(23, 25, 29, 0.92) 36.46%, rgba(23, 25, 29, 0.619632) 70.83%, rgba(23, 25, 29, 0) 100%);
+  }
+
+  
 </style>

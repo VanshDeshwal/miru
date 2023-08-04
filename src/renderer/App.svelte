@@ -24,11 +24,11 @@
   import IspBlock from './views/IspBlock.svelte'
   import { Toaster } from 'svelte-sonner'
   import Logout from './components/Logout.svelte'
-
+  import {set} from '../renderer/views/Settings.svelte'
   setContext('view', view)
 </script>
 
-<div class='page-wrapper with-sidebar with-transitions bg-dark' data-sidebar-type='overlayed-all'>
+<div class='page-wrapper {set.theme} with-sidebar with-transitions' data-sidebar-type='overlayed-all'>
   <IspBlock />
   <Menubar bind:page={$page} />
   <ViewAnime />
@@ -52,5 +52,29 @@
     position: unset !important;
     width: calc(100% - var(--sidebar-minimised)) !important;
     transition: none !important;
+  }
+
+  .dark{
+    background-color: var(--dark-color) !important; 
+  }
+
+  .very-dark{
+    background-color: var(--dark-color-dim) !important;
+  }
+
+  .pitch-black{
+    background-color: black !important;
+  }
+
+  .anilist-blue{
+    background-color: #0B1622 !important;
+  }
+
+  .spot-green{
+    background-color: green !important;
+  }
+
+  .marin-blue{
+    background-color: #1F2937 !important;
   }
 </style>

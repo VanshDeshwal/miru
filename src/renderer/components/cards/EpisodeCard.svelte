@@ -2,10 +2,12 @@
   import { statusColorMap } from '@/modules/anime.js'
   import EpisodePreviewCard from './EpisodePreviewCard.svelte'
   import { hoverClick } from '@/modules/click.js'
+  import { since } from '@/modules/util'
   import { getContext } from 'svelte'
   export let data
 
   let preview = false
+
   const episodeThumbnail = data.episodeData?.image || data.media?.bannerImage || data.media?.coverImage?.extraLarge || ' '
 
   const view = getContext('view')
@@ -40,7 +42,6 @@
           {data.episodeData?.title?.en || ''}
         </div>
       </div>
-
       {#if data.episode}
         <div class='col-5 d-flex flex-column align-items-end text-right'>
           <div class='text-white'>

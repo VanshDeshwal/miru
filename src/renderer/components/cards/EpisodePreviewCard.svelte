@@ -1,5 +1,7 @@
 <script>
   import { statusColorMap, formatMap } from '@/modules/anime.js'
+  import { since } from '@/modules/util'
+  import { set } from '../../views/Settings.svelte'
   export let data
 
   const media = data.media
@@ -7,7 +9,7 @@
   let hide = true
 </script>
 
-<div class='position-absolute w-400 mh-400 absolute-container top-0 m-auto bg-dark-light z-30 rounded-3 overflow-hidden pointer d-flex flex-column'>
+<div class='position-absolute w-400 mh-400 absolute-container top-0 m-auto {set.theme} z-30 rounded-3 overflow-hidden pointer d-flex flex-column'>
   <div class='image h-200 w-full position-relative d-flex justify-content-between align-items-end text-white' class:bg-black={episodeThumbnail === ' '}>
     <img loading='lazy' src={episodeThumbnail} alt='cover' class='img-cover w-full h-full position-absolute' style:--color={media?.coverImage.color || '#1890ff'} />
     {#if data.episodeData?.video}
@@ -126,5 +128,29 @@
     height: 1.1rem;
     width: 1.1rem;
     border-radius: 50%;
+  }
+
+  .dark{
+    background-color: var(--dark-color-light) !important; 
+  }
+
+  .very-dark{
+    background-color: var(--dark-color-light) !important;
+  }
+
+  .pitch-black{
+    background-color: var(--dark-color-light) !important;
+  }
+
+  .anilist-blue{
+    background-color: #151F2E !important;
+  }
+
+  .spot-green{
+    background-color: green !important;
+  }
+
+  .marin-blue{
+    background-color: #374151 !important;
   }
 </style>

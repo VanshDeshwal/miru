@@ -247,7 +247,7 @@ function getParseObjTitle (obj) {
 window.xd = resolveFileMedia
 
 // TODO: anidb aka true episodes need to be mapped to anilist episodes a bit better
-export async function resolveFileMedia (fileName, pubDate) {
+export async function resolveFileMedia (fileName) {
   let parseObjs = await anitomyscript(fileName)
 
   if (parseObjs.constructor !== Array) parseObjs = [parseObjs]
@@ -257,7 +257,6 @@ export async function resolveFileMedia (fileName, pubDate) {
   for (const parseObj of parseObjs) {
     let failed = false
     let episode
-    let date = pubDate
     let media = relations[getParseObjTitle(parseObj)]
     // resolve episode, if movie, dont.
     const maxep = media?.nextAiringEpisode?.episode || media?.episodes
@@ -308,7 +307,6 @@ export async function resolveFileMedia (fileName, pubDate) {
     fileMedias.push({
       episode: episode || parseObj.episode_number,
       parseObject: parseObj,
-      date,
       media,
       failed
     })

@@ -3,46 +3,6 @@
   import { click } from '@/modules/click.js'
   let block = false
 
-  if (set.theme == 'Black') {
-  document.body.classList.remove('dark-mode');
-  document.body.classList.remove('marin-blue');
-  document.body.classList.remove('anilist-blue');
-  document.body.classList.remove('spot-green');
-  document.body.classList.add('black-mode');
-  }
-  else if(set.theme == 'Default')
-  {
-  document.body.classList.remove('black-mode'); 
-  document.body.classList.remove('marin-blue');
-  document.body.classList.remove('anilist-blue');
-  document.body.classList.remove('spot-green');
-  document.body.classList.add('dark-mode');
-  }
-  else if(set.theme == 'Marin-Blue')
-  {
-  document.body.classList.remove('black-mode'); 
-  document.body.classList.remove('dark-mode');
-  document.body.classList.remove('anilist-blue');
-  document.body.classList.remove('spot-green');
-  document.body.classList.add('marin-blue');
-  }
-  else if(set.theme == 'Anilist-Blue')
-  {
-  document.body.classList.remove('black-mode'); 
-  document.body.classList.remove('dark-mode');
-  document.body.classList.remove('marin-blue');
-  document.body.classList.remove('spot-green');
-  document.body.classList.add('anilist-blue');
-  }
-  else if(set.theme == 'Spot-Green')
-  {
-  document.body.classList.remove('black-mode'); 
-  document.body.classList.remove('dark-mode');
-  document.body.classList.remove('marin-blue');
-  document.body.classList.remove('anilist-blue');
-  document.body.classList.add('spot-green');
-  }
-
   async function testConnection () {
     try {
       for (let i = 0; i < 2; ++i) {

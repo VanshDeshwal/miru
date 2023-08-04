@@ -25,7 +25,7 @@
     disableSubtitleBlur: false,
     toshoURL: decodeURIComponent(atob('aHR0cHM6Ly9mZWVkLmFuaW1ldG9zaG8ub3JnLw==')),
     showDetailsInRPC: true,
-    theme: 'default',
+    theme: 'dark',
     smoothScroll: true,
     cards: 'small',
     expandingSidebar: true
@@ -534,9 +534,9 @@
               <span class='input-group-text w-100 justify-content-center'>Theme</span>
             </div>
             <select class='form-control form-control-lg' bind:value={settings.theme} placeholder={defaults.theme} onchange="location.reload()">
-              <option value='bg-dark' selected>Default</option>
-              <option value='bg-very-dark'>Dark-2</option>
-              <option value='black-mode'>Black</option>
+              <option value='dark' selected>Default</option>
+              <option value='very-dark'>Dark-2</option>
+              <option value='pitch-black'>Black</option>
               <option value='marin-blue'>Marin Blue</option>
               <option value='spot-green'>Spot Green</option>
               <option value='anilist-blue'>Anilist-Blue</option>
