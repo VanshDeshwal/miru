@@ -389,6 +389,7 @@
       }
     }
   }
+  let fitWidth = false
   let showKeybinds = false
   loadWithDefaults({
     KeyX: {
@@ -439,6 +440,11 @@
     KeyS: {
       fn: () => skip(),
       id: '+90'
+    },
+    KeyW: {
+      fn: () => { fitWidth = !fitWidth },
+      id: 'fit_width',
+      type: 'icon'
     },
     KeyD: {
       fn: () => toggleCast(),
@@ -572,10 +578,9 @@
   function resetImmerse () {
     if (immerseTimeout) {
       clearTimeout(immerseTimeout)
-    } else {
-      immersed = false
     }
-    immerseTimeout = setTimeout(immersePlayer, 8 * 1000)
+    immersed = false
+    immerseTimeout = setTimeout(immersePlayer, (paused ? 8 : 1) * 1000)
   }
 
   function hideBuffering () {
@@ -891,6 +896,7 @@
   <video
     crossorigin='anonymous'
     class='position-absolute h-full w-full'
+    class:fitWidth
     style={`margin-top: ${menubarOffset}px`}
     preload='auto'
     {src}
@@ -966,7 +972,7 @@
   <div class='bottom d-flex z-40 flex-column px-20'>
     <div class='w-full d-flex align-items-center h-20 mb-5 seekbar'>
       <Seekbar
-        accentColor={'#e5204c'}
+        accentColor='var(--accent-color)'
         class='font-size-20'
         length={safeduration}
         {buffer}
@@ -1059,6 +1065,9 @@
 </div>
 
 <style>
+  .fitWidth {
+    object-fit: cover;
+  }
   .custom-range {
     color: #e5204c;
     --thumb-height: 0px;
