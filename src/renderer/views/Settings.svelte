@@ -2,6 +2,8 @@
 
   import { toast } from 'svelte-sonner'
   import { click } from '@/modules/click.js'
+  import { alID } from '@/modules/anilist.js'
+  import { logout } from '../components/Logout.svelte'
   export let alToken = localStorage.getItem('ALtoken') || null
   const defaults = {
     playerAutoplay: true,
@@ -28,8 +30,9 @@
     theme: 'dark',
     smoothScroll: true,
     cards: 'small',
-    expandingSidebar: true
+    expandingSidebar: true,
   }
+
 
   export const set = { ...defaults, ...(JSON.parse(localStorage.getItem('settings')) || {}) }
   if (set.enableDoH) window.IPC.emit('doh', set.doHURL)
@@ -144,6 +147,23 @@
     localStorage.removeItem('settings')
     settings = { ...defaults }
   }
+  function getAlText (){
+    return alID? 'Logout' : 'Login'
+  }
+  function alAccount (){
+        if (alID) {
+          $logout = true
+        } else {
+          window.IPC.emit('open', 'https://anilist.co/api/v2/oauth/authorize?client_id=4254&response_type=token') // Change redirect_url to miru://auth
+          if (platformMap[window.version.platform] === 'Linux') {
+            toast('Support Notification', {
+              description: "If your linux distribution doesn't support custom protocol handlers, you can simply paste the full URL into the app.",
+              duration: 300000
+            })
+          }
+        }
+  }
+
   function handleFolder () {
     window.IPC.emit('dialog')
   }
@@ -195,24 +215,30 @@
           </div>
         </TabLabel>
       {/each}
-      <button
+      <!-- <button
         use:click={() => window.IPC.emit('open', 'https://github.com/sponsors/ThaUnknown/')}
         class='btn btn-primary mx-20 mt-auto'
         type='button'>
         Donate
-      </button>
-      <button
+      </button> -->
+      <!-- <button
         use:click={importSettings}
         class='btn btn-primary mx-20 mt-10'
         type='button'>
         Import Settings From Clipboard
-      </button>
+      </button> -->
       <button
+      use:click={alAccount}
+      class='btn btn-primary mx-20 mt-auto'
+      type='button'>
+      {getAlText()}
+    </button>
+      <!-- <button
         use:click={exportSettings}
         class='btn btn-primary mx-20 mt-10'
         type='button'>
         Export Settings To Clipboard
-      </button>
+      </button> -->
       <button
         use:click={checkUpdate}
         class='btn btn-primary mx-20 mt-10'

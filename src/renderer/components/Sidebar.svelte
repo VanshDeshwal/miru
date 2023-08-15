@@ -2,31 +2,38 @@
   import { getContext } from 'svelte'
   import { alID } from '@/modules/anilist.js'
   import { media } from '../views/Player/MediaHandler.svelte'
-  import { platformMap, set } from '../views/Settings.svelte'
-  import { toast } from 'svelte-sonner'
+  import { set } from '../views/Settings.svelte'
   import { click } from '@/modules/click.js'
-  import { logout } from './Logout.svelte'
+  import { fastPrettyBytes } from '@/modules/util.js'
+  import { client } from '@/modules/torrent.js'
   const view = getContext('view')
   export let page
+  const torrent = {}
+  client.on('stats', updateStats)
+  function updateStats ({ detail }) {
+    torrent.up = detail.uploadSpeed || 0
+    torrent.down = detail.downloadSpeed || 0
+    torrent.total = torrent.up + torrent.down || 0
+  }
   const links = [
-    {
-      click: () => {
-        if (alID) {
-          $logout = true
-        } else {
-          window.IPC.emit('open', 'https://anilist.co/api/v2/oauth/authorize?client_id=4254&response_type=token') // Change redirect_url to miru://auth
-          if (platformMap[window.version.platform] === 'Linux') {
-            toast('Support Notification', {
-              description: "If your linux distribution doesn't support custom protocol handlers, you can simply paste the full URL into the app.",
-              duration: 300000
-            })
-          }
-        }
-      },
-      icon: 'login',
-      text: 'Login With AniList',
-      css: 'mt-auto'
-    },
+    // {
+    //   click: () => {
+    //     if (alID) {
+    //       $logout = true
+    //     } else {
+    //       window.IPC.emit('open', 'https://anilist.co/api/v2/oauth/authorize?client_id=4254&response_type=token') // Change redirect_url to miru://auth
+    //       if (platformMap[window.version.platform] === 'Linux') {
+    //         toast('Support Notification', {
+    //           description: "If your linux distribution doesn't support custom protocol handlers, you can simply paste the full URL into the app.",
+    //           duration: 300000
+    //         })
+    //       }
+    //     }
+    //   },
+    //   icon: 'login',
+    //   text: 'Login With AniList',
+    //   css: 'mt-auto'
+    // },
     {
       click: () => {
         page = 'home'
@@ -68,13 +75,6 @@
     },
     {
       click: () => {
-        location.reload()
-      },
-      icon: 'cached',
-      text: 'Reload'
-    },
-    {
-      click: () => {
         window.IPC.emit('open', 'https://github.com/sponsors/ThaUnknown/')
       },
       icon: 'favorite',
@@ -93,8 +93,9 @@
   if (alID) {
     alID.then(result => {
       if (result?.data?.Viewer) {
-        links[0].image = result.data.Viewer.avatar.medium
-        links[0].text = 'Logout'
+        // links[0].image = result.data.Viewer.avatar.medium
+        links[6].image = result.data.Viewer.avatar.medium
+        // links[0].text = 'Logout'
       }
     })
   }
@@ -103,6 +104,15 @@
 <div class='sidebar z-30' class:animated={set.expandingSidebar}>
   <div class='sidebar-overlay {set.theme} pointer-events-none h-full position-absolute' />
   <div class='sidebar-menu h-full d-flex flex-column justify-content-center align-items-center m-0 pb-5' class:animate={page !== 'player'}>
+    <!-- <div class='sidebar-link sidebar-link-with-icon pointer overflow-hidden'>
+      <span class='text-nowrap d-flex align-items-center w-full h-full'>
+        <span class='material-symbols-outlined rounded'>swap_vert</span>
+        <span class='text ml-20'>{fastPrettyBytes(torrent.total)}/s</span>
+      </span>
+    </div> -->
+    <div style='height:30rem'>
+      
+    </div>
     {#each links as { click: _click, icon, text, image, css, page: _page }, i (i)}
       <div
         class='sidebar-link sidebar-link-with-icon pointer overflow-hidden {css}'

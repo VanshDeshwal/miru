@@ -2,13 +2,14 @@
   import { getContext } from 'svelte'
   import { click } from '@/modules/click.js'
 
-  export let page
+  // export let page
   const view = getContext('view')
   const trailer = getContext('trailer')
   function close () {
-    $view = null
-    $trailer = null
-    page = 'home'
+    // $view = null
+    // $trailer = null
+    // page = 'home'
+    location.reload()
   }
 </script>
 

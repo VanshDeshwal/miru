@@ -5,7 +5,7 @@
   export let data
 </script>
 
-<div class='w-full h-400 position-relative gradient-{set.theme}'>
+<div class='w-full h-350 position-relative gradient-{set.theme}'>
   {#await data}
     <SkeletonBanner />
   {:then { data }}
