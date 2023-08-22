@@ -1,9 +1,8 @@
 import WebTorrent from 'webtorrent'
-import { SubtitleParser, SubtitleStream } from 'matroska-subtitles'
 import { ipcRenderer } from 'electron'
-import { pipeline } from 'streamx'
 import HTTPTracker from 'bittorrent-tracker/lib/client/http-tracker.js'
-import { hex2bin, bin2hex, arr2text, hex2arr } from 'uint8-util'
+import { hex2bin, arr2hex, text2arr } from 'uint8-util'
+import Parser from './parser.js'
 
 class TorrentClient extends WebTorrent {
   constructor (settings) {
@@ -19,7 +18,6 @@ class TorrentClient extends WebTorrent {
 
     this.current = null
     this.parsed = false
-    this.boundParse = this.parseSubtitles.bind(this)
 
     setInterval(() => {
       this.dispatch('stats', {
@@ -63,12 +61,7 @@ class TorrentClient extends WebTorrent {
   }
 
   _scrape ({ id, infoHashes }) {
-    const hashes = infoHashes.map(infoHash => hex2bin(infoHash))
-    const malformed = {}
-    for (const hash of infoHashes) {
-      malformed[bin2hex(arr2text(hex2arr(hash)))] = hash
-    }
-    this.trackers.cat._request(this.trackers.cat.scrapeUrl, { info_hash: hashes }, (err, data) => {
+    this.trackers.cat._request(this.trackers.cat.scrapeUrl, { info_hash: infoHashes.map(infoHash => hex2bin(infoHash)) }, (err, data) => {
       if (err) {
         console.error(err)
         return this.dispatch('scrape', { id, result: [] })
@@ -76,7 +69,7 @@ class TorrentClient extends WebTorrent {
       const { files } = data
       const result = []
       for (const [key, data] of Object.entries(files || {})) {
-        result.push({ hash: malformed[bin2hex(key)], ...data })
+        result.push({ hash: key.length !== 40 ? arr2hex(text2arr(key)) : key, ...data })
       }
       this.dispatch('scrape', { id, result })
       console.log(result, data)
@@ -89,25 +82,12 @@ class TorrentClient extends WebTorrent {
         if (data.data) {
           const found = (await this.get(data.data.infoHash))?.files.find(file => file.path === data.data.path)
           if (this.current) {
-            this.current.removeListener('done', this.boundParse)
             this.current.removeAllListeners('stream')
           }
-          this.cancelParse()
-          this.parsed = false
+          this.parser?.destroy()
           this.current = found
-          if (this.current?.name.endsWith('.mkv')) {
-            // if (this.current.done) this.parseSubtitles()
-            // this.current.once('done', this.boundParse)
-            this.parseFonts(this.current)
-            this.current.on('stream', (_, cb) => {
-              if (!this.parsed) {
-                this.stream = new SubtitleStream(this.stream)
-                this.handleSubtitleParser(this.stream, true)
-                cb(this.stream)
-              }
-            })
-          }
-          // TODO: findSubtitleFiles(current)
+          this.parser = new Parser(this, found)
+          // TODO: parser.findSubtitleFiles(found)
         }
         break
       }
@@ -143,79 +123,9 @@ class TorrentClient extends WebTorrent {
     message({ type, data }, transfer)
   }
 
-  parseSubtitles () {
-    if (this.current.name.endsWith('.mkv')) {
-      const parser = new SubtitleParser()
-      this.handleSubtitleParser(parser, true)
-      const finish = () => {
-        console.log('Sub parsing finished')
-        this.parsed = true
-        this.parser?.destroy()
-        this.parser = undefined
-        fileStream?.destroy()
-      }
-      parser.once('tracks', tracks => {
-        if (!tracks.length) finish()
-      })
-      parser.once('finish', finish)
-      console.log('Sub parsing started')
-      const fileStream = this.current.createReadStream()
-      this.parser = fileStream.pipe(parser)
-    }
-  }
-
-  cancelParse () {
-    this.parser?.destroy()
-    this.stream?.destroy()
-    this.metadata?.destroy()
-    this.metadata = undefined
-    this.parser = undefined
-    this.stream = undefined
-  }
-
-  parseFonts (file) {
-    this.metadata = pipeline(file.createReadStream(), new SubtitleParser())
-    this.handleSubtitleParser(this.metadata)
-    this.metadata.once('tracks', tracks => {
-      if (!tracks.length) {
-        this.parsed = true
-        this.metadata.destroy()
-      }
-    })
-    this.metadata.once('subtitle', () => {
-      this.metadata.destroy()
-    })
-  }
-
-  handleSubtitleParser (parser, skipFile) {
-    parser.once('tracks', tracks => {
-      if (!tracks.length) {
-        this.parsed = true
-        parser?.destroy()
-      } else {
-        this.dispatch('tracks', tracks)
-      }
-    })
-    parser.on('subtitle', (subtitle, trackNumber) => {
-      this.dispatch('subtitle', { subtitle, trackNumber })
-    })
-    if (!skipFile) {
-      parser.once('chapters', chapters => {
-        this.dispatch('chapters', chapters)
-      })
-      parser.on('file', file => {
-        if (file.mimetype === 'application/x-truetype-font' || file.mimetype === 'application/font-woff' || file.mimetype === 'application/vnd.ms-opentype' || file.mimetype === 'font/sfnt' || file.mimetype.startsWith('font/') || file.filename.toLowerCase().endsWith('.ttf')) {
-          const data = Buffer.from(file.data)
-          this.dispatch('file', { mimetype: file.mimetype, data }, [data.buffer])
-        }
-      })
-    }
-  }
-
   predestroy () {
     this.destroy()
     this.server.close()
-    this.cancelParse()
   }
 }
 
