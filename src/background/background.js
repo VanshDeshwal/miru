@@ -56,8 +56,8 @@ class TorrentClient extends WebTorrent {
     })
     this.dispatch('files', files)
     this.dispatch('magnet', { magnet: torrent.magnetURI, hash: torrent.infoHash })
-    // this will cause errors when only the renderer refreshes, and not the background process, but it's not an issue, for now
-    this.dispatch('torrent', torrent.torrentFile, [torrent.torrentFile.buffer])
+    const clonedTorrentFile = new Uint8Array(torrent.torrentFile)
+    this.dispatch('torrent', clonedTorrentFile, [clonedTorrentFile.buffer])
   }
 
   _scrape ({ id, infoHashes }) {
@@ -141,3 +141,20 @@ ipcRenderer.on('port', (e) => {
   }
   message = e.ports[0].postMessage.bind(e.ports[0])
 })
+
+const excludedErrorMessages = ['WebSocket']
+
+function dispatchError (e) {
+  if (e instanceof ErrorEvent) return dispatchError(e.error)
+  if (e instanceof PromiseRejectionEvent) return dispatchError(e.reason)
+  for (const exclude of excludedErrorMessages) {
+    if (e.message?.startsWith(exclude)) return
+  }
+  client?.dispatch('error', e)
+}
+
+process.on('uncaughtException', dispatchError)
+
+window.addEventListener('error', dispatchError)
+
+window.addEventListener('unhandledrejection', dispatchError)
