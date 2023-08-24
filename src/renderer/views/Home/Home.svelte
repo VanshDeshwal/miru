@@ -10,7 +10,7 @@
 
   const date = new Date()
 
-  const bannerData = alRequest({ method: 'Search', sort: 'POPULARITY_DESC', perPage: 1, onList: false, season: getSeason(date), year: date.getFullYear() })
+  const bannerData = alRequest({ method: 'Search', sort: 'TRENDING_DESC', perPage: 1, onList: true, season: getSeason(date), year: date.getFullYear(), Adult: false})
 
   const manager = new Sections()
 

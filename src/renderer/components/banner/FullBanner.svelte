@@ -25,6 +25,8 @@
     })
     media.isFavourite = !media.isFavourite
   }
+
+  console.log(media)
 </script>
 
 <img src={media.bannerImage || ''} alt='banner' class='img-cover w-full h-full position-absolute' />
