@@ -120,7 +120,7 @@ img[src=''], img[src=' '] {
 }
 
 .root {
-  animation: 0.3s ease 0s 1 root-load-in;
+  animation: 0.3s ease 0s 1 load-in;
 }
 
 .content-visibility-auto {
@@ -131,36 +131,23 @@ img[src=''], img[src=' '] {
   left: 0 !important;
   width: 100% !important;
 }
-@keyframes root-load-in {
+
+@keyframes skeleloader {
   from {
-    bottom: -1.2rem;
-    transform: scale(0.95);
+    background-position-x: 200%;
   }
 
   to {
-    bottom: 0;
-    transform: scale(1);
-  }
-}
-
-@keyframes load {
-  from {
-    left: -15rem;
-  }
-
-  to {
-    left: 100%;
+    background-position-x: -100%;
   }
 }
 @keyframes load-in {
   from {
-    bottom: -1.2rem;
-    transform: scale(0.95);
+    transform: translateY(1.2rem) scale(0.95);
   }
 
   to {
-    bottom: 0;
-    transform: scale(1);
+    transform: none
   }
 }
 
@@ -169,14 +156,13 @@ img[src=''], img[src=' '] {
   overflow: hidden;
 }
 
-.skeloader::before {
-  will-change: left;
-  content: '';
-  position: absolute;
+.skeloader .skeleloader-swipe {
   height: 100%;
-  width: 15rem;
+  width: 100%;
   background: linear-gradient(to right, transparent 0%, #17191c 50%, transparent 100%);
-  animation: load 1s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  animation: skeleloader 1s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .align-content-start {
