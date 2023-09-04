@@ -26,7 +26,6 @@
     media.isFavourite = !media.isFavourite
   }
 
-  console.log(media)
 </script>
 
 <img src={media.bannerImage || ''} alt='banner' class='img-cover w-full h-full position-absolute' />
@@ -94,7 +93,7 @@
   }
   .description {
     display: -webkit-box !important;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
   .title {
