@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron'
 import HTTPTracker from 'bittorrent-tracker/lib/client/http-tracker.js'
 import { hex2bin, arr2hex, text2arr } from 'uint8-util'
 import Parser from './parser.js'
-import { defaults } from '../common/settings.js'
+import { defaults, fontRx, subRx, videoRx } from '../common/util.js'
 
 class TorrentClient extends WebTorrent {
   static excludedErrorMessages = ['WebSocket', 'User-Initiated Abort, reason=', 'Connection failed.']
@@ -18,7 +18,7 @@ class TorrentClient extends WebTorrent {
       torrentPort: settings.torrentPort || 0,
       dhtPort: settings.dhtPort || 0
     })
-    this.ready = new Promise(resolve => {
+    this._ready = new Promise(resolve => {
       ipcRenderer.on('port', ({ ports }) => {
         this.message = ports[0].postMessage.bind(ports[0])
         resolve()
@@ -28,6 +28,7 @@ class TorrentClient extends WebTorrent {
           this.handleMessage({ data })
         }
       })
+      ipcRenderer.on('destroy', this.predestroy.bind(this))
     })
     this.settings = settings
 
@@ -78,6 +79,42 @@ class TorrentClient extends WebTorrent {
     this.dispatch('files', files)
     this.dispatch('magnet', { magnet: torrent.magnetURI, hash: torrent.infoHash })
     localStorage.setItem('torrent', JSON.stringify([...torrent.torrentFile]))
+  }
+
+  async findFontFiles (targetFile) {
+    const files = this.torrents[0].files
+    const fontFiles = files.filter(file => fontRx.test(file.name))
+
+    const map = {}
+
+    // deduplicate fonts
+    // some releases have duplicate fonts for diff languages
+    // if they have different chars, we can't find that out anyways
+    // so some chars might fail, on REALLY bad releases
+    for (const file of fontFiles) {
+      map[file.name] = file
+    }
+
+    for (const file of Object.values(map)) {
+      const data = await file.arrayBuffer()
+      if (targetFile !== this.current) return
+      this.dispatch('file', { data: new Uint8Array(data) }, [data])
+    }
+  }
+
+  async findSubtitleFiles (targetFile) {
+    const files = this.torrents[0].files
+    const videoFiles = files.filter(file => videoRx.test(file.name))
+    const videoName = targetFile.name.substring(0, targetFile.name.lastIndexOf('.')) || targetFile.name
+    // array of subtitle files that match video name, or all subtitle files when only 1 vid file
+    const subfiles = files.filter(file => {
+      return subRx.test(file.name) && (videoFiles.length === 1 ? true : file.name.includes(videoName))
+    })
+    for (const file of subfiles) {
+      const data = await file.arrayBuffer()
+      if (targetFile !== this.current) return
+      this.dispatch('subtitleFile', { name: file.name, data: new Uint8Array(data) }, [data])
+    }
   }
 
   _scrape ({ id, infoHashes }) {
@@ -150,7 +187,8 @@ class TorrentClient extends WebTorrent {
           this.parser?.destroy()
           this.current = found
           this.parser = new Parser(this, found)
-          // TODO: this.parser.findSubtitleFiles(found)
+          this.findSubtitleFiles(found)
+          this.findFontFiles(found)
         }
         break
       }
@@ -166,7 +204,7 @@ class TorrentClient extends WebTorrent {
   }
 
   async dispatch (type, data, transfer) {
-    await this.ready
+    await this._ready
     this.message?.({ type, data }, transfer)
   }
 
@@ -176,4 +214,5 @@ class TorrentClient extends WebTorrent {
   }
 }
 
+// @ts-ignore
 window.client = new TorrentClient()

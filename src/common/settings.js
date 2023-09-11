@@ -25,3 +25,4 @@ export const defaults = {
   cards: 'small',
   expandingSidebar: true
 }
+

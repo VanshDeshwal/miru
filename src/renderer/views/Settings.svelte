@@ -3,7 +3,7 @@
   import { click } from '@/modules/click.js'
   import { alID } from '@/modules/anilist.js'
   import { logout } from '../components/Logout.svelte'
-  import { defaults } from '@/../common/settings.js'
+  import { defaults } from '@/../common/util.js'
   export let alToken = localStorage.getItem('ALtoken') || null
 
   export const set = { ...defaults, ...(JSON.parse(localStorage.getItem('settings')) || {}) }
