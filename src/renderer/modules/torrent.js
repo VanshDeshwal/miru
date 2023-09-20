@@ -12,7 +12,7 @@ class TorrentWorker extends EventTarget {
     this.ready = new Promise(resolve => {
       window.IPC.once('port', () => {
         this.port = window.port
-        this.port.onmessage((...args) => this.handleMessage(...args))
+        this.port.onmessage(this.handleMessage.bind(this))
         resolve()
       })
       window.IPC.emit('portRequest')
@@ -57,6 +57,11 @@ client.on('files', ({ detail }) => {
 client.on('error', ({ detail }) => {
   console.error(detail)
   toast.error('Torrent Error', { description: detail.message || detail })
+})
+
+client.on('warn', ({ detail }) => {
+  console.error(detail)
+  toast.warning('Torrent Warning', { description: detail.message || detail })
 })
 
 export async function add (torrentID, hide) {

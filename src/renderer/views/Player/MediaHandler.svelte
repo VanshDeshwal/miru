@@ -1,5 +1,5 @@
 <script context='module'>
-  import { writable, get } from 'svelte/store'
+  import { writable } from 'simple-store-svelte'
   import { resolveFileMedia } from '@/modules/anime.js'
   import { videoRx } from '@/../common/util.js'
   import { tick } from 'svelte'
@@ -29,11 +29,11 @@
   }
 
   export function findInCurrent (obj) {
-    const oldNowPlaying = get(nowPlaying)
+    const oldNowPlaying = nowPlaying.value
 
     if (oldNowPlaying.media?.id === obj.media.id && oldNowPlaying.episode === obj.episode) return false
 
-    const fileList = get(files)
+    const fileList = files.value
 
     const targetFile = fileList.find(file => file.media?.media?.id === obj.media.id && file.media?.episode === obj.episode)
     if (!targetFile) return false
@@ -70,6 +70,41 @@
 
   const TYPE_EXCLUSIONS = ['ED', 'ENDING', 'NCED', 'NCOP', 'OP', 'OPENING', 'PREVIEW', 'PV']
 
+  // find best media in batch to play
+  // currently in progress or unwatched
+  // tv, movie, ona, ova
+  function findPreferredPlaybackMedia (videoFiles) {
+    for (const { media } of videoFiles) {
+      if (media.media?.mediaListEntry?.status === 'CURRENT') return { media: media.media, episode: (media.media.mediaListEntry.progress || 0) + 1 }
+    }
+
+    for (const { media } of videoFiles) {
+      if (media.media?.mediaListEntry?.status === 'REPEATING') return { media: media.media, episode: (media.media.mediaListEntry.progress || 0) + 1 }
+    }
+
+    let lowestPlanning
+    for (const { media, episode } of videoFiles) {
+      if (media.media?.mediaListEntry?.status === 'PLANNING' && (!lowestPlanning || episode > lowestPlanning.episode)) lowestPlanning = { media: media.media, episode }
+    }
+    if (lowestPlanning) return lowestPlanning
+
+    // unwatched
+    for (const format of ['TV', 'MOVIE', 'ONA', 'OVA']) {
+      let lowestUnwatched
+      for (const { media, episode } of videoFiles) {
+        if (media.media?.format === format && !media.media.mediaListEntry && (!lowestUnwatched || episode > lowestUnwatched.episode)) lowestUnwatched = { media: media.media, episode }
+      }
+      if (lowestUnwatched) return lowestUnwatched
+    }
+
+    // highest occurence if all else fails - unlikely
+
+    const max = highestOccurence(videoFiles, file => file.media.media?.id).media
+    if (max?.media) {
+      return { media: max.media, episode: (max.media.mediaListEntry?.progress + 1 || 1) }
+    }
+  }
+
   async function handleFiles (files) {
     console.info('MediaHandler: got files', files)
     if (!files?.length) return processed.set(files)
@@ -82,7 +117,7 @@
         otherFiles.push(file)
       }
     }
-    let nowPlaying = get(media)
+    let nowPlaying = media.value
 
     const resolved = await resolveFileMedia(videoFiles.map(file => file.name))
 
@@ -102,10 +137,7 @@
     console.info('MediaHandler: resolved video files', { videoFiles })
 
     if (!nowPlaying) {
-      const max = highestOccurence(videoFiles, file => file.media.media?.id).media
-      if (max?.media) {
-        nowPlaying = { media: max.media, episode: (max.media.mediaListEntry?.progress + 1 || 1) }
-      }
+      nowPlaying = findPreferredPlaybackMedia(videoFiles)
     }
 
     const filtered = nowPlaying?.media && videoFiles.filter(file => file.media?.media?.id && file.media?.media?.id === nowPlaying.media.id)
@@ -166,8 +198,8 @@
     navigator.mediaSession.metadata = metadata
   }
 
-  function setDiscordRPC (np = get(nowPlaying)) {
-    const w2g = get(state)
+  function setDiscordRPC (np = nowPlaying.value) {
+    const w2g = state.value
     const details = [np.title, np.episodeTitle].filter(i => i).join(' - ') || undefined
     const activity = {
       details,
