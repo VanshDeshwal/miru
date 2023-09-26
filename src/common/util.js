@@ -22,6 +22,7 @@ export const defaults = {
   showDetailsInRPC: true,
   smoothScroll: true,
   cards: 'small',
+  theme: 'dark',
   expandingSidebar: true
 }
 
