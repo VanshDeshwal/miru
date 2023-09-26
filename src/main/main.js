@@ -61,13 +61,17 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
-    webtorrentWindow.webContents.postMessage('destroy', null)
+    try {
+      webtorrentWindow.webContents.postMessage('destroy', null)
+    } catch (e) {}
     app.quit()
   })
 
   ipcMain.on('close', () => {
     mainWindow = null
-    webtorrentWindow.webContents.postMessage('destroy', null)
+    try {
+      webtorrentWindow.webContents.postMessage('destroy', null)
+    } catch (e) {}
     app.quit()
   })
 
