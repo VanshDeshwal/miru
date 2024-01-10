@@ -517,17 +517,17 @@
       type: 'icon'
     },
     BracketLeft: {
-      fn: () => (playbackRate -= 0.1),
+      fn: () => { playbackRate = video.defaultPlaybackRate -= 0.1 },
       id: 'history',
       type: 'icon'
     },
     BracketRight: {
-      fn: () => (playbackRate += 0.1),
+      fn: () => { playbackRate = video.defaultPlaybackRate += 0.1 },
       id: 'update',
       type: 'icon'
     },
     Backslash: {
-      fn: () => (playbackRate = 1),
+      fn: () => { playbackRate = video.defaultPlaybackRate = 1 },
       id: 'schedule',
       type: 'icon'
     }
@@ -1050,8 +1050,11 @@
         <span class='material-symbols-outlined ctrl' title='Mute [M]' data-name='toggleMute' use:click={toggleMute}> {muted ? 'volume_off' : 'volume_up'} </span>
         <input class='ctrl h-full custom-range' type='range' min='0' max='1' step='any' data-name='setVolume' bind:value={volume} />
       </div>
-      <div class='ts mr-auto'>{toTS(targetTime, safeduration > 3600 ? 2 : 3)} / {toTS(safeduration - targetTime, safeduration > 3600 ? 2 : 3)}</div>
-      <span class='material-symbols-outlined ctrl keybinds' title='Keybinds [`]' use:click={() => (showKeybinds = true)}> keyboard </span>
+      <div class='ts'>{toTS(targetTime, safeduration > 3600 ? 2 : 3)} / {toTS(safeduration - targetTime, safeduration > 3600 ? 2 : 3)}</div>
+      {#if playbackRate !== 1}
+        <div class='ts'>x{playbackRate.toFixed(1)}</div>
+      {/if}
+      <span class='ml-auto material-symbols-outlined ctrl keybinds' title='Keybinds [`]' use:click={() => (showKeybinds = true)}> keyboard </span>
       {#if 'audioTracks' in HTMLVideoElement.prototype && video?.audioTracks?.length > 1}
         <div class='dropdown dropup with-arrow' use:click={toggleDropdown}>
           <span class='material-symbols-outlined ctrl' title='Audio Tracks'>
@@ -1408,11 +1411,6 @@
     height: 100%;
   }
 
-  @media (pointer: none), (pointer: coarse) {
-    .bottom .volume .custom-range {
-      width: 5vw;
-    }
-  }
   .h-20 {
     height: 2rem
   }
@@ -1453,8 +1451,8 @@
       display: block !important;
     }
     .miniplayer .mobile-focus-target:focus-visible {
-    background: hsla(209, 100%, 55%, 0.3);
-  }
+      background: hsla(209, 100%, 55%, 0.3);
+    }
   }
 
 </style>
