@@ -17,6 +17,10 @@
   function setHoverState (state) {
     preview = state
   }
+  function rating (s) {
+    s = (s/10).toFixed(1)
+    return s
+  }
 </script>
 
 <div class='d-flex p-20 position-relative first-check' use:hoverClick={[viewMedia, setHoverState]}>
@@ -24,8 +28,23 @@
     <PreviewCard {media} />
   {/if}
   <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
-    {#if $page === 'schedule'}
-      <div class='w-full text-center pb-10'>
+    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-image' style:--color={media.coverImage.color || '#1890ff'} />
+    {#if media.averageScore}
+    <div class='rating position-absolute'>
+      <span class='p-5 material-symbols-outlined rating-icon'>grade</span>
+      <span class='pt-5 pr-5 rating-number position-absolute'>{rating(media.averageScore)}</span>
+    </div>
+    {/if}
+    <div class='text-white font-weight-very-bold font-size-16 pt-15 title overflow-hidden'>
+      {#if media.mediaListEntry?.status}
+        <div style:--statusColor={statusColorMap[media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={media.mediaListEntry.status} />
+      {/if}
+      {media.title.userPreferred}
+    </div>
+    
+    <div class='d-flex flex-row mt-auto pt-10 font-weight-medium justify-content-between w-full text-muted'>
+      {#if $page === 'schedule'}
+      <div class='w-full'>
         {#if media.airingSchedule?.nodes?.[0]?.airingAt}
           Episode {media.airingSchedule.nodes[0].episode } in
           <span class='font-weight-bold text-light'>
@@ -36,14 +55,7 @@
         {/if}
       </div>
     {/if}
-    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded' style:--color={media.coverImage.color || '#1890ff'} />
-    <div class='text-white font-weight-very-bold font-size-16 pt-15 title overflow-hidden'>
-      {#if media.mediaListEntry?.status}
-        <div style:--statusColor={statusColorMap[media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={media.mediaListEntry.status} />
-      {/if}
-      {media.title.userPreferred}
-    </div>
-    <div class='d-flex flex-row mt-auto pt-10 font-weight-medium justify-content-between w-full text-muted'>
+      {#if $page !== 'schedule'}
       <div class='d-flex align-items-center' style='margin-left: -3px'>
         <span class='material-symbols-outlined font-size-24 pr-5'>calendar_month</span>
         {media.seasonYear || 'N/A'}
@@ -52,6 +64,7 @@
         {formatMap[media.format]}
         <span class='material-symbols-outlined font-size-24 pl-5'>monitor</span>
       </div>
+      {/if}
     </div>
   </div>
 </div>
@@ -66,11 +79,11 @@
     -webkit-box-orient: vertical;
   }
   img {
-    height: 27rem;
+    height: 265px;
   }
   .item {
     animation: 0.3s ease 0s 1 load-in;
-    width: 19rem;
+    width: 185px;
     contain-intrinsic-height: 36.7rem;
   }
   .cover-img {
@@ -81,5 +94,22 @@
     height: 1.1rem;
     width: 1.1rem;
     border-radius: 50%;
+  }
+  .rating {
+    background:black !important;
+    width:50px;
+    border-radius: 0.8rem 0 0.8rem 0;
+  }
+  .rating-icon{
+    font-variation-settings: 
+    'FILL' 1;
+    color:yellow;
+    font-size:18px;
+  }
+  .rating-number{
+    top:0px;
+  }
+  .rounded-image{
+    border-radius: 1rem 0.8rem 0.8rem 0.8rem;
   }
 </style>

@@ -102,7 +102,7 @@ export let alID = null
 if (alToken) {
   alID = alRequest({ method: 'Viewer', token: alToken }).then(result => {
     const lists = result?.data?.Viewer?.mediaListOptions?.animeList?.customLists || []
-    if (!lists.includes('Watched using Miru')) {
+    if (!lists.includes('Completed')) {
       alRequest({ method: 'CustomList', lists })
     }
     return result
@@ -147,8 +147,8 @@ export async function alEntry (filemedia) {
             variables.status = 'COMPLETED'
             if (media.mediaListEntry?.status === 'REPEATING') variables.repeat = media.mediaListEntry.repeat + 1
           }
-          if (!lists.includes('Watched using Miru')) {
-            variables.lists.push('Watched using Miru')
+          if (!lists.includes('Completed')) {
+            variables.lists.push('Completed')
           }
           await alRequest(variables)
           userLists.value = alRequest({ method: 'UserLists' })
@@ -514,7 +514,7 @@ query($id: Int){
 }`
       break
     } case 'CustomList':{
-      variables.lists = [...opts.lists, 'Watched using Miru']
+      variables.lists = [...opts.lists, 'Completed']
       query = /* js */`
 mutation($lists: [String]){
   UpdateUser(animeListOptions: { customLists: $lists }){

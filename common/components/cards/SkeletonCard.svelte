@@ -16,6 +16,6 @@
   }
   .wrapper {
     height: 45rem;
-    contain-intrinsic-height: 40.6rem;
+    contain-intrinsic-height: 45rem;
   }
 </style>

@@ -8,7 +8,6 @@
   function close () {
     $view = null
     page = 'home'
-    // location.reload()
   }
 </script>
 

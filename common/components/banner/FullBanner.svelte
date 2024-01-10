@@ -25,8 +25,6 @@
     })
     media.isFavourite = !media.isFavourite
   }
-  console.log("here is the banner data")
-  console.log(media)
 </script>
 
 <img src={media.bannerImage || ''} alt='banner' class='img-cover w-full h-full position-absolute' />
@@ -70,14 +68,14 @@
     {/each}
   </div>
   <div class='d-flex flex-row pb-20'>
-    <button class='btn bg-dark-light h-50 w-200 font-size-20 px-20 shadow-none font-weight-bold border-0'
+    <button class='btn bg-dark-light h-50 w-200 font-size-20 font-weight-bold px-20 shadow-none border-0'
       use:click={() => playMedia(media)}>
       Watch Now
     </button>
-    <button class='btn bg-dark-light h-50 w-50 font-size-20 btn-square ml-10 material-symbols-outlined shadow-none border-0' class:filled={media.isFavourite} use:click={toggleFavourite}>
+    <button class='btn bg-dark-light h-50 w-50 font-size-20 font-weight-bold btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={media.isFavourite} use:click={toggleFavourite}>
       favorite
     </button>
-    <button class='btn bg-dark-light h-50 w-50 font-size-20 btn-square ml-10 material-symbols-outlined shadow-none border-0' class:filled={media.mediaListEntry} use:click={toggleStatus}>
+    <button class='btn bg-dark-light h-50 w-50 font-size-20 font-weight-bold btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={media.mediaListEntry} use:click={toggleStatus}>
       bookmark
     </button>
   </div>
@@ -94,7 +92,7 @@
   }
   .description {
     display: -webkit-box !important;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
   }
   .title {

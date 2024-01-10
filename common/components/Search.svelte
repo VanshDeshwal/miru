@@ -54,36 +54,31 @@
   }
 </script>
 
-<form class='container-fluid py-20 px-50 bg-dark pb-0 position-sticky top-0 search-container z-40' on:input bind:this={form}>
+<form class='container-fluid py-20 px-10 bg-dark pb-0 position-sticky top-0 search-container z-40' on:input bind:this={form}>
   <div class='row'>
     <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
       <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-        <div class='material-symbols-outlined mr-10 font-size-30'>title</div>
-        Title
       </div>
       <div class='input-group'>
         <div class='input-group-prepend'>
-          <span class='input-group-text d-flex material-symbols-outlined bg-dark-light pr-0 font-size-18'>search</span>
+          <span style="height:5rem; border-radius:2rem 0 0 2rem;" class='input-group-text d-flex material-symbols-outlined bg-dark-light pr-0 font-size-18'>search</span>
         </div>
         <input
           bind:this={searchTextInput}
           type='search'
           class='form-control bg-dark-light border-left-0 text-capitalize'
+          style="height:5rem; border-radius:0 2rem 2rem 0;"
           autocomplete='off'
           bind:value={search.search}
           data-option='search'
           disabled={search.disableSearch}
-          placeholder='Any' />
+          placeholder='Title' />
       </div>
     </div>
     <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
-      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-        <div class='material-symbols-outlined mr-10 font-size-30'>theater_comedy</div>
-        Genre
-      </div>
       <div class='input-group'>
-        <select class='form-control bg-dark-light' required bind:value={search.genre} disabled={search.disableSearch}>
-          <option value selected disabled hidden>Any</option>
+        <select style="height:5rem; border-radius:2rem;" class='form-control bg-dark-light' required bind:value={search.genre} disabled={search.disableSearch}>
+          <option value selected disabled hidden>Genre</option>
           <option value='Action'>Action</option>
           <option value='Adventure'>Adventure</option>
           <option value='Comedy'>Comedy</option>
@@ -106,13 +101,9 @@
       </div>
     </div>
     <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
-      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-        <div class='material-symbols-outlined mr-10 font-size-30'>spa</div>
-        Season
-      </div>
       <div class='input-group'>
-        <select class='form-control bg-dark-light border-right-dark' required bind:value={search.season} disabled={search.disableSearch}>
-          <option value selected disabled hidden>Any</option>
+        <select style="height:5rem; border-radius:2rem 0 0 2rem;" class='form-control bg-dark-light border-right-dark' required bind:value={search.season} disabled={search.disableSearch}>
+          <option value selected disabled hidden>Season</option>
           <option value='WINTER'>Winter</option>
           <option value='SPRING'>Spring</option>
           <option value='SUMMER'>Summer</option>
@@ -124,17 +115,13 @@
             <option>{year}</option>
           {/each}
         </datalist>
-        <input type='number' placeholder='Any' min='1940' max='2100' list='search-year' class='bg-dark-light form-control' disabled={search.disableSearch} bind:value={search.year} />
+        <input style="height:5rem; border-radius:0 2rem 2rem 0;" type='number' placeholder='Year' min='1940' max='2100' list='search-year' class='bg-dark-light form-control' disabled={search.disableSearch} bind:value={search.year} />
       </div>
     </div>
     <div class='col p-10 d-flex flex-column justify-content-end'>
-      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-        <div class='material-symbols-outlined mr-10 font-size-30'>monitor</div>
-        Format
-      </div>
       <div class='input-group'>
-        <select class='form-control bg-dark-light' required bind:value={search.format} disabled={search.disableSearch}>
-          <option value selected disabled hidden>Any</option>
+        <select style="height:5rem; border-radius:2rem;" class='form-control bg-dark-light' required bind:value={search.format} disabled={search.disableSearch}>
+          <option value selected disabled hidden>Format</option>
           <option value='TV'>TV Show</option>
           <option value='MOVIE'>Movie</option>
           <option value='TV_SHORT'>TV Short</option>
@@ -144,13 +131,9 @@
       </div>
     </div>
     <div class='col p-10 d-flex flex-column justify-content-end'>
-      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-        <div class='material-symbols-outlined mr-10 font-size-30'>live_tv</div>
-        Status
-      </div>
       <div class='input-group'>
-        <select class='form-control bg-dark-light' required bind:value={search.status} disabled={search.disableSearch}>
-          <option value selected disabled hidden>Any</option>
+        <select style="height:5rem; border-radius:2rem;" class='form-control bg-dark-light' required bind:value={search.status} disabled={search.disableSearch}>
+          <option value selected disabled hidden>Status</option>
           <option value='RELEASING'>Airing</option>
           <option value='FINISHED'>Finished</option>
           <option value='NOT_YET_RELEASED'>Not Yet Aired</option>
@@ -159,12 +142,8 @@
       </div>
     </div>
     <div class='col p-10 d-flex flex-column justify-content-end'>
-      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
-        <div class='material-symbols-outlined mr-10 font-size-30'>sort</div>
-        Sort
-      </div>
       <div class='input-group'>
-        <select class='form-control bg-dark-light' required bind:value={search.sort} disabled={search.disableSearch}>
+        <select style="height:5rem; border-radius:2rem;" class='form-control bg-dark-light' required bind:value={search.sort} disabled={search.disableSearch}>
           <option value selected disabled hidden>Name</option>
           <option value='START_DATE_DESC'>Release Date</option>
           <option value='SCORE_DESC'>Score</option>
@@ -177,7 +156,9 @@
     <input type='file' class='d-none' id='search-image' accept='image/*' on:input|preventDefault|stopPropagation={handleFile} />
     <div class='col-auto p-10 d-flex'>
       <div class='align-self-end'>
-        <button class='btn btn-square bg-dark-light material-symbols-outlined font-size-18 px-5 align-self-end border-0' type='button'>
+        <button class='btn btn-square bg-dark-light material-symbols-outlined font-size-18 px-5 align-self-end border-0' type='button' style="color:grey; border-radius: 2rem;
+        width: 4rem;
+        height: 5rem;">
           <label for='search-image' class='pointer mb-0'>
             image
           </label>
@@ -186,7 +167,9 @@
     </div>
     <div class='col-auto p-10 d-flex'>
       <div class='align-self-end'>
-        <button class='btn btn-square bg-dark-light material-symbols-outlined font-size-18 px-5 align-self-end border-0' type='button' use:click={searchClear} class:text-primary={!!sanitisedSearch?.length || search.disableSearch || search.clearNext}>
+        <button class='btn btn-square bg-dark-light material-symbols-outlined font-size-18 px-5 align-self-end border-0' type='button' style="color:grey; border-radius: 2rem;
+        width: 4rem;
+        height: 5rem;" use:click={searchClear} class:text-primary={!!sanitisedSearch?.length || search.disableSearch || search.clearNext}>
           delete
         </button>
       </div>

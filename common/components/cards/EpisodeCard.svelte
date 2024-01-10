@@ -23,7 +23,7 @@
   {#if preview}
     <EpisodePreviewCard {data} />
   {/if}
-  <div class='item d-flex flex-column h-full pointer  content-visibility-auto'>
+  <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
     <div class='image item-2 w-full position-relative rounded-3 overflow-hidden d-flex justify-content-between align-items-end text-white' class:bg-black={episodeThumbnail === ' '}>
       <img loading='lazy' src={episodeThumbnail} alt='cover' class='cover-img w-full h-full position-absolute' style:--color={data.media?.coverImage?.color || '#1890ff'} />
       <div class='pl-10 pb-10 material-symbols-outlined filled z-10'>play_arrow</div>
@@ -46,8 +46,8 @@
         </div>
       </div>
       {#if data.episode}
-        <div class='col-5 d-flex flex-column align-items-end text-right'>
-          <div class='text-white'>
+        <div class='col-auto d-flex flex-column align-items-end text-right'>
+          <div class='text-white font-weight-bold'>
             Episode {data.episode} / {data.media?.episodes || '?'}
           </div>
           {#if data.date}
@@ -84,7 +84,6 @@
   .item {
     animation: 0.3s ease 0s 1 load-in;
     width: 33rem;
-    
   }
   .item-2 {
     height:150px !important;

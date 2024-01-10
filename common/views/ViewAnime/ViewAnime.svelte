@@ -1,7 +1,6 @@
 <script>
   import { getContext } from 'svelte'
   import { getMediaMaxEp, formatMap, playMedia, setStatus } from '@/modules/anime.js'
-  import {set} from '../Settings.svelte'
   import { playAnime } from '../RSSView.svelte'
   import { toast } from 'svelte-sonner'
   import { alRequest } from '@/modules/anilist.js'

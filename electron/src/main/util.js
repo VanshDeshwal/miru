@@ -10,7 +10,6 @@ const flags = [
   ['enable-gpu-rasterization'],
   ['enable-zero-copy'],
   ['ignore-gpu-blocklist'],
-  ['ignore-certificate-errors'],
   ['enable-hardware-overlays', 'single-fullscreen,single-on-top,underlay'],
   ['enable-features', 'PlatformEncryptedDolbyVision,EnableDrDc,CanvasOopRasterization,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes,UseSkiaRenderer,WebAssemblyLazyCompilation'],
   ['force_high_performance_gpu'],

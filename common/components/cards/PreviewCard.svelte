@@ -55,7 +55,7 @@
   }
 </script>
 
-<div class='position-absolute w-350 h-400 absolute-container top-0 bottom-0 m-auto bg-dark-light z-30 rounded overflow-hidden pointer'>
+<div class='position-absolute w-450 h-480 absolute-container top-0 bottom-0 m-auto bg-dark-light z-30 rounded-3 overflow-hidden pointer'>
   <div class='banner position-relative bg-black'>
     <img src={media.bannerImage || ' '} alt='banner' class='img-cover w-full h-full' />
     {#if media.trailer?.id}
@@ -87,7 +87,7 @@
       {media.title.userPreferred}
     </div>
     <div class='d-flex flex-row pt-5'>
-      <button class='btn btn-secondary flex-grow-1 text-dark font-weight-bold shadow-none border-0 d-flex align-items-center justify-content-center'
+      <button class='btn btn-secondary h-50 flex-grow-1 text-dark font-weight-bold shadow-none border-0 d-flex align-items-center justify-content-center'
         use:click={play}
         disabled={media.status === 'NOT_YET_RELEASED'}>
         <span class='material-symbols-outlined font-size-20 filled pr-10'>
@@ -95,10 +95,10 @@
         </span>
         {playButtonText}
       </button>
-      <button class='btn btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={media.isFavourite} use:click={toggleFavourite}>
+      <button class='btn btn-square h-50 ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.isFavourite} use:click={toggleFavourite}>
         favorite
       </button>
-      <button class='btn btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={media.mediaListEntry} use:click={toggleStatus}>
+      <button class='btn btn-square h-50 ml-10 material-symbols-outlined font-size-18 shadow-none border-0' class:filled={media.mediaListEntry} use:click={toggleStatus}>
         bookmark
       </button>
     </div>
@@ -127,7 +127,7 @@
         </span>
       {/if}
     </div>
-    <div class='w-full h-full text-muted description overflow-hidden'>
+    <div class='w-full h-full text-muted  font-size-18 description overflow-hidden'>
       {media.description?.replace(/<[^>]*>/g, '')}
     </div>
   </div>

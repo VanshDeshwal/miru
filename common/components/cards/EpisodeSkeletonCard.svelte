@@ -19,10 +19,9 @@
     width: 33rem
   }
   .wrapper {
-    height: 28.7rem;
-    contain-intrinsic-height: 28.7rem;
+    height: 27.7rem;
+    contain-intrinsic-height: 27.7rem;
   }
-
   .item-2 {
     height:150px !important;
   }
