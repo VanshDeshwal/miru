@@ -1,9 +1,10 @@
 <script>
   import { settings } from '@/modules/settings.js'
-  import { playAnime } from '../RSSView.svelte'
+  import { getAnimeProgress, setAnimeProgress } from '@/modules/animeprogress.js'
+  import { playAnime } from '@/views/TorrentSearch/TorrentModal.svelte'
   import { client } from '@/modules/torrent.js'
   import { createEventDispatcher } from 'svelte'
-  import { alEntry } from '@/modules/anilist.js'
+  import { anilistClient } from '@/modules/anilist.js'
   import Subtitles from '@/modules/subtitles.js'
   import { toTS, fastPrettyBytes, videoRx } from '@/modules/util.js'
   import { toast } from 'svelte-sonner'
@@ -16,6 +17,7 @@
   import Keybinds, { loadWithDefaults, condition } from 'svelte-keybinds'
   import { SUPPORTS } from '@/modules/support.js'
   import 'rvfc-polyfill'
+  import IPC from '@/modules/ipc.js'
 
   const emit = createEventDispatcher()
 
@@ -153,6 +155,8 @@
   }
   $: loadDeband($settings.playerDeband, video)
 
+  let watchedListener
+
   async function handleCurrent (file) {
     if (file) {
       if (thumbnailData.video?.src) URL.revokeObjectURL(video?.src)
@@ -166,13 +170,26 @@
       chapters = []
       currentSkippable = null
       completed = false
-      if (subs) subs.destroy()
+      if (subs) {
+        subs.destroy()
+        subs = null
+      }
       current = file
       emit('current', current)
-      src = file.url
-      client.send('current', file)
-      subs = new Subtitles(video, files, current, handleHeaders)
-      video.load()
+      client.send('current', { current: file, external: settings.value.enableExternal })
+      if (!settings.value.enableExternal) {
+        src = file.url
+        subs = new Subtitles(video, files, current, handleHeaders)
+        video.load()
+        await loadAnimeProgress()
+      } else if (current.media?.media?.duration) {
+        const duration = current.media?.media?.duration
+        client.removeEventListener('externalWatched', watchedListener)
+        watchedListener = ({ detail }) => {
+          checkCompletionByTime(detail, duration)
+        }
+        client.on('externalWatched', watchedListener)
+      }
     }
   }
 
@@ -197,6 +214,25 @@
       hasLast = false
     }
   }
+
+  async function loadAnimeProgress () {
+    if (!current?.media?.media?.id || !current?.media?.episode || current?.media?.failed || !media?.media?.id || !media?.episode) return
+
+    const animeProgress = await getAnimeProgress(current.media.media.id, current.media.episode)
+    if (!animeProgress) return
+
+    const currentTime = Math.max(animeProgress.currentTime - 5, 0) // Load 5 seconds before
+    seek(currentTime - video.currentTime)
+  }
+
+  function saveAnimeProgress () {
+    if (!current?.media?.media?.id || !current?.media?.episode || current?.media?.failed || !media?.media?.id || !media?.episode) return
+
+    if (buffering || paused || video.readyState < 4) return
+
+    setAnimeProgress({ mediaId: current.media.media.id, episode: current.media.episode, currentTime: video.currentTime, safeduration })
+  }
+  setInterval(saveAnimeProgress, 30000)
 
   function cycleSubtitles () {
     if (current && subs?.headers) {
@@ -237,21 +273,24 @@
   }
   function playPause () {
     paused = !paused
+    resetImmerse()
   }
   function toggleMute () {
     muted = !muted
   }
-  let visibilityPaused = true
-  document.addEventListener('visibilitychange', () => {
+  const handleVisibility = visibility => {
     if (!video?.ended && $settings.playerPause && !pip) {
-      if (document.visibilityState === 'hidden') {
+      if (visibility === 'hidden') {
         visibilityPaused = paused
         paused = true
       } else {
         if (!visibilityPaused) paused = false
       }
     }
-  })
+  }
+  let visibilityPaused = true
+  document.addEventListener('visibilitychange', () => handleVisibility(document.visibilityState))
+  IPC.on('visibilitychange', handleVisibility)
   function tryPlayNext () {
     if ($settings.playerAutoplay && !state.value) playNext()
   }
@@ -624,6 +663,7 @@
   }
 
   function toggleImmerse () {
+    clearTimeout(immerseTimeout)
     immersed = !immersed
   }
 
@@ -856,13 +896,17 @@
   let completed = false
   function checkCompletion () {
     if (!completed && $settings.playerAutocomplete) {
-      const fromend = Math.max(180, safeduration / 10)
-      if (safeduration && currentTime && video?.readyState && safeduration - fromend < currentTime) {
-        if (media?.media?.episodes || media?.media?.nextAiringEpisode?.episode) {
-          if (media.media.episodes || media.media.nextAiringEpisode?.episode > media.episode) {
-            completed = true
-            alEntry(media)
-          }
+      checkCompletionByTime(currentTime, safeduration)
+    }
+  }
+
+  function checkCompletionByTime (currentTime, safeduration) {
+    const fromend = Math.max(180, safeduration / 10)
+    if (safeduration && currentTime && video?.readyState && safeduration - fromend < currentTime) {
+      if (media?.media?.episodes || media?.media?.nextAiringEpisode?.episode) {
+        if (media.media.episodes || media.media.nextAiringEpisode?.episode > media.episode) {
+          completed = true
+          anilistClient.alEntry(media)
         }
       }
     }
@@ -970,6 +1014,7 @@
     on:loadedmetadata={autoPlay}
     on:loadedmetadata={checkAudio}
     on:loadedmetadata={clearLoadInterval}
+    on:loadedmetadata={loadAnimeProgress}
     on:leavepictureinpicture={() => { pip = false }} />
   {#if stats}
     <div class='position-absolute top-0 bg-tp p-10 m-15 text-monospace rounded z-50'>
@@ -1050,11 +1095,11 @@
         <span class='material-symbols-outlined ctrl' title='Mute [M]' data-name='toggleMute' use:click={toggleMute}> {muted ? 'volume_off' : 'volume_up'} </span>
         <input class='ctrl h-full custom-range' type='range' min='0' max='1' step='any' data-name='setVolume' bind:value={volume} />
       </div>
-      <div class='ts'>{toTS(targetTime, safeduration > 3600 ? 2 : 3)} / {toTS(safeduration - targetTime, safeduration > 3600 ? 2 : 3)}</div>
+      <div class='ts' class:mr-auto={playbackRate === 1}>{toTS(targetTime, safeduration > 3600 ? 2 : 3)} / {toTS(safeduration - targetTime, safeduration > 3600 ? 2 : 3)}</div>
       {#if playbackRate !== 1}
-        <div class='ts'>x{playbackRate.toFixed(1)}</div>
+        <div class='ts mr-auto'>x{playbackRate.toFixed(1)}</div>
       {/if}
-      <span class='ml-auto material-symbols-outlined ctrl keybinds' title='Keybinds [`]' use:click={() => (showKeybinds = true)}> keyboard </span>
+      <span class='material-symbols-outlined ctrl keybinds' title='Keybinds [`]' use:click={() => (showKeybinds = true)}> keyboard </span>
       {#if 'audioTracks' in HTMLVideoElement.prototype && video?.audioTracks?.length > 1}
         <div class='dropdown dropup with-arrow' use:click={toggleDropdown}>
           <span class='material-symbols-outlined ctrl' title='Audio Tracks'>
@@ -1101,7 +1146,7 @@
                 </label>
               {/if}
             {/each}
-            <input type='number' step='0.1' bind:value={subDelay} on:click|stopPropagation class='form-control text-right form-control-sm' />
+            <input type='text' inputmode='numeric' pattern='[0-9]*' step='0.1' bind:value={subDelay} on:click|stopPropagation class='form-control text-right form-control-sm' />
           </div>
         </div>
       {/if}
@@ -1440,6 +1485,12 @@
       .top  {
         padding-top: max(var(--safe-area-top), env(safe-area-inset-top, 0)) !important;
       }
+    }
+    .middle .ctrl {
+      display: flex !important;
+    }
+    .miniplayer .middle .ctrl {
+      display: none !important;
     }
     .toggle-immerse {
       display: block !important;

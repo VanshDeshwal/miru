@@ -5,6 +5,8 @@ import Discord from './discord.js'
 import Updater from './updater.js'
 import Protocol from './protocol.js'
 import { development } from './util.js'
+import Dialog from './dialog.js'
+import store from './store.js'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -38,13 +40,18 @@ function createWindow () {
       backgroundThrottling: false,
       preload: path.join(__dirname, '/preload.js')
     },
-    icon: path.join(__dirname, '/logo.ico'),
+    icon: path.join(__dirname, '/logo_filled.png'),
     show: false
   })
   new Discord(mainWindow)
   new Protocol(mainWindow)
   new Updater(mainWindow)
+  new Dialog(webtorrentWindow)
   mainWindow.setMenuBarVisibility(false)
+
+  mainWindow.webContents.setWindowOpenHandler(() => {
+    return { action: 'deny' }
+  })
 
   mainWindow.webContents.session.webRequest.onHeadersReceived(({ responseHeaders }, fn) => {
     delete responseHeaders['Access-Control-Allow-Origin']
@@ -63,6 +70,9 @@ function createWindow () {
   ipcMain.on('devtools', () => {
     webtorrentWindow.webContents.openDevTools()
   })
+
+  mainWindow.on('minimize', () => mainWindow.webContents.postMessage('visibilitychange', 'hidden'))
+  mainWindow.on('restore', () => mainWindow.webContents.postMessage('visibilitychange', 'visible'))
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -84,7 +94,7 @@ function createWindow () {
   mainWindow.webContents.on('render-process-gone', (e, { reason }) => {
     if (reason === 'crashed') {
       if (++crashcount > 10) {
-        dialog.showMessageBox({ message: 'Crashed too many times.', title: 'Miru', detail: 'App crashed too many times. For a fix visit https://github.com/ThaUnknown/miru/blob/master/docs/faq.md#miru-crashed-too-many-times', icon: '/renderer/public/logo.ico' }).then(() => {
+        dialog.showMessageBox({ message: 'Crashed too many times.', title: 'Miru', detail: 'App crashed too many times. For a fix visit https://github.com/ThaUnknown/miru/blob/master/docs/faq.md#miru-crashed-too-many-times', icon: '/renderer/public/logo_filled.png' }).then(() => {
           shell.openExternal('https://github.com/ThaUnknown/miru/blob/master/docs/faq.md#miru-crashed-too-many-times')
           app.quit()
         })
@@ -104,6 +114,8 @@ function createWindow () {
     const { port1, port2 } = new MessageChannelMain()
     await torrentLoad
     webtorrentWindow.webContents.postMessage('port', null, [port1])
+    webtorrentWindow.webContents.postMessage('player', store.get('player'))
+    webtorrentWindow.webContents.postMessage('torrentPath', store.get('torrentPath'))
     sender.postMessage('port', null, [port2])
   })
 }

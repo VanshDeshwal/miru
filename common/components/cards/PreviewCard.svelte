@@ -1,11 +1,15 @@
 <script>
   import { formatMap, setStatus, playMedia } from '@/modules/anime.js'
-  import { alRequest } from '@/modules/anilist.js'
+  import { anilistClient } from '@/modules/anilist.js'
   import { click } from '@/modules/click.js'
+  /** @type {import('@/modules/al.d.ts').Media} */
   export let media
 
   let hide = true
 
+  /**
+   * @param {import('@/modules/al.d.ts').Media} media
+   */
   function getPlayButtonText (media) {
     if (media.mediaListEntry) {
       const { status, progress } = media.mediaListEntry
@@ -27,18 +31,12 @@
       media.mediaListEntry = res.data.SaveMediaListEntry
     } else {
       // delete
-      alRequest({
-        method: 'Delete',
-        id: media.mediaListEntry.id
-      })
+      anilistClient.delete({ id: media.mediaListEntry.id })
       media.mediaListEntry = undefined
     }
   }
   function toggleFavourite () {
-    alRequest({
-      method: 'Favourite',
-      id: media.id
-    })
+    anilistClient.favourite({ id: media.id })
     media.isFavourite = !media.isFavourite
   }
   function play () {
@@ -57,7 +55,7 @@
 
 <div class='position-absolute w-450 h-480 absolute-container top-0 bottom-0 m-auto bg-dark-light z-30 rounded-3 overflow-hidden pointer'>
   <div class='banner position-relative bg-black'>
-    <img src={media.bannerImage || ' '} alt='banner' class='img-cover w-full h-full' />
+    <img src={media.bannerImage || `https://i.ytimg.com/vi/${media.trailer?.id}/hqdefault.jpg` || ' '} alt='banner' class='img-cover w-full h-full' />
     {#if media.trailer?.id}
       <div class='material-symbols-outlined filled position-absolute z-10 top-0 right-0 p-15 font-size-22' class:d-none={hide} use:click={toggleMute}>{muted ? 'volume_off' : 'volume_up'}</div>
       <!-- for now we use some invidious instance, would be nice to somehow get these links outselves, this redirects straight to some google endpoint -->

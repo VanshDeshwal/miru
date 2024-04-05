@@ -1,14 +1,14 @@
 <script context='module'>
   import { setContext } from 'svelte'
   import { writable } from 'simple-store-svelte'
-  import { alRequest } from '@/modules/anilist.js'
+  import { anilistClient } from '@/modules/anilist.js'
   import IPC from '@/modules/ipc.js'
 
   export const page = writable('home')
   export const view = writable(null)
   export async function handleAnime (anime) {
     view.set(null)
-    view.set((await alRequest({ method: 'SearchIDSingle', id: anime })).data.Media)
+    view.set((await anilistClient.searchIDSingle({ id: anime })).data.Media)
   }
   IPC.on('open-anime', handleAnime)
   IPC.on('schedule', () => {
@@ -20,7 +20,7 @@
   import Sidebar from './components/Sidebar.svelte'
   import Router from './Router.svelte'
   import ViewAnime from './views/ViewAnime/ViewAnime.svelte'
-  import RSSView from './views/RSSView.svelte'
+  import TorrentModal from './views/TorrentSearch/TorrentModal.svelte'
   import Menubar from './components/Menubar.svelte'
   import IspBlock from './views/IspBlock.svelte'
   import { Toaster } from 'svelte-sonner'
@@ -38,7 +38,7 @@
   <Sidebar bind:page={$page} />
   <div class='overflow-hidden content-wrapper h-full z-10'>
     <Toaster visibleToasts={6} position='top-right' theme='dark' richColors duration={10000} closeButton />
-    <RSSView />
+    <TorrentModal />
     <Router bind:page={$page} />
   </div>
   <Navbar bind:page={$page} />

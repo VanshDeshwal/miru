@@ -14,3 +14,18 @@ hr {
 :root {
   --container-xl-max-width: 150rem
 }
+
+.app-image {
+  aspect-ratio: 2/1;
+  object-fit: contain;
+}
+
+@-moz-document url-prefix() {
+  .ghost {
+    text-shadow:
+    0.6px 0.6px 0 #3a3a3a,
+    -0.6px 0.6px 0 #3a3a3a,
+    -0.6px -0.6px 0 #3a3a3a,
+    0.6px -0.6px 0 #3a3a3a !important;
+  }
+}

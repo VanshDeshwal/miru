@@ -1,4 +1,4 @@
-import { alRequest, currentSeason, currentYear, userLists } from '@/modules/anilist.js'
+import { anilistClient, currentSeason, currentYear } from '@/modules/anilist.js'
 import { writable } from 'simple-store-svelte'
 import { settings, alToken } from '@/modules/settings.js'
 import { RSSManager } from '@/modules/rss.js'
@@ -24,8 +24,8 @@ export default class SectionsManager {
 
   static createFallbackLoad (variables, type) {
     return (page = 1, perPage = 50, search = variables) => {
-      const options = { method: 'Search', page, perPage, ...SectionsManager.sanitiseObject(search) }
-      const res = alRequest(options)
+      const options = { page, perPage, ...SectionsManager.sanitiseObject(search) }
+      const res = anilistClient.search(options)
       return SectionsManager.wrapResponse(res, perPage, type)
     }
   }
@@ -65,15 +65,15 @@ function createSections () {
     ...settings.value.rssFeedsNew.map(([title, url]) => {
       const section = {
         title,
-        load: (page = 1, perPage = 8) => RSSManager.getMediaForRSS(page, perPage, url),
-        preview: writable(RSSManager.getMediaForRSS(1, 8, url)),
+        load: (page = 1, perPage = 12) => RSSManager.getMediaForRSS(page, perPage, url),
+        preview: writable(RSSManager.getMediaForRSS(1, 12, url)),
         variables: { disableSearch: true }
       }
 
       // update every 30 seconds
       section.interval = setInterval(async () => {
-        if (await RSSManager.getContentChanged(1, 8, url)) {
-          section.preview.value = RSSManager.getMediaForRSS(1, 8, url, true)
+        if (await RSSManager.getContentChanged(1, 12, url)) {
+          section.preview.value = RSSManager.getMediaForRSS(1, 12, url, true)
         }
       }, 30000)
 
@@ -83,7 +83,7 @@ function createSections () {
     {
       title: 'Continue Watching',
       load: (page = 1, perPage = 50, variables = {}) => {
-        const res = userLists.value.then(res => {
+        const res = anilistClient.userLists.value.then(res => {
           const mediaList = res.data.MediaListCollection.lists.reduce((filtered, { status, entries }) => {
             return (status === 'CURRENT' || status === 'REPEATING') ? filtered.concat(entries) : filtered
           }, [])
@@ -91,7 +91,8 @@ function createSections () {
             if (media.status === 'FINISHED') return true
             return media.mediaListEntry?.progress < media.nextAiringEpisode?.episode - 1
           }).map(({ media }) => media.id)
-          return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
+          if (!ids.length) return {}
+          return anilistClient.searchIDS({ page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
         })
         return SectionsManager.wrapResponse(res, perPage)
       },
@@ -100,13 +101,14 @@ function createSections () {
     {
       title: 'Sequels You Missed',
       load: (page = 1, perPage = 50, variables = {}) => {
-        const res = userLists.value.then(res => {
+        const res = anilistClient.userLists.value.then(res => {
           const mediaList = res.data.MediaListCollection.lists.find(({ status }) => status === 'COMPLETED')?.entries
           if (!mediaList) return {}
           const ids = mediaList.flatMap(({ media }) => {
             return media.relations.edges.filter(edge => edge.relationType === 'SEQUEL')
           }).map(({ node }) => node.id)
-          return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables), status: ['FINISHED', 'RELEASING'], onList: false })
+          if (!ids.length) return {}
+          return anilistClient.searchIDS({ page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables), status: ['FINISHED', 'RELEASING'], onList: false })
         })
         return SectionsManager.wrapResponse(res, perPage)
       },
@@ -115,10 +117,10 @@ function createSections () {
     {
       title: 'Your List',
       load: (page = 1, perPage = 50, variables = {}) => {
-        const res = userLists.value.then(res => {
+        const res = anilistClient.userLists.value.then(res => {
           const ids = res.data.MediaListCollection.lists.find(({ status }) => status === 'PLANNING')?.entries.map(({ media }) => media.id)
           if (!ids) return {}
-          return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
+          return anilistClient.searchIDS({ page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
         })
         return SectionsManager.wrapResponse(res, perPage)
       },
@@ -127,10 +129,10 @@ function createSections () {
     {
       title: 'Completed List',
       load: (page = 1, perPage = 50, variables = {}) => {
-        const res = userLists.value.then(res => {
+        const res = anilistClient.userLists.value.then(res => {
           const ids = res.data.MediaListCollection.lists.find(({ status }) => status === 'COMPLETED')?.entries.map(({ media }) => media.id)
           if (!ids) return {}
-          return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
+          return anilistClient.searchIDS({ page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
         })
         return SectionsManager.wrapResponse(res, perPage)
       },
@@ -139,10 +141,10 @@ function createSections () {
     {
       title: 'Paused List',
       load: (page = 1, perPage = 50, variables = {}) => {
-        const res = userLists.value.then(res => {
+        const res = anilistClient.userLists.value.then(res => {
           const ids = res.data.MediaListCollection.lists.find(({ status }) => status === 'PAUSED')?.entries.map(({ media }) => media.id)
           if (!ids) return {}
-          return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
+          return anilistClient.searchIDS({ page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
         })
         return SectionsManager.wrapResponse(res, perPage)
       },
@@ -151,10 +153,10 @@ function createSections () {
     {
       title: 'Dropped List',
       load: (page = 1, perPage = 50, variables = {}) => {
-        const res = userLists.value.then(res => {
+        const res = anilistClient.userLists.value.then(res => {
           const ids = res.data.MediaListCollection.lists.find(({ status }) => status === 'DROPPED')?.entries.map(({ media }) => media.id)
           if (!ids) return {}
-          return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
+          return anilistClient.searchIDS({ page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
         })
         return SectionsManager.wrapResponse(res, perPage)
       },
@@ -163,10 +165,10 @@ function createSections () {
     {
       title: 'Currently Watching List',
       load: (page = 1, perPage = 50, variables = {}) => {
-        const res = userLists.value.then(res => {
+        const res = anilistClient.userLists.value.then(res => {
           const ids = res.data.MediaListCollection.lists.find(({ status }) => status === 'CURRENT')?.entries.map(({ media }) => media.id)
           if (!ids) return {}
-          return alRequest({ method: 'SearchIDS', page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
+          return anilistClient.searchIDS({ page, perPage, id: ids, ...SectionsManager.sanitiseObject(variables) })
         })
         return SectionsManager.wrapResponse(res, perPage)
       },
