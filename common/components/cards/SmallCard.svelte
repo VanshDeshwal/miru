@@ -43,6 +43,18 @@
     </div>
     
     <div class='d-flex flex-row mt-auto pt-10 font-weight-medium justify-content-between w-full text-muted'>
+      {#if $page !== 'schedule'}
+        <div class='d-flex align-items-center' style='margin-left: -3px'>
+          <span class='material-symbols-outlined font-size-24 pr-5'>calendar_month</span>
+          {media.seasonYear || 'N/A'}
+        </div>
+        <div class='d-flex align-items-center'>
+          {formatMap[media.format]}
+          <span class='material-symbols-outlined font-size-24 pl-5'>monitor</span>
+        </div>
+        {/if}
+        
+
       {#if $page === 'schedule'}
       <div class='w-full'>
         {#if media.airingSchedule?.nodes?.[0]?.airingAt}
@@ -55,26 +67,9 @@
         {/if}
       </div>
     {/if}
-    <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded' style:--color={media.coverImage.color || '#1890ff'} />
 
-    <div class='text-white font-weight-very-bold font-size-16 pt-15 title overflow-hidden'>
-      {#if media.mediaListEntry?.status}
-        <div style:--statusColor={statusColorMap[media.mediaListEntry.status]} class='list-status-circle d-inline-flex overflow-hidden mr-5' title={media.mediaListEntry.status} />
-      {/if}
-      {media.title.userPreferred}
-    </div>
-    <div class='d-flex flex-row mt-auto pt-10 font-weight-medium justify-content-between w-full text-muted'>
-      <div class='d-flex align-items-center' style='margin-left: -3px'>
-        <span class='material-symbols-outlined font-size-24 pr-5'>calendar_month</span>
-        {media.seasonYear || 'N/A'}
-      </div>
-      <div class='d-flex align-items-center'>
-        {formatMap[media.format]}
-        <span class='material-symbols-outlined font-size-24 pl-5'>monitor</span>
-      </div>
-      {/if}
-    </div>
   </div>
+</div>
 </div>
 
 <style>
