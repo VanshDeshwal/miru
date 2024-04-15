@@ -1,10 +1,16 @@
 <script>
+  import { getContext } from 'svelte'
   import { formatMap, setStatus, playMedia } from '@/modules/anime.js'
   import { anilistClient } from '@/modules/anilist.js'
   import { click } from '@/modules/click.js'
   export let mediaList
 
   let current = mediaList[0]
+
+  const view = getContext('view')
+  function viewMedia () {
+    $view = current
+  }
 
   async function toggleStatus () {
     if (!current.mediaListEntry) {
@@ -16,10 +22,6 @@
       anilistClient.delete({ id: current.mediaListEntry.id })
       current.mediaListEntry = undefined
     }
-  }
-  function toggleFavourite () {
-    anilistClient.favourite({ id: current.id })
-    current.isFavourite = !current.isFavourite
   }
 
   function currentIndex () {
@@ -90,11 +92,11 @@
       use:click={() => playMedia(current)}>
       Watch Now
     </button>
-    <button class='btn bg-dark-light btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={current.isFavourite} use:click={toggleFavourite}>
-      favorite
-    </button>
     <button class='btn bg-dark-light btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' class:filled={current.mediaListEntry} use:click={toggleStatus}>
       bookmark
+    </button>
+    <button class='btn bg-dark-light btn-square ml-10 material-symbols-outlined font-size-16 shadow-none border-0' use:click={viewMedia}>
+      info
     </button>
   </div>
   <div class='d-flex'>

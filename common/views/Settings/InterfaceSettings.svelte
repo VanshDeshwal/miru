@@ -1,7 +1,7 @@
 <script>
   import { variables } from '@/modules/themes.js'
   import { click } from '@/modules/click.js'
-  import HomeSections from './HomeSectionsSettings.svelte'
+  import HomeSections, {downloadSections} from './HomeSectionsSettings.svelte'
   import IPC from '@/modules/ipc.js'
   import SettingCard from './SettingCard.svelte'
   import { SUPPORTS } from '@/modules/support.js'

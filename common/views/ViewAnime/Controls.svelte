@@ -144,6 +144,10 @@
         <span class='material-symbols-outlined mr-15 font-size-18 w-30'> share </span>
         Share
       </button>
+      <button class='btn flex-fill font-weight-bold font-size-16 ml-5 d-flex align-items-center' use:click={() => { copyToClipboard(`https://miru.watch/anime/${media.id}`) }}>
+        <span class='material-symbols-outlined mr-15 font-size-18 w-30'> download </span>
+        Download
+      </button>
     </div>
   </div>
 </div>
