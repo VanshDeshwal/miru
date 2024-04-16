@@ -1,5 +1,4 @@
 <script>
-  import { getAnimeData, storeAnimeData } from '@/modules/downloads.js'
   import { getContext } from 'svelte'
   import { getMediaMaxEp, formatMap, playMedia, setStatus } from '@/modules/anime.js'
   import { playAnime } from '@/views/TorrentSearch/TorrentModal.svelte'
@@ -68,17 +67,7 @@
     IPC.emit('open', url)
   }
   let episodeOrder = true
-  function saveAnimeData (){
-    storeAnimeData({ mediaId: media.id, episode: media.episode, title: media.title, description: media.description})
-    console.log('Anime Data Saved!!')
-    test()
 
-  }
-
-  function test() {
-    const data = getAnimeData(media.id, media.episode)
-    console.log(data.mediaID)
-  }
 </script>
 
 <div class='modal modal-full z-100' class:show={media} on:keydown={checkClose} tabindex='-1' role='button' bind:this={modal}>
@@ -148,9 +137,6 @@
                   </button>
                   <button class='btn bg-dark btn-lg btn-square ml-10 material-symbols-outlined font-size-20 shadow-none border-0' use:click={() => openInBrowser(`https://anilist.co/anime/${media.id}`)}>
                     open_in_new
-                  </button>
-                  <button class='btn bg-dark btn-lg btn-square ml-10 material-symbols-outlined font-size-20 shadow-none border-0' use:click={saveAnimeData}>
-                    download
                   </button>
                 </div>
               </div>

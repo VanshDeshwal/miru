@@ -183,8 +183,7 @@ function createSections () {
     { title: 'Action', variables: { sort: 'TRENDING_DESC', genre: 'Action' } },
     { title: 'Adventure', variables: { sort: 'TRENDING_DESC', genre: 'Adventure' } },
     { title: 'Fantasy', variables: { sort: 'TRENDING_DESC', genre: 'Fantasy' } },
-    { title: 'Comedy', variables: { sort: 'TRENDING_DESC', genre: 'Comedy' } },
-    { title: 'Downloads', variables: { sort: 'TRENDING_DESC', genre: 'Comedy' } }
+    { title: 'Comedy', variables: { sort: 'TRENDING_DESC', genre: 'Comedy' } }
   ]
 }
 

@@ -17,8 +17,5 @@ export default class Updater {
     autoUpdater.on('update-available', () => {
       window.webContents.send('update-available', true)
     })
-    autoUpdater.on('update-downloaded', () => {
-      window.webContents.send('update-downloaded', true)
-    })
   }
 }

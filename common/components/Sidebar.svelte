@@ -69,17 +69,6 @@
       text: 'Watch Together'
     },
     {
-      click: () => {
-        page = 'downloads'
-      },
-      page: 'downloads',
-      icon: 'download',
-      text: 'Downloads'
-    },
-    {
-      click: () => {
-        IPC.emit('open', 'https://github.com/sponsors/ThaUnknown/')
-      },
       icon: 'favorite',
       text: 'Support This App',
       css: 'mt-auto donate'

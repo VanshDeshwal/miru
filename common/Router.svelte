@@ -12,7 +12,6 @@
   import MediaHandler from './views/Player/MediaHandler.svelte'
   import Settings from '@/views/Settings/Settings.svelte'
   import WatchTogether from './views/WatchTogether/WatchTogether.svelte'
-  import Downloads from './views/Downloads/Downloads.svelte'
   import Miniplayer from 'svelte-miniplayer'
   import Search from './views/Search.svelte'
   import AiringSchedule from './views/AiringSchedule.svelte'
@@ -39,6 +38,4 @@
   <AiringSchedule />
 {:else if page === 'watchtogether'}
   <WatchTogether />
-{:else if page === 'downloads'}
-  <Downloads />
 {/if}
