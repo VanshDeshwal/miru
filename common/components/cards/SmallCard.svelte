@@ -23,11 +23,11 @@
   }
 </script>
 
-<div class='d-flex p-20 position-relative first-check' use:hoverClick={[viewMedia, setHoverState]}>
+<div class='d-flex p-md-20 p-15 position-relative first-check' use:hoverClick={[viewMedia, setHoverState]}>
   {#if preview}
     <PreviewCard {media} />
   {/if}
-  <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
+  <div class='item small-card d-flex flex-column h-full pointer content-visibility-auto'>
     <img loading='lazy' src={media.coverImage.extraLarge || ''} alt='cover' class='cover-img w-full rounded-image' style:--color={media.coverImage.color || '#1890ff'} />
     {#if media.averageScore}
     <div class='rating position-absolute'>
@@ -82,12 +82,13 @@
     -webkit-box-orient: vertical;
   }
   img {
-    height: 265px;
+    width: 100%;
+    aspect-ratio: 230/331;
   }
   .item {
     animation: 0.3s ease 0s 1 load-in;
-    width: 185px;
-    contain-intrinsic-height: 36.7rem;
+    width: 100%;
+    aspect-ratio: 152/296;
   }
   .cover-img {
     background-color: var(--color) !important;
