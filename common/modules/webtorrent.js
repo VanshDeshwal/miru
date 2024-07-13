@@ -4,12 +4,10 @@ import HTTPTracker from 'bittorrent-tracker/lib/client/http-tracker.js'
 import { hex2bin, arr2hex, text2arr } from 'uint8-util'
 import Parser from './parser.js'
 import { defaults, fontRx, subRx, videoRx } from './util.js'
-import { SUPPORTS } from './support.js'
+import { SUPPORTS } from '@/modules/support.js'
 
 // HACK: this is https only, but electron doesnt run in https, weirdge
 if (!globalThis.FileSystemFileHandle) globalThis.FileSystemFileHandle = false
-
-const LARGE_FILESIZE = 32_000_000_000
 
 const announce = [
   atob('d3NzOi8vdHJhY2tlci5vcGVud2VidG9ycmVudC5jb20='),
@@ -142,19 +140,9 @@ export default class TorrentClient extends WebTorrent {
         url: this.serverMode === 'node' ? 'http://localhost:' + this.server.address().port + file.streamURL : file.streamURL
       }
     })
-    if (torrent.length > LARGE_FILESIZE) {
-      for (const file of torrent.files) {
-        file.deselect()
-      }
-      this.dispatch('warn', 'Detected Large Torrent! To Conserve Drive Space Files Will Be Downloaded Selectively Instead Of Downloading The Entire Torrent.')
-    }
     this.dispatch('files', files)
     this.dispatch('magnet', { magnet: torrent.magnetURI, hash: torrent.infoHash })
     localStorage.setItem('torrent', JSON.stringify([...torrent.torrentFile])) // this won't work on mobile, but really it only speeds stuff up by ~1-2 seconds since magnet data doesn't need to be resolved
-
-    if (torrent.length > await this.storageQuota(torrent.path)) {
-      this.dispatchError('Torrent Too Big! This Torrent Exceeds The Selected Drive\'s Available Space. Change Download Location In Torrent Settings To A Drive With More Space And Restart The App!')
-    }
   }
 
   async findFontFiles (targetFile) {
@@ -196,7 +184,8 @@ export default class TorrentClient extends WebTorrent {
   _scrape ({ id, infoHashes }) {
     this.trackers.cat._request(this.trackers.cat.scrapeUrl, { info_hash: infoHashes.map(infoHash => hex2bin(infoHash)) }, (err, data) => {
       if (err) {
-        this.dispatchError(err)
+        const error = this._errorToString(err)
+        this.dispatch('warn', `Failed to update seeder counts: ${error}`)
         return this.dispatch('scrape', { id, result: [] })
       }
       const { files } = data
@@ -208,26 +197,31 @@ export default class TorrentClient extends WebTorrent {
     })
   }
 
-  dispatchError (e) {
+  _errorToString (e) {
     if (typeof Event !== 'undefined' && e instanceof Event) {
-      if (e.error) return this.dispatchError(e.error)
-      if (e.message) return this.dispatchError(e.message)
-      if (e.reason) return this.dispatchError(e.reason)
-      return this.dispatchError(JSON.stringify(e))
+      if (e.error) return this._errorToString(e.error)
+      if (e.message) return this._errorToString(e.message)
+      if (e.reason) return this._errorToString(e.reason)
+      return JSON.stringify(e)
     }
     if (typeof Error !== 'undefined' && e instanceof Error) {
-      if (e.message) return this.dispatchError(e.message)
-      if (e.cause) return this.dispatchError(e.cause)
-      if (e.reason) return this.dispatchError(e.reason)
-      if (e.name) return this.dispatchError(e.name)
-      return this.dispatchError(JSON.stringify(e))
+      if (e.message) return this._errorToString(e.message)
+      if (e.cause) return this._errorToString(e.cause)
+      if (e.reason) return this._errorToString(e.reason)
+      if (e.name) return this._errorToString(e.name)
+      return JSON.stringify(e)
     }
-    if (typeof e !== 'string') return this.dispatchError(JSON.stringify(e))
+    if (typeof e !== 'string') return JSON.stringify(e)
+    return e
+  }
+
+  dispatchError (e) {
+    const error = this._errorToString(e)
     for (const exclude of TorrentClient.excludedErrorMessages) {
-      if (e.startsWith(exclude)) return
+      if (error.startsWith(exclude)) return
     }
-    console.error(e)
-    this.dispatch('error', e)
+    console.error(error)
+    this.dispatch('error', error)
   }
 
   async addTorrent (data, skipVerify = false) {
@@ -243,7 +237,8 @@ export default class TorrentClient extends WebTorrent {
       path: this.torrentPath || undefined,
       destroyStoreOnDestroy: !this.settings.torrentPersist,
       skipVerify,
-      announce
+      announce,
+      deselect: this.settings.torrentStreamedDownload
     })
 
     torrent.once('done', () => {
@@ -256,20 +251,25 @@ export default class TorrentClient extends WebTorrent {
       case 'current': {
         if (data.data) {
           const torrent = await this.get(data.data.current.infoHash)
-          const found = torrent?.files.find(file => file.path === data.data.current.path)
-          if (!found) return
+          if (!torrent || torrent.destroyed) return
+          const found = torrent.files.find(file => file.path === data.data.current.path)
+          if (!found || found._destroyed) return
           if (this.playerProcess) {
             this.playerProcess.kill()
             this.playerProcess = null
           }
           if (this.current) {
             this.current.removeAllListeners('stream')
+            if (!this.current._destroyed) this.current.deselect()
           }
           this.parser?.destroy()
           found.select()
+          if (found.length > await this.storageQuota(torrent.path)) {
+            this.dispatchError('File Too Big! This File Exceeds The Selected Drive\'s Available Space. Change Download Location In Torrent Settings To A Drive With More Space And Restart The App!')
+          }
           this.current = found
           if (data.data.external && this.player) {
-            this.playerProcess = spawn(this.player, [encodeURI('http://localhost:' + this.server.address().port + found.streamURL)])
+            this.playerProcess = spawn(this.player, [encodeURI('' + new URL('http://localhost:' + this.server.address().port + found.streamURL))])
             this.playerProcess.stdout.on('data', () => {})
             const startTime = Date.now()
             this.playerProcess.once('close', () => {
