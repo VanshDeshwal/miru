@@ -790,7 +790,7 @@ packages:
     dependencies:
       '@ionic/utils-terminal': 2.3.5
       debug: 4.3.5
-      tslib: 2.6.2
+      tslib: 2.6.3
     transitivePeerDependencies:
       - supports-color
 
@@ -856,7 +856,7 @@ packages:
       '@ionic/utils-terminal': 2.3.4
       cross-spawn: 7.0.3
       debug: 4.3.5
-      tslib: 2.6.2
+      tslib: 2.6.3
     transitivePeerDependencies:
       - supports-color
 
@@ -886,7 +886,7 @@ packages:
       slice-ansi: 4.0.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
-      tslib: 2.6.2
+      tslib: 2.6.3
       untildify: 4.0.0
       wrap-ansi: 7.0.0
     transitivePeerDependencies:
@@ -6369,7 +6369,7 @@ packages:
       plist: 3.1.0
       split2: 4.2.0
       through2: 4.0.2
-      tslib: 2.6.2
+      tslib: 2.6.3
       yauzl: 2.10.0
     transitivePeerDependencies:
       - supports-color
