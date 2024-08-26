@@ -14,6 +14,8 @@
   import { click } from '@/modules/click.js'
   import { page } from '@/App.svelte'
   import { toast } from 'svelte-sonner'
+  import { MagnifyingGlass, Image } from 'svelte-radix'
+  import { Type, Drama, Leaf, MonitorPlay, Tv, ArrowDownWideNarrow, Trash2, Tags, Grid3X3, Grid2X2 } from 'lucide-svelte'
 
   export let search
   let searchTextInput
@@ -54,14 +56,16 @@
   }
 </script>
 
-<form class='container-fluid py-20 px-md-10 px-20 bg-dark pb-0 position-sticky top-0 search-container z-40' on:input bind:this={form}>
+<form class='container-fluid py-20 px-md-10 bg-dark pb-0 position-sticky top-0 search-container z-40' on:input bind:this={form}>
   <div class='row'>
     <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
       <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
+        <Type class='mr-10' size='3rem' />
+        Title
       </div>
       <div class='input-group'>
         <div class='input-group-prepend'>
-          <span style="height:5rem; border-radius:2rem 0 0 2rem;" class='input-group-text d-flex material-symbols-outlined bg-dark-light pr-0 font-size-18'>search</span>
+          <span class='input-group-text d-flex material-symbols-outlined bg-dark-light pr-0 font-size-18'>search</span>
         </div>
         <input
           bind:this={searchTextInput}
@@ -76,6 +80,10 @@
       </div>
     </div>
     <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
+      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
+        <div class='material-symbols-outlined mr-10 font-size-30'>theater_comedy</div>
+        Genre
+      </div>
       <div class='input-group'>
         <select style="height:5rem; border-radius:2rem;" class='form-control bg-dark-light' required bind:value={search.genre} disabled={search.disableSearch}>
           <option value selected disabled hidden>Genre</option>
@@ -101,6 +109,10 @@
       </div>
     </div>
     <div class='col-lg col-4 p-10 d-flex flex-column justify-content-end'>
+      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
+        <div class='material-symbols-outlined mr-10 font-size-30'>spa</div>
+        Season
+      </div>
       <div class='input-group'>
         <select style="height:5rem; border-radius:2rem 0 0 2rem;" class='form-control bg-dark-light border-right-dark' required bind:value={search.season} disabled={search.disableSearch}>
           <option value selected disabled hidden>Season</option>
@@ -119,6 +131,10 @@
       </div>
     </div>
     <div class='col p-10 d-flex flex-column justify-content-end'>
+      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
+        <div class='material-symbols-outlined mr-10 font-size-30'>monitor</div>
+        Format
+      </div>
       <div class='input-group'>
         <select style="height:5rem; border-radius:2rem;" class='form-control bg-dark-light' required bind:value={search.format} disabled={search.disableSearch}>
           <option value selected disabled hidden>Format</option>
@@ -131,6 +147,10 @@
       </div>
     </div>
     <div class='col p-10 d-flex flex-column justify-content-end'>
+      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
+        <div class='material-symbols-outlined mr-10 font-size-30'>live_tv</div>
+        Status
+      </div>
       <div class='input-group'>
         <select style="height:5rem; border-radius:2rem;" class='form-control bg-dark-light' required bind:value={search.status} disabled={search.disableSearch}>
           <option value selected disabled hidden>Status</option>
@@ -142,6 +162,10 @@
       </div>
     </div>
     <div class='col p-10 d-flex flex-column justify-content-end'>
+      <div class='pb-10 font-size-24 font-weight-semi-bold d-flex'>
+        <div class='material-symbols-outlined mr-10 font-size-30'>sort</div>
+        Sort
+      </div>
       <div class='input-group'>
         <select style="height:5rem; border-radius:2rem;" class='form-control bg-dark-light' required bind:value={search.sort} disabled={search.disableSearch}>
           <option value selected disabled hidden>Name</option>
@@ -156,9 +180,7 @@
     <input type='file' class='d-none' id='search-image' accept='image/*' on:input|preventDefault|stopPropagation={handleFile} />
     <div class='col-auto p-10 d-flex'>
       <div class='align-self-end'>
-        <button class='btn btn-square bg-dark-light material-symbols-outlined font-size-18 px-5 align-self-end border-0' type='button' style="color:grey; border-radius: 2rem;
-        width: 4rem;
-        height: 5rem;">
+        <button class='btn btn-square bg-dark-light material-symbols-outlined font-size-18 px-5 align-self-end border-0' type='button'>
           <label for='search-image' class='pointer mb-0'>
             image
           </label>
@@ -167,9 +189,7 @@
     </div>
     <div class='col-auto p-10 d-flex'>
       <div class='align-self-end'>
-        <button class='btn btn-square bg-dark-light material-symbols-outlined font-size-18 px-5 align-self-end border-0' type='button' style="color:grey; border-radius: 2rem;
-        width: 4rem;
-        height: 5rem;" use:click={searchClear} class:text-primary={!!sanitisedSearch?.length || search.disableSearch || search.clearNext}>
+        <button class='btn btn-square bg-dark-light material-symbols-outlined font-size-18 px-5 align-self-end border-0' type='button' use:click={searchClear} class:text-primary={!!sanitisedSearch?.length || search.disableSearch || search.clearNext}>
           delete
         </button>
       </div>
@@ -177,20 +197,17 @@
   </div>
   <div class='w-full px-10 pt-10 h-50 d-flex flex-colum align-items-center'>
     {#if sanitisedSearch?.length}
-      <span class='material-symbols-outlined font-size-24 mr-20 filled text-dark-light'>sell</span>
+      <Tags class='text-dark-light mr-20' size='3rem' />
       {#each sanitisedSearch as badge}
         <span class='badge bg-light border-0 py-5 px-10 text-capitalize mr-20 text-white text-nowrap'>{('' + badge).replace(/_/g, ' ').toLowerCase()}</span>
       {/each}
     {/if}
-    <span class='material-symbols-outlined font-size-24 mr-10 filled ml-auto text-dark-light pointer' class:text-muted={$settings.cards === 'small'} use:click={() => changeCardMode('small')}>grid_on</span>
-    <span class='material-symbols-outlined font-size-24 filled text-dark-light pointer' class:text-muted={$settings.cards === 'full'} use:click={() => changeCardMode('full')}>grid_view</span>
+    <span class='mr-10 filled ml-auto text-dark-light pointer' class:text-muted={$settings.cards === 'small'} use:click={() => changeCardMode('small')}><Grid3X3 size='2.25rem' /></span>
+    <span class='text-dark-light pointer' class:text-muted={$settings.cards === 'full'} use:click={() => changeCardMode('full')}><Grid2X2 size='2.25rem' /></span>
   </div>
 </form>
 
 <style>
-  .text-dark-light {
-    color: var(--gray-color-light);
-  }
   .input-group,
   .container-fluid button, .pointer {
     transition: scale 0.2s ease;

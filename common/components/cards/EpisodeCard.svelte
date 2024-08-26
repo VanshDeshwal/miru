@@ -6,6 +6,7 @@
   import { getContext } from 'svelte'
   import { liveAnimeEpisodeProgress } from '@/modules/animeprogress.js'
   import { anilistClient } from '@/modules/anilist.js'
+  import { Play } from 'lucide-svelte'
   export let data
 
   let preview = false
@@ -25,11 +26,12 @@
   const progress = liveAnimeEpisodeProgress(media?.id, data?.episode)
 </script>
 
-<div class='d-flex p-20 pb-10 position-relative episode-card' use:hoverClick={[data.onclick || viewMedia, setHoverState]}>
+<div class='d-flex p-20 pb-10 position-relative episode-card' use:hoverClick={[data.onclick || viewMedia, setHoverState]} on:contextmenu|preventDefault={viewMedia} role='none'>
   {#if preview}
     <EpisodePreviewCard {data} />
   {/if}
   <div class='item d-flex flex-column h-full pointer content-visibility-auto'>
+<<<<<<< HEAD
     <div class='image item-2 w-full position-relative rounded-3 overflow-hidden d-flex justify-content-between align-items-end text-white' class:bg-black={episodeThumbnail === ' '}>
       <img loading='lazy' src={episodeThumbnail} alt='cover' class='cover-img w-full h-full position-absolute' style:--color={data.media?.coverImage?.color || '#1890ff'} />
       {#if data.failed}
@@ -38,6 +40,11 @@
         </div>
       {/if}
       <div class='pl-10 pb-10 material-symbols-outlined filled z-10'>play_arrow</div>
+=======
+    <div class='image h-200 w-full position-relative rounded overflow-hidden d-flex justify-content-between align-items-end text-white' class:bg-black={episodeThumbnail === ' '}>
+      <img loading='lazy' src={episodeThumbnail} alt='cover' class='cover-img w-full h-full position-absolute' style:--color={media?.coverImage?.color || '#1890ff'} />
+      <Play class='mb-5 ml-5 pl-10 pb-10 z-10' fill='currentColor' size='3rem' />
+>>>>>>> 7bb83a8dd5dfe58c14a8c4f40a4da0d1997cf8f5
       <div class='pr-15 pb-10 font-size-16 font-weight-medium z-10'>
         {#if media?.duration}
           {media.duration}m
@@ -85,9 +92,6 @@
   .episode-card:hover {
     z-index: 30;
     /* fixes transform scaling on click causing z-index issues */
-  }
-  .material-symbols-outlined {
-    font-size: 3rem;
   }
   .title {
     display: -webkit-box;
